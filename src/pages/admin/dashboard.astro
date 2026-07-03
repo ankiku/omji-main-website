@@ -167,6 +167,10 @@ import '../../styles/global.css';
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
         AI Blog Autopilot
       </button>
+      <button class="sidebar-link" data-tab="manage-blogs">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M4 6h16M4 12h16M4 18h12"/></svg>
+        Manage Blogs
+      </button>
       <a class="sidebar-link" href="/projects" style="margin-top:auto; display:block; padding:11px 20px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
         View Website
@@ -334,6 +338,62 @@ import '../../styles/global.css';
               <div id="ai-progress-bar" style="width:0%; height:100%; background:var(--gold); transition:width 0.3s;"></div>
             </div>
             <div id="ai-log" style="margin-top:15px; font-size:0.8rem; color:var(--text-muted); max-height:150px; overflow-y:auto; font-family:monospace; line-height:1.5;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANAGE BLOGS TAB -->
+      <div class="tab-content" id="tab-manage-blogs">
+        <div class="admin-panel">
+          <div class="admin-panel-title" style="justify-content:space-between;">
+            <span>All Blog Posts</span>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select id="blog-filter" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-primary);font-size:0.8rem;">
+                <option value="all">All</option>
+                <option value="published">Published</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="draft">Drafts</option>
+              </select>
+              <span id="blog-count-label" style="font-size:0.8rem;color:var(--text-muted);">0 posts</span>
+            </div>
+          </div>
+          <div id="blogs-manage-grid" style="display:flex;flex-direction:column;gap:12px;"></div>
+          <div class="empty-state" id="blogs-empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>No blog posts yet. Use the AI Autopilot to generate posts.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOG EDIT MODAL -->
+      <div id="blog-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;overflow-y:auto;padding:40px 20px;">
+        <div style="max-width:700px;margin:0 auto;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:30px;position:relative;">
+          <button id="blog-edit-close" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--text-muted);font-size:1.5rem;cursor:pointer;">×</button>
+          <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--gold);margin-bottom:20px;">Edit Blog Post</h3>
+          <input type="hidden" id="edit-blog-slug" />
+          <div class="admin-field" style="margin-bottom:15px;">
+            <label>Title</label>
+            <input type="text" id="edit-blog-title" />
+          </div>
+          <div class="admin-field" style="margin-bottom:15px;">
+            <label>Excerpt</label>
+            <input type="text" id="edit-blog-excerpt" />
+          </div>
+          <div class="admin-field" style="margin-bottom:15px;">
+            <label>Category</label>
+            <input type="text" id="edit-blog-cat" />
+          </div>
+          <div class="admin-field" style="margin-bottom:15px;">
+            <label>Publish Date</label>
+            <input type="datetime-local" id="edit-blog-date" />
+          </div>
+          <div class="admin-field" style="margin-bottom:20px;">
+            <label>Content (HTML)</label>
+            <textarea id="edit-blog-content" rows="10" style="width:100%;font-family:monospace;font-size:0.85rem;padding:10px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-elevated);color:var(--text-primary);resize:vertical;"></textarea>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;">
+            <button class="btn btn-ghost" id="blog-edit-cancel">Cancel</button>
+            <button class="btn btn-primary" id="blog-edit-save">Save Changes</button>
           </div>
         </div>
       </div>
@@ -806,6 +866,171 @@ import '../../styles/global.css';
 
   // Initial Run
   updateOverviewStats();
+
+  // ── MANAGE BLOGS TAB LOGIC ──
+  const blogFilter = document.getElementById('blog-filter');
+  const blogsManageGrid = document.getElementById('blogs-manage-grid');
+  const blogsEmptyState = document.getElementById('blogs-empty-state');
+  const blogCountLabel = document.getElementById('blog-count-label');
+  const blogEditModal = document.getElementById('blog-edit-modal');
+
+  function getStatusBadge(blog) {
+    const now = new Date();
+    const pubDate = new Date(blog.publishDate);
+    if (blog.status === 'draft') return '<span style="background:rgba(150,150,150,0.15);color:#999;padding:3px 8px;border-radius:4px;font-size:0.72rem;font-weight:600;">Draft</span>';
+    if (blog.status === 'published' || pubDate <= now) return '<span style="background:rgba(80,180,80,0.15);color:#4a4;padding:3px 8px;border-radius:4px;font-size:0.72rem;font-weight:600;">Published</span>';
+    return '<span style="background:rgba(176,141,87,0.15);color:var(--gold);padding:3px 8px;border-radius:4px;font-size:0.72rem;font-weight:600;">Scheduled</span>';
+  }
+
+  function getBlogStatus(blog) {
+    const now = new Date();
+    const pubDate = new Date(blog.publishDate);
+    if (blog.status === 'draft') return 'draft';
+    if (blog.status === 'published' || pubDate <= now) return 'published';
+    return 'scheduled';
+  }
+
+  function renderBlogsGrid() {
+    if (!blogsManageGrid || !blogsEmptyState) return;
+    const filter = blogFilter ? blogFilter.value : 'all';
+    let blogs = [...localBlogs];
+
+    if (filter !== 'all') {
+      blogs = blogs.filter(b => getBlogStatus(b) === filter);
+    }
+
+    blogCountLabel.textContent = blogs.length + ' post' + (blogs.length !== 1 ? 's' : '');
+
+    if (blogs.length === 0) {
+      blogsManageGrid.innerHTML = '';
+      blogsEmptyState.style.display = 'block';
+      return;
+    }
+    blogsEmptyState.style.display = 'none';
+
+    // Sort: scheduled first, then published, then draft
+    blogs.sort((a, b) => new Date(b.publishDate || 0) - new Date(a.publishDate || 0));
+
+    blogsManageGrid.innerHTML = blogs.map(b => {
+      const status = getBlogStatus(b);
+      const pubDate = new Date(b.publishDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+      const isScheduled = status === 'scheduled';
+      const isPublished = status === 'published';
+      return `
+        <div style="background:var(--bg-elevated);border:1px solid var(--border);padding:16px 20px;border-radius:var(--radius-md);display:flex;align-items:center;gap:16px;">
+          <div style="font-size:1.5rem;flex-shrink:0;">${b.emoji || '📝'}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:0.9rem;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.title}</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              ${getStatusBadge(b)}
+              <span>📅 ${pubDate}</span>
+              <span style="color:var(--text-muted);">${b.cat || 'Uncategorized'}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+            ${isScheduled ? `<button class="btn btn-ghost btn-sm blog-publish-btn" data-slug="${b.slug}" style="color:#4a4;border-color:rgba(80,180,80,0.3);font-size:0.75rem;">Publish Now</button>` : ''}
+            ${isPublished ? `<button class="btn btn-ghost btn-sm blog-unpublish-btn" data-slug="${b.slug}" style="color:#e90;border-color:rgba(238,153,0,0.3);font-size:0.75rem;">Unpublish</button>` : ''}
+            <button class="btn btn-ghost btn-sm blog-edit-btn" data-slug="${b.slug}" style="font-size:0.75rem;">Edit</button>
+            <button class="btn btn-ghost btn-sm blog-delete-btn" data-slug="${b.slug}" style="color:#c44;border-color:rgba(220,60,60,0.3);font-size:0.75rem;">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Attach event listeners
+    blogsManageGrid.querySelectorAll('.blog-publish-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const slug = btn.dataset.slug;
+        try {
+          await fetch('/api/blogs', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, status: 'published', publishDate: new Date().toISOString() }) });
+          const idx = localBlogs.findIndex(b => b.slug === slug);
+          if (idx !== -1) { localBlogs[idx].status = 'published'; localBlogs[idx].publishDate = new Date().toISOString(); }
+          showToast('Blog published!');
+          renderBlogsGrid();
+        } catch(e) { showToast('Failed to publish', 'error'); }
+      });
+    });
+
+    blogsManageGrid.querySelectorAll('.blog-unpublish-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const slug = btn.dataset.slug;
+        try {
+          await fetch('/api/blogs', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug, status: 'draft' }) });
+          const idx = localBlogs.findIndex(b => b.slug === slug);
+          if (idx !== -1) { localBlogs[idx].status = 'draft'; }
+          showToast('Blog unpublished (moved to draft).');
+          renderBlogsGrid();
+        } catch(e) { showToast('Failed to unpublish', 'error'); }
+      });
+    });
+
+    blogsManageGrid.querySelectorAll('.blog-delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Delete this blog post permanently?')) return;
+        const slug = btn.dataset.slug;
+        try {
+          await fetch('/api/blogs', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug }) });
+          localBlogs = localBlogs.filter(b => b.slug !== slug);
+          showToast('Blog deleted.');
+          renderBlogsGrid();
+        } catch(e) { showToast('Failed to delete', 'error'); }
+      });
+    });
+
+    blogsManageGrid.querySelectorAll('.blog-edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.dataset.slug;
+        const blog = localBlogs.find(b => b.slug === slug);
+        if (!blog) return;
+        document.getElementById('edit-blog-slug').value = blog.slug;
+        document.getElementById('edit-blog-title').value = blog.title || '';
+        document.getElementById('edit-blog-excerpt').value = blog.excerpt || '';
+        document.getElementById('edit-blog-cat').value = blog.cat || '';
+        document.getElementById('edit-blog-content').value = blog.content || '';
+        const d = new Date(blog.publishDate);
+        document.getElementById('edit-blog-date').value = d.toISOString().slice(0, 16);
+        blogEditModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      });
+    });
+  }
+
+  // Blog filter change
+  if (blogFilter) blogFilter.addEventListener('change', renderBlogsGrid);
+
+  // Blog Edit Modal: Close
+  document.getElementById('blog-edit-close')?.addEventListener('click', () => { blogEditModal.style.display = 'none'; document.body.style.overflow = ''; });
+  document.getElementById('blog-edit-cancel')?.addEventListener('click', () => { blogEditModal.style.display = 'none'; document.body.style.overflow = ''; });
+
+  // Blog Edit Modal: Save
+  document.getElementById('blog-edit-save')?.addEventListener('click', async () => {
+    const slug = document.getElementById('edit-blog-slug').value;
+    const updates = {
+      slug,
+      title: document.getElementById('edit-blog-title').value.trim(),
+      excerpt: document.getElementById('edit-blog-excerpt').value.trim(),
+      cat: document.getElementById('edit-blog-cat').value.trim(),
+      content: document.getElementById('edit-blog-content').value,
+      publishDate: new Date(document.getElementById('edit-blog-date').value).toISOString(),
+    };
+    try {
+      await fetch('/api/blogs', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updates) });
+      const idx = localBlogs.findIndex(b => b.slug === slug);
+      if (idx !== -1) Object.assign(localBlogs[idx], updates);
+      showToast('Blog updated!');
+      blogEditModal.style.display = 'none';
+      document.body.style.overflow = '';
+      renderBlogsGrid();
+    } catch(e) { showToast('Failed to save changes', 'error'); }
+  });
+
+  // Render blogs when switching to tab
+  const origTabLogic = document.querySelectorAll('.sidebar-link[data-tab]');
+  origTabLogic.forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.dataset.tab === 'manage-blogs') renderBlogsGrid();
+    });
+  });
 </script>
 </body>
 </html>

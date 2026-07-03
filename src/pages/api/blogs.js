@@ -13,6 +13,8 @@ function getBlogs() {
 }
 
 function saveBlogs(data) {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
 }
 
@@ -32,6 +34,8 @@ export async function POST({ request }) {
       saveBlogs(payload);
     } else {
       const blogs = getBlogs();
+      // Add default status if not present
+      if (!payload.status) payload.status = 'scheduled';
       blogs.push(payload);
       saveBlogs(blogs);
     }
@@ -45,8 +49,52 @@ export async function POST({ request }) {
   }
 }
 
-export async function DELETE() {
+// PUT — update a blog by slug (edit content, publish, unpublish)
+export async function PUT({ request }) {
   try {
+    const payload = await request.json();
+    const { slug, ...updates } = payload;
+    if (!slug) {
+      return new Response(JSON.stringify({ error: 'slug is required' }), { status: 400 });
+    }
+    
+    let blogs = getBlogs();
+    const idx = blogs.findIndex(b => b.slug === slug);
+    if (idx === -1) {
+      return new Response(JSON.stringify({ error: 'Blog not found' }), { status: 404 });
+    }
+    
+    // Merge updates into existing blog
+    blogs[idx] = { ...blogs[idx], ...updates };
+    saveBlogs(blogs);
+    
+    return new Response(JSON.stringify({ success: true, blog: blogs[idx] }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}
+
+export async function DELETE({ request }) {
+  try {
+    // Check if body has a slug for individual delete
+    const text = await request.text();
+    if (text) {
+      const { slug } = JSON.parse(text);
+      if (slug) {
+        let blogs = getBlogs();
+        blogs = blogs.filter(b => b.slug !== slug);
+        saveBlogs(blogs);
+        return new Response(JSON.stringify({ success: true }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+    }
+    
+    // No slug = clear all
     saveBlogs([]);
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
