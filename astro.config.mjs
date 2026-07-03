@@ -8,7 +8,7 @@ export default defineConfig({
   site: 'https://omjiconstruction.com',
   output: 'static',
   adapter: node({
-    mode: 'standalone',
+    mode: 'middleware',
   }),
   integrations: [sitemap()]
 });

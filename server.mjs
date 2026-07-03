@@ -1,14 +1,9 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { handler } from './dist/server/entry.mjs';
+import http from 'http';
 
-// Resolve the compiled Astro server entry
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const port = process.env.PORT || 3000;
+const server = http.createServer(handler);
 
-// We dynamically import the built entry.mjs that Astro will generate in the dist folder
-import(join(__dirname, 'dist', 'server', 'entry.mjs'))
-  .catch(err => {
-    console.error('Failed to load Astro server entry. Did you run `npm run build`?');
-    console.error(err);
-    process.exit(1);
-  });
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
