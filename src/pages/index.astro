@@ -1458,8 +1458,12 @@ const faqs = [
             }
           }
         }
+        
+        requestAnimationFrame(animate);
+      }
+      animate();
 
-        async function initHomeProjects() {
+      async function initHomeProjects() {
         const grid = document.getElementById('homeProjectsGrid');
         const noMsg = document.getElementById('no-home-projects-msg');
         if (!grid) return;
@@ -1484,7 +1488,7 @@ const faqs = [
             const mainImg = photos.length > 0 ? photos[0] : null;
             
             return `
-              <div class="project-card reveal antique-gold-border scalloped-arch on-card" onclick="openHomeModal(${p.id})">
+              <div class="project-card reveal visible antique-gold-border scalloped-arch on-card" onclick="openHomeModal(${p.id})">
                 ${mainImg 
                   ? `<img src="${mainImg}" class="project-card-image" alt="${p.title}" loading="lazy" />` 
                   : `<div class="project-card-placeholder">🏗️</div>`}
@@ -1563,12 +1567,9 @@ const faqs = [
             }
           });
         }
+        }
       }
       initHomeProjects();
-      
-      requestAnimationFrame(animate);
-      }
-      animate();
     })();
 
     // ── Interactive Phases Tabs ──
