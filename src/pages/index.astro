@@ -1,8 +1,12 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 
 const staticImages = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*.{jpeg,jpg,png,gif}');
+
+// Pre-resolve the hero image to get its optimized URL for LCP preloading
+const heroImageModule = await staticImages['../assets/images/phase-04.png']();
+const optimizedHero = await getImage({ src: heroImageModule.default, format: 'webp' });
 const phases = [
   {
     num: "01",
@@ -333,7 +337,7 @@ const faqs = [
 ];
 ---
 
-<BaseLayout faqSchema={faqs}>
+<BaseLayout faqSchema={faqs} preloadImage={optimizedHero.src}>
   <!-- ═══════════════════════════════════
        HERO SECTION
        ═══════════════════════════════════ -->

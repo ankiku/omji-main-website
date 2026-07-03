@@ -7,12 +7,14 @@ interface Props {
   title?: string;
   description?: string;
   faqSchema?: { question: string; answer: string }[];
+  preloadImage?: string;
 }
 
 const {
   title = 'OMJI Construction — Best Construction Company in Jaipur | Home & Commercial Building',
   description = 'OMJI Construction is Jaipur\'s most trusted construction company. We build premium homes, commercial buildings & industrial structures with top-quality materials, on-time delivery & fixed pricing. Free consultation — call now!',
   faqSchema,
+  preloadImage,
 } = Astro.props;
 
 const siteName = 'OMJI Construction';
@@ -126,9 +128,15 @@ const faqJsonLd = faqSchema ? {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" />
+  </noscript>
 
-
+  <!-- LCP Image Preload -->
+  {preloadImage && (
+    <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+  )}
   <!-- JSON-LD: LocalBusiness -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(localBusinessSchema)} />
 
