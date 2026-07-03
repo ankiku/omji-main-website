@@ -318,13 +318,23 @@ import '../../styles/global.css';
             Gemini AI Autopilot (30-Day Schedule)
           </div>
           <div style="background:var(--bg-glass); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md); margin-bottom:20px;">
-            <p style="margin-bottom:15px; font-size:0.9rem; color:var(--text-secondary);">Enter your Gemini API Key to automatically generate 90 construction-related blog posts (3 posts/day for 30 days). The system will schedule them automatically, requiring zero human interference. <strong>Do not close this page while it is generating.</strong></p>
-            <div class="admin-field" style="max-width:400px; margin-bottom:15px;">
-              <label>Gemini API Key *</label>
-              <input type="password" id="gemini-api-key" placeholder="AIzaSy..." />
+            <p style="margin-bottom:15px; font-size:0.9rem; color:var(--text-secondary);">Enter your Gemini API Key and schedule parameters to automatically generate and schedule SEO-friendly construction blogs.</p>
+            <div style="display:flex; gap:15px; margin-bottom:15px; flex-wrap:wrap;">
+              <div class="admin-field" style="flex:1; min-width:200px;">
+                <label>Gemini API Key *</label>
+                <input type="password" id="gemini-api-key" placeholder="AIzaSy..." />
+              </div>
+              <div class="admin-field" style="width:120px;">
+                <label>Total Blogs</label>
+                <input type="number" id="ai-total-blogs" value="30" min="1" max="100" />
+              </div>
+              <div class="admin-field" style="width:140px;">
+                <label>Blogs Per Day</label>
+                <input type="number" id="ai-blogs-per-day" value="1" min="1" max="10" />
+              </div>
             </div>
             <div style="display:flex; gap:10px;">
-              <button class="btn btn-primary" id="start-ai-blog-btn">Generate 90 Posts Now</button>
+              <button class="btn btn-primary" id="start-ai-blog-btn">Start AI Generator</button>
               <button class="btn btn-ghost" id="clear-ai-blog-btn" style="color:#c44; border:1px solid rgba(220,60,60,0.3);">Clear All Blogs</button>
             </div>
           </div>
@@ -707,8 +717,8 @@ import '../../styles/global.css';
     
     logAi(`Starting AI Autopilot. Found ${localBlogs.length} existing posts.`);
     
-    const totalPosts = 90;
-    const postsPerDay = 3;
+    const totalPosts = parseInt(document.getElementById('ai-total-blogs').value) || 30;
+    const postsPerDay = parseInt(document.getElementById('ai-blogs-per-day').value) || 1;
     
     const topics = [
       'RCC Construction techniques', 'Modern Brickwork patterns', 'High quality steel Fe 500D',
