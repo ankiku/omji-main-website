@@ -1,6 +1,7 @@
 ---
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 
 interface Props {
   title?: string;
@@ -127,8 +128,6 @@ const faqJsonLd = faqSchema ? {
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap" />
 
-  <!-- Global CSS -->
-  <link rel="stylesheet" href="/src/styles/global.css" />
 
   <!-- JSON-LD: LocalBusiness -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(localBusinessSchema)} />
