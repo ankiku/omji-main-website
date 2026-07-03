@@ -2,8 +2,10 @@ export const prerender = false;
 import fs from 'fs';
 import path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'projects.json');
-const PUBLIC_UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
+import { getDataPath, getUploadPath } from '../../lib/data-store.js';
+
+const DATA_FILE = getDataPath('projects.json');
+const PUBLIC_UPLOAD_DIR = getUploadPath();
 const DIST_UPLOAD_DIR = path.join(process.cwd(), 'dist', 'client', 'uploads');
 
 // Ensure upload dirs exist

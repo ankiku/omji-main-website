@@ -2,7 +2,9 @@ export const prerender = false;
 import fs from 'fs';
 import path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'blogs.json');
+import { getDataPath } from '../../lib/data-store.js';
+
+const DATA_FILE = getDataPath('blogs.json');
 
 function getBlogs() {
   if (!fs.existsSync(DATA_FILE)) return [];

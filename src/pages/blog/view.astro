@@ -2,22 +2,24 @@
 export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import fs from 'fs';
-import path from 'path';
-
-const slug = Astro.url.searchParams.get('id');
+import { getDataPath } from '../../lib/data-store.js';
 
 let post = null;
-try {
-  const DATA_FILE = path.join(process.cwd(), 'data', 'blogs.json');
-  if (fs.existsSync(DATA_FILE)) {
-    const savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    const now = new Date().getTime();
-    const found = savedBlogs.find(p => p.slug === slug);
-    if (found && new Date(found.publishDate).getTime() <= now) {
-      post = found;
+const slug = Astro.url.searchParams.get('slug');
+
+if (slug) {
+  try {
+    const DATA_FILE = getDataPath('blogs.json');
+    if (fs.existsSync(DATA_FILE)) {
+      const savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+      const now = new Date().getTime();
+      const found = savedBlogs.find(p => p.slug === slug);
+      if (found && new Date(found.publishDate).getTime() <= now) {
+        post = found;
+      }
     }
-  }
-} catch(e) {}
+  } catch(e) {}
+}
 ---
 <BaseLayout 
   title={post ? `${post.title} — OMJI Construction` : "Post Not Found"} 

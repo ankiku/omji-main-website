@@ -6,9 +6,11 @@ import path from 'path';
 
 const categories = ['All', 'Residential', 'Commercial', 'Industrial', 'Interior', 'Renovation', 'Institutional'];
 
+import { getDataPath } from '../lib/data-store.js';
+
 let savedProjects = [];
 try {
-  const DATA_FILE = path.join(process.cwd(), 'data', 'projects.json');
+  const DATA_FILE = getDataPath('projects.json');
   if (fs.existsSync(DATA_FILE)) {
     savedProjects = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
   }

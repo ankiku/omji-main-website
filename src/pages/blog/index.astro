@@ -4,9 +4,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import fs from 'fs';
 import path from 'path';
 
+import { getDataPath } from '../../lib/data-store.js';
+
 let savedBlogs = [];
 try {
-  const DATA_FILE = path.join(process.cwd(), 'data', 'blogs.json');
+  const DATA_FILE = getDataPath('blogs.json');
   if (fs.existsSync(DATA_FILE)) {
     savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
   }
