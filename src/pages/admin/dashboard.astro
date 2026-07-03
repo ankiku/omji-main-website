@@ -4,6 +4,7 @@ export const prerender = false;
 const initialProjects = [];
 const initialContacts = [];
 const initialBlogs = [];
+import '../../styles/global.css';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +16,6 @@ const initialBlogs = [];
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/src/styles/global.css" />
   <style>
     body { background: var(--bg-elevated) !important; min-height: 100vh; font-family: var(--font-body); margin: 0; }
     
@@ -121,9 +121,10 @@ const initialBlogs = [];
 <div class="toast" id="toast"></div>
 
 <script is:inline define:vars={{ initialProjects, initialContacts, initialBlogs, envGeminiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
-  let localProjects = initialProjects;
-  let localContacts = initialContacts;
-  let localBlogs = initialBlogs;
+  window.initialProjects = initialProjects;
+  window.initialContacts = initialContacts;
+  window.initialBlogs = initialBlogs;
+  window.envGeminiKey = envGeminiKey;
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
   }
@@ -342,6 +343,11 @@ const initialBlogs = [];
 </div>
 
 <script is:inline>
+  let localProjects = window.initialProjects;
+  let localContacts = window.initialContacts;
+  let localBlogs = window.initialBlogs;
+  let envGeminiKey = window.envGeminiKey;
+
   // Auth Guard Double Check
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
