@@ -218,16 +218,16 @@
     </div>
   </div>
 
-  <script>
+  <script define:vars={{ envUser: import.meta.env.PUBLIC_ADMIN_USER || 'admin', envPass: import.meta.env.PUBLIC_ADMIN_PASSWORD || 'omji2025' }}>
     const form = document.getElementById('loginForm');
     const error = document.getElementById('loginError');
     
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
-      const user = (document.getElementById('username') as HTMLInputElement)?.value;
-      const pass = (document.getElementById('password') as HTMLInputElement)?.value;
+      const user = document.getElementById('username')?.value;
+      const pass = document.getElementById('password')?.value;
       
-      if (user === 'admin' && pass === 'omji2025') {
+      if (user === envUser && pass === envPass) {
         sessionStorage.setItem('omji_admin_auth', 'true');
         // Add a small success animation before redirect
         const btn = document.querySelector('button[type="submit"]');

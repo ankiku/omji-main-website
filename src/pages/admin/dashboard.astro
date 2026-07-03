@@ -116,7 +116,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script is:inline>
+<script is:inline define:vars={{ envGeminiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
   }
@@ -587,6 +587,9 @@
   const aiProgressText = document.getElementById('ai-progress-text');
   const aiLog = document.getElementById('ai-log');
   const geminiKeyInput = document.getElementById('gemini-api-key');
+  if (envGeminiKey) {
+    geminiKeyInput.value = envGeminiKey;
+  }
 
   function logAi(msg) {
     const d = document.createElement('div');
