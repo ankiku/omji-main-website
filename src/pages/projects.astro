@@ -1,0 +1,212 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const categories = ['All', 'Residential', 'Commercial', 'Industrial', 'Interior', 'Renovation', 'Institutional'];
+---
+<BaseLayout
+  title="Our Projects in Jaipur — OMJI Construction Portfolio"
+  description="Explore 250+ completed construction projects in Jaipur — homes, offices, warehouses & more. See our work in Mansarovar, Jagatpura, Malviya Nagar & across Jaipur."
+>
+  <style>
+    .project-card { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+    .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .project-card-image { width: 100%; height: 220px; object-fit: cover; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    .project-card-placeholder { width: 100%; height: 220px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    
+    /* Lightbox Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85); z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      padding: 2rem; backdrop-filter: blur(8px);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--bg-card); width: 100%; max-width: 900px;
+      max-height: 90vh; border-radius: var(--radius-lg);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--border-ornament);
+    }
+    .modal-header {
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-title { font-family: var(--font-heading); font-size: 1.5rem; color: var(--text-primary); font-weight: 700; margin: 0; }
+    .modal-close {
+      background: rgba(0,0,0,0.05); border: none; width: 36px; height: 36px;
+      border-radius: 50%; font-size: 1.2rem; cursor: pointer; color: var(--text-primary);
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { background: rgba(220,60,60,0.1); color: #c44; }
+    .modal-body { padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
+    
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .gallery-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem; }
+    .modal-meta-tag { background: var(--bg-elevated); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.85rem; color: var(--text-secondary); border: 1px solid var(--border); font-weight: 500; }
+  </style>
+
+  <section class="page-hero" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span><span style="color:var(--bronze)">Projects</span></div>
+      <div class="section-tag">Our Work</div>
+      <div class="mandana-corners" style="padding: 1rem 3rem; display: inline-block;">
+        <h1 class="page-hero-title" style="margin:0;">Projects in <span class="gold-text">Jaipur</span></h1>
+      </div>
+      <p class="page-hero-sub" style="margin-top:1.5rem;">250+ completed projects across Jaipur — homes, offices, warehouses, and more. Every project built with premium quality and delivered on time.</p>
+    </div>
+  </section>
+
+  <section class="section" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="filter-bar reveal" id="filterBar">
+        {categories.map(cat => (
+          <button class={`filter-btn ${cat === 'All' ? 'active' : ''}`} data-filter={cat}>{cat}</button>
+        ))}
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Rendered dynamically from localStorage -->
+      </div>
+      
+      <div id="no-projects-msg" style="display:none; text-align:center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border);">
+        No projects have been uploaded yet. Please add projects via the admin dashboard.
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox Modal -->
+  <div class="modal-overlay" id="projectModal">
+    <div class="modal-content antique-gold-border mandana-corners">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">Project Title</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta" id="modalMeta"></div>
+        <div id="modalDesc" style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6;"></div>
+        <div class="gallery-grid" id="modalGallery"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="cta-section" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="reveal antique-gold-border mandana-corners" style="position:relative;z-index:2;background:var(--bg-card);padding:4rem;border-radius:var(--radius-xl);">
+        <h2 class="display-md" style="margin-bottom:1rem;">Want to See Your<br/><span class="gold-text">Project Here?</span></h2>
+        <p class="body-lg" style="max-width:440px;margin:0 auto 2rem;">Let's discuss your vision. Free consultation, no commitment. We build across all areas of Jaipur.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="/contact" class="btn btn-primary btn-lg">Get Free Estimate</a>
+          <a href="https://wa.me/919929398279" target="_blank" class="btn btn-outline btn-lg">WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const grid = document.getElementById('projectsGrid');
+    const noMsg = document.getElementById('no-projects-msg');
+    
+    // Load projects from localStorage
+    const savedProjects = JSON.parse(localStorage.getItem('omji_projects') || '[]');
+    
+    if (savedProjects.length === 0) {
+      grid.style.display = 'none';
+      noMsg.style.display = 'block';
+    } else {
+      grid.innerHTML = savedProjects.map((p, i) => {
+        // Fetch first image for thumbnail
+        let photos = [];
+        if (p.images) photos = p.images;
+        else if (p.imageData) photos = [p.imageData];
+        else {
+          try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
+        }
+        const mainImg = photos.length > 0 ? photos[0] : null;
+        
+        return `
+          <div class="project-card reveal antique-gold-border scalloped-arch on-card" data-cat="${p.category}" onclick="openModal(${p.id})">
+            ${mainImg 
+              ? `<img src="${mainImg}" class="project-card-image" alt="${p.title}" loading="lazy" />` 
+              : `<div class="project-card-placeholder">🏗️</div>`}
+            <div class="project-card-body">
+              <div class="project-card-type" style="text-transform:uppercase;font-size:0.75rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:4px;">${p.category}</div>
+              <div class="project-card-name" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:12px;">${p.title}</div>
+              <div class="project-card-meta" style="display:flex;gap:8px;flex-wrap:wrap;">
+                ${p.area ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📐 ${p.area}</span>` : ''}
+                ${p.year ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📅 ${p.year}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filtering logic
+    const filterBtns = document.querySelectorAll('#filterBar .filter-btn');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        const cards = document.querySelectorAll('#projectsGrid .project-card');
+        cards.forEach(card => {
+          card.style.display = (filter === 'All' || card.getAttribute('data-cat').toLowerCase() === filter.toLowerCase()) ? '' : 'none';
+        });
+      });
+    });
+
+    // Modal Logic
+    const modal = document.getElementById('projectModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalGallery = document.getElementById('modalGallery');
+
+    window.openModal = function(id) {
+      const p = savedProjects.find(x => x.id === id);
+      if (!p) return;
+      
+      modalTitle.textContent = p.title;
+      
+      let metaHtml = `<span class="modal-meta-tag">${p.category}</span>`;
+      if (p.area) metaHtml += `<span class="modal-meta-tag">📐 Area: ${p.area}</span>`;
+      if (p.year) metaHtml += `<span class="modal-meta-tag">📅 Year: ${p.year}</span>`;
+      modalMeta.innerHTML = metaHtml;
+      
+      modalDesc.textContent = p.description || 'No description provided.';
+      
+      let photos = [];
+      if (p.images) photos = p.images;
+      else if (p.imageData) photos = [p.imageData];
+      else {
+        try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
+      }
+      
+      if (photos.length > 0) {
+        modalGallery.innerHTML = photos.map(src => `<img src="${src}" class="gallery-img" loading="lazy" />`).join('');
+      } else {
+        modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
+      }
+      
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    modalClose.addEventListener('click', () => {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</BaseLayout>

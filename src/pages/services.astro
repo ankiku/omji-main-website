@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const services = [
+  {
+    icon: '📐', num: '01', title: 'Home Construction in Jaipur',
+    desc: 'Want to build your dream home? We handle everything from start to finish — plot survey, design coordination, foundation, structure, walls, and roof. Just tell us your vision, we make it real.',
+    features: ['Free site visit & soil testing', 'Complete design coordination', 'Foundation to roof construction', 'Daily WhatsApp updates', 'Fixed price — no surprises', 'On-time delivery guarantee'],
+    ideal: 'Families building their dream home in Jaipur',
+  },
+  {
+    icon: '🏗️', num: '02', title: 'Foundation & Structural Work',
+    desc: 'The foundation is the most important part of any building. We use the right foundation type for your soil — isolated footing, raft, pile, or strip. Our RCC work uses premium steel and machine-mixed concrete.',
+    features: ['Soil testing & foundation design', 'PCC & footing reinforcement', 'Column, beam & slab casting', 'Machine-mixed M25/M30 concrete', '28-day proper curing', 'Cube test & quality reports'],
+    ideal: 'Any construction project needing strong foundations',
+  },
+  {
+    icon: '🏢', num: '03', title: 'Commercial Building Construction',
+    desc: 'Offices, showrooms, shops, and commercial complexes built to your specifications. We understand commercial deadlines and deliver on time with the same premium quality as our residential work.',
+    features: ['Office & showroom construction', 'Multi-storey commercial buildings', 'Warehouse & factory structures', 'RIICO plot construction', 'Fast-track project execution', 'All permits & approvals handled'],
+    ideal: 'Business owners & developers in Jaipur',
+  },
+  {
+    icon: '🔨', num: '04', title: 'Renovation & Repair Work',
+    desc: 'Old building needs repair? Cracks in walls? Waterproofing issues? We handle all types of renovation — from structural strengthening to adding extra floors on existing buildings.',
+    features: ['Structural assessment & repair', 'Additional floor construction', 'Waterproofing solutions', 'Wall crack repair', 'Bathroom & kitchen renovation', 'Terrace waterproofing'],
+    ideal: 'Homeowners with existing properties',
+  },
+  {
+    icon: '🧱', num: '05', title: 'Masonry & Brickwork',
+    desc: 'Our skilled masons build walls with precision using AAC blocks or fly ash bricks. Every wall is perfectly aligned, every lintel is properly cast, and every opening is precisely formed.',
+    features: ['AAC block / fly ash bricks', 'Lintel casting above openings', 'Staircase construction', 'Boundary & compound walls', 'Parapet & sunshade work', 'Proper mortar & curing'],
+    ideal: 'All building types in Jaipur',
+  },
+  {
+    icon: '📋', num: '06', title: 'Construction Consulting',
+    desc: 'Not sure where to start? Our senior engineers provide free advice on your project — cost estimation, material selection, structural design review, and construction planning. No commitment needed.',
+    features: ['Free cost estimation', 'Structural design review', 'Material selection guidance', 'Construction planning', 'Quality audit of ongoing work', 'Second opinion on quotes'],
+    ideal: 'Anyone planning to build in Jaipur',
+  },
+];
+---
+<BaseLayout
+  title="Construction Services in Jaipur — Home, Commercial & Industrial | OMJI Construction"
+  description="OMJI Construction offers home construction, commercial building, foundation work, RCC structure, renovation & consulting services in Jaipur. Free consultation — call now!"
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span><span style="color:var(--bronze)">Services</span></div>
+      <div class="section-tag">What We Do</div>
+      <h1 class="page-hero-title">Construction <span class="gold-text">Services in Jaipur</span></h1>
+      <p class="page-hero-sub">From building your dream home to constructing commercial complexes — we do it all with premium quality and fixed pricing. No hidden costs, ever.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;flex-direction:column;gap:6rem;">
+        {services.map((svc, i) => (
+          <article class="reveal" style={`display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;`}>
+            <div style={i % 2 !== 0 ? 'order:2' : ''}>
+              <div class="phase-visual phase-visual--img arch-frame" style="aspect-ratio:4/3;">
+                <img 
+                  src={`/images/phase-0${Math.min(i + 1, 6)}.png`} 
+                  alt={`${svc.title} | OMJI Construction Jaipur`} 
+                  class="phase-visual-img active" 
+                  loading="lazy"
+                />
+                <div class="phase-visual-overlay"></div>
+                <div class="phase-visual-badge" style="transform:translateY(0);opacity:1;">
+                  <span style="font-size:1.5rem;">{svc.icon}</span>
+                  <span class="phase-visual-badge-num">{svc.num}</span>
+                </div>
+              </div>
+            </div>
+            <div style={i % 2 !== 0 ? 'order:1' : ''}>
+              <div class="label" style="margin-bottom:1rem;">Service {svc.num}</div>
+              <h2 class="heading-lg" style="margin-bottom:1rem;">{svc.title}</h2>
+              <p class="body-md" style="margin-bottom:1.5rem;">{svc.desc}</p>
+              <div style="margin-bottom:1.5rem;">
+                <div class="label" style="margin-bottom:0.8rem;">What's Included</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                  {svc.features.map(f => (
+                    <div style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--text-secondary);">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--bronze)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                      {f}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style="padding:10px 16px;background:var(--bronze-pale);border:1px solid var(--border-bronze);border-radius:var(--radius-sm);font-size:0.78rem;color:var(--bronze);margin-bottom:1.5rem;">
+                <strong>Best for:</strong> {svc.ideal}
+              </div>
+              <a href="/contact" class="btn btn-primary">Get Free Quote →</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container">
+      <div class="reveal" style="position:relative;z-index:2;">
+        <h2 class="display-md" style="margin-bottom:1rem;">Not sure which<br/><span class="gold-text">service you need?</span></h2>
+        <p class="body-lg" style="max-width:440px;margin:0 auto 2rem;">Call us for a free 30-minute consultation. We'll guide you to the right solution for your project in Jaipur.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="/contact" class="btn btn-primary btn-lg">Book Free Call</a>
+          <a href="https://wa.me/919929398279" target="_blank" class="btn btn-outline btn-lg">WhatsApp Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 900px) {
+      article[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+      article > div { order: unset !important; }
+    }
+  </style>
+</BaseLayout>

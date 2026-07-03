@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = []; // We will load from localStorage now
+
+const categories = ['All', 'Foundation', 'RCC Construction', 'Concrete Technology', 'Site Management', 'Structural Safety', 'Civil Engineering'];
+---
+<BaseLayout
+  title="Blog — Civil Construction Insights | OMJI Construction"
+  description="Expert articles on foundation techniques, RCC construction, concrete technology, and civil engineering best practices."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span><span style="color:var(--bronze)">Blog</span></div>
+      <div class="section-tag">Engineering Insights</div>
+      <h1 class="page-hero-title">Construction <span class="gold-text">Blog</span></h1>
+      <p class="page-hero-sub">Expert articles on civil construction, structural engineering, concrete technology, and site management.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="filter-bar reveal" id="blogFilterBar" style="justify-content:center;">
+        {categories.map(cat => (
+          <button class={`filter-btn ${cat === 'All' ? 'active' : ''}`} data-blogfilter={cat}>{cat}</button>
+        ))}
+      </div>
+      <div class="blog-grid" id="blogGrid">
+        <!-- Rendered dynamically from localStorage -->
+      </div>
+      <div id="no-blogs-msg" style="display:none; text-align:center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border); margin-top: 2rem;">
+        No blog posts have been published yet.
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const grid = document.getElementById('blogGrid');
+    const noMsg = document.getElementById('no-blogs-msg');
+    
+    // Load from localStorage
+    const savedBlogs = JSON.parse(localStorage.getItem('omji_blog_posts') || '[]');
+    const now = new Date().getTime();
+    
+    // Filter scheduled posts
+    const publishedBlogs = savedBlogs.filter(p => new Date(p.publishDate).getTime() <= now);
+    
+    if (publishedBlogs.length === 0) {
+      grid.style.display = 'none';
+      noMsg.style.display = 'block';
+    } else {
+      grid.innerHTML = publishedBlogs.sort((a,b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()).map((post, i) => {
+        let imageHtml = `<div class="blog-card-img" style="font-size: 3rem; display:flex; align-items:center; justify-content:center;">${post.emoji || '📰'}</div>`;
+        if (post.image) {
+          imageHtml = `<img src="${post.image}" class="blog-card-img" style="object-fit:cover; width:100%; height:100%; border-radius: 0;" alt="${post.title}" />`;
+        }
+        
+        return `
+          <a href="/blog/view?id=${post.slug}" class="blog-card reveal reveal-d${(i % 3) + 1}" data-blogcat="${post.cat}">
+            ${imageHtml}
+            <div class="blog-card-body">
+              <div class="blog-card-cat">${post.cat}</div>
+              <div class="blog-card-title">${post.title}</div>
+              <p class="blog-card-excerpt">${post.excerpt}</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="blog-card-link">Read Article →</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);">${new Date(post.publishDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})} · ${post.readTime || '5 min'}</span>
+              </div>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    const filterBtns = document.querySelectorAll('#blogFilterBar .filter-btn');
+    const cards = document.querySelectorAll('#blogGrid .blog-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-blogfilter');
+        cards.forEach(card => {
+          card.style.display = (filter === 'All' || card.getAttribute('data-blogcat') === filter) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="About OMJI Construction — Jaipur's Trusted Construction Company Since 2015"
+  description="Learn about OMJI Construction's 10+ year journey building homes and commercial structures in Jaipur. 250+ projects completed with premium quality and on-time delivery."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span><span style="color:var(--bronze)">About</span></div>
+      <div class="section-tag">About OMJI Construction</div>
+      <h1 class="page-hero-title">Jaipur's Trusted Builder<br/><span class="gold-text">Since 2015</span></h1>
+      <p class="page-hero-sub">10+ years of building strong homes and commercial structures in Jaipur — with unwavering commitment to quality, transparency, and on-time delivery.</p>
+    </div>
+  </section>
+
+  <!-- Story -->
+  <section class="section">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;">
+        <div class="reveal-left">
+          <div class="phase-visual phase-visual--img arch-frame" style="aspect-ratio:4/3;">
+            <img 
+              src="/images/phase-01.png" 
+              alt="OMJI Construction Team in Jaipur" 
+              class="phase-visual-img active" 
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="phase-visual-overlay"></div>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="section-tag">Est. 2015 · Jaipur</div>
+          <h2 class="heading-lg" style="margin-bottom:1rem;">Built on Trust &<br/><span class="gold-text">Engineering Precision</span></h2>
+          <p class="body-md" style="margin-bottom:1rem;">OMJI Construction was founded in Jaipur with a simple vision: to make home construction transparent, high-quality, and stress-free for every family in Rajasthan.</p>
+          <p class="body-md" style="margin-bottom:1rem;">What started as a team of 5 engineers has grown into a 200+ member organization. We specialize in the complete construction process — from excavation and foundation work to RCC framing, masonry, and structural completion.</p>
+          <p class="body-md" style="margin-bottom:1rem;">We speak your language. No confusing engineering jargon — just honest updates, daily progress photos, and a fixed price that never changes.</p>
+          <p class="body-md">Today, we are trusted by homeowners, developers, and businesses across Jaipur and Rajasthan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Our Promises</div>
+        <h2 class="display-md">What Makes Us <span class="gold-text">Different</span></h2>
+        <p class="section-subtitle">These aren't just values — they're promises we keep on every single project in Jaipur.</p>
+      </div>
+      <div class="quality-grid">
+        {[
+          { icon: '🎯', title: 'No Shortcuts', desc: 'We never compromise on materials or processes. OPC 53 cement, Fe 500D steel — always.' },
+          { icon: '📱', title: 'Daily Updates', desc: 'Get photos and progress reports on WhatsApp every single day. See your home being built.' },
+          { icon: '⏱️', title: 'On-Time Delivery', desc: '97% on-time delivery rate across 250+ projects. We treat deadlines as commitments.' },
+          { icon: '💰', title: 'Fixed Price', desc: 'The price we quote is the price you pay. No hidden charges, no surprises, no extras.' },
+          { icon: '👷', title: 'Expert Engineers', desc: 'Every project is supervised by engineers with 10+ years of experience in Jaipur.' },
+          { icon: '🛡️', title: '5-Year Warranty', desc: 'Every project comes with a 5-year structural warranty. We stand behind our work.' },
+          { icon: '🧪', title: 'Lab-Tested Materials', desc: 'Every batch of concrete, steel, and cement is tested in certified labs before use.' },
+          { icon: '🤝', title: 'Personal Attention', desc: 'Dedicated project manager for your site. One phone call away, always.' },
+        ].map((item, i) => (
+          <div class={`quality-card reveal reveal-d${(i % 4) + 1}`}>
+            <div class="quality-icon">{item.icon}</div>
+            <div class="quality-title">{item.title}</div>
+            <div class="quality-desc">{item.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Numbers Don't Lie</div>
+        <h2 class="display-md">Our <span class="gold-text">Track Record</span></h2>
+      </div>
+      <div class="dashboard-grid">
+        {[
+          { icon: '🏗️', num: '250', suffix: '+', label: 'Projects in Jaipur' },
+          { icon: '📐', num: '10', suffix: '+', label: 'Years Experience' },
+          { icon: '😊', num: '98', suffix: '%', label: 'Happy Clients' },
+          { icon: '👷', num: '200', suffix: '+', label: 'Team Members' },
+          { icon: '📊', num: '97', suffix: '%', label: 'On-Time Delivery' },
+        ].map((s, i) => (
+          <div class={`dash-stat reveal reveal-d${i + 1}`}>
+            <div class="dash-stat-icon">{s.icon}</div>
+            <div class="dash-stat-num" data-count={s.num} data-suffix={s.suffix}>0</div>
+            <div class="dash-stat-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="reveal" style="position:relative;z-index:2;">
+        <h2 class="display-md" style="margin-bottom:1rem;">Ready to Build with<br/><span class="gold-text">Jaipur's Best?</span></h2>
+        <p class="body-lg" style="max-width:440px;margin:0 auto 2rem;">Free consultation. No commitment. Let's discuss your project over chai ☕</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="/contact" class="btn btn-primary btn-lg">Get Free Estimate</a>
+          <a href="https://wa.me/919929398279" target="_blank" class="btn btn-outline btn-lg">WhatsApp Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @media (max-width: 900px) {
+      div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</BaseLayout>

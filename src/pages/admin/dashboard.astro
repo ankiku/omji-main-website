@@ -1,0 +1,782 @@
+---
+// Admin dashboard page — blocked from crawler indexing
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Omji Construction</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/global.css" />
+  <style>
+    body { background: var(--bg-elevated) !important; min-height: 100vh; font-family: var(--font-body); margin: 0; }
+    
+    /* Layout */
+    .admin-layout { display: flex; min-height: 100vh; }
+    .admin-sidebar { 
+      width: 260px; 
+      background: var(--bg-card); 
+      border-right: 1px solid var(--border); 
+      display: flex; 
+      flex-direction: column; 
+      position: fixed; 
+      top: 0; bottom: 0; left: 0;
+      z-index: 50;
+    }
+    .admin-main { flex: 1; margin-left: 260px; display: flex; flex-direction: column; }
+    
+    /* Sidebar */
+    .sidebar-logo { padding: 24px; border-bottom: 1px solid var(--border); }
+    .sidebar-nav { padding: 20px 12px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-link { 
+      display: flex; align-items: center; padding: 12px 16px; 
+      border-radius: var(--radius-sm); border: none; background: transparent; 
+      color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .sidebar-link:hover { background: var(--bg-glass); color: var(--bronze); }
+    .sidebar-link.active { background: var(--gold-pale); color: var(--bronze); font-weight: 600; border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+    .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
+    .sidebar-logout { 
+      display: flex; align-items: center; width: 100%; padding: 10px; 
+      background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      color: var(--text-muted); cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .sidebar-logout:hover { background: rgba(220,60,60,0.1); color: #c44; border-color: rgba(220,60,60,0.3); }
+
+    /* Topbar */
+    .admin-topbar { 
+      height: 72px; padding: 0 32px; background: var(--bg-card); 
+      border-bottom: 1px solid var(--border); display: flex; 
+      align-items: center; justify-content: space-between; 
+    }
+    .admin-topbar h1 { font-family: var(--font-display); font-size: 1.4rem; color: var(--text-primary); margin: 0; }
+    .admin-badge { background: var(--gold-pale); color: var(--bronze); padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border: 1px solid var(--border-ornament); }
+
+    /* Content Area */
+    .admin-content { padding: 32px; max-width: 1200px; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Panels & Cards */
+    .admin-panel { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+    .admin-panel-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); }
+    
+    .stat-mini { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); }
+    .stat-mini-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; color: var(--bronze); line-height: 1; margin-bottom: 8px; }
+    .stat-mini-lbl { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+    /* Upload & Forms */
+    .upload-zone { border: 2px dashed var(--border-ornament); border-radius: var(--radius-md); padding: 40px 20px; text-align: center; background: var(--bg-glass); cursor: pointer; transition: all 0.2s; margin-bottom: 24px; }
+    .upload-zone:hover, .upload-zone.over { background: var(--gold-pale); border-color: var(--gold); }
+    
+    .admin-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .admin-field.full { grid-column: 1 / -1; }
+    .admin-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .admin-field input, .admin-field select, .admin-field textarea { width: 100%; padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.95rem; color: var(--text-primary); transition: all 0.2s; outline: none; box-sizing: border-box; }
+    .admin-field select { cursor: pointer; appearance: auto; }
+    .admin-field select option { background-color: #F5ECD8; color: #1A1208; }
+    .admin-field input:focus, .admin-field select:focus, .admin-field textarea:focus { border-color: var(--gold); background: #FFFFFF; box-shadow: 0 0 0 3px rgba(154,111,40,0.1); }
+    .admin-field textarea { resize: vertical; min-height: 100px; }
+
+    /* Manage Projects Grid */
+    .projects-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .proj-admin-card { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; }
+    .proj-admin-img-placeholder { background: var(--bg-elevated); font-size: 2rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; height: 200px; }
+    .proj-admin-info { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+    .proj-admin-name { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .proj-admin-cat { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .btn-delete { margin-top: auto; padding: 8px; width: 100%; background: rgba(220,60,60,0.05); color: #c44; border: 1px solid rgba(220,60,60,0.2); border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; transition: all 0.2s; font-size: 0.85rem; }
+    .btn-delete:hover { background: rgba(220,60,60,0.1); border-color: rgba(220,60,60,0.4); }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.6; }
+
+    /* Toasts */
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 9999;
+      padding: 14px 22px; border-radius: var(--radius-md);
+      font-size: 0.88rem; font-weight: 600;
+      transform: translateY(80px); opacity: 0;
+      transition: transform 0.4s, opacity 0.4s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast-success { background: rgba(176,141,87,0.15); border: 1px solid rgba(176,141,87,0.4); color: var(--bronze-hover); }
+    .toast-error { background: rgba(220,60,60,0.12); border: 1px solid rgba(220,60,60,0.3); color: #c44; }
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<script is:inline>
+  if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
+    window.location.href = '/admin';
+  }
+</script>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+          <polygon points="18,2 34,30 2,30" stroke="#B08D57" stroke-width="2" fill="none"/>
+          <polygon points="18,10 27,27 9,27" stroke="#B08D57" stroke-width="1" fill="rgba(176,141,87,0.12)"/>
+        </svg>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:900;letter-spacing:0.1em;color:var(--bronze);line-height:1;">OMJI</div>
+          <div style="font-size:0.48rem;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Admin Panel</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="sidebar-link active" data-tab="overview">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="sidebar-link" data-tab="upload">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        Upload Project
+      </button>
+      <button class="sidebar-link" data-tab="contacts">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Contact Requests
+      </button>
+      <button class="sidebar-link" data-tab="manage">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Manage Projects
+      </button>
+      <button class="sidebar-link" data-tab="ai-blog">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+        AI Blog Autopilot
+      </button>
+      <a class="sidebar-link" href="/projects" style="margin-top:auto; display:block; padding:11px 20px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+        View Website
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div id="admin-user-info" style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">Logged in as <strong style="color:var(--bronze);">admin</strong></div>
+      <button class="sidebar-logout" id="logout-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle;"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 id="page-title">Overview</h1>
+      <span class="admin-badge">✦ Admin</span>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- OVERVIEW TAB -->
+      <div class="tab-content active" id="tab-overview">
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; margin-bottom:28px;">
+          <div class="stat-mini">
+            <div class="stat-mini-num" id="total-count">0</div>
+            <div class="stat-mini-lbl">Uploaded Projects</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-num">8</div>
+            <div class="stat-mini-lbl">Static Default Projects</div>
+          </div>
+          <div class="stat-mini">
+            <div class="stat-mini-num" id="last-upload-val">—</div>
+            <div class="stat-mini-lbl">Last Upload Date</div>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <div class="admin-panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Dashboard Instructions
+          </div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <p style="font-size:0.9rem; line-height:1.6; color:var(--text-body);">This admin dashboard runs entirely on the browser using LocalStorage. You can upload images, fill in details, and list or delete them. Uploads will be merged with the hardcoded projects on the live portfolio page.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTACTS TAB -->
+      <div class="tab-content" id="tab-contacts">
+        <div class="admin-panel">
+          <div class="admin-panel-title" style="justify-content:space-between;">
+            <span>Contact Form Submissions</span>
+            <button class="btn btn-ghost btn-sm" id="clear-contacts-btn" style="color:#c44; border-color:rgba(220,60,60,0.3);">Clear All</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px;" id="contacts-grid"></div>
+          <div class="empty-state" id="contacts-empty-state">
+            <div class="empty-state-icon">📥</div>
+            <p>No contact requests yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPLOAD TAB -->
+      <div class="tab-content" id="tab-upload">
+        <div class="admin-panel">
+          <div class="admin-panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+            Upload New Project
+          </div>
+
+          <div class="upload-zone drag-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+            <input type="file" id="file-input" style="display:none;" accept="image/*" multiple />
+            <div id="drop-zone-content">
+              <div style="font-size:3rem; margin-bottom:0.75rem;">🖼️</div>
+              <div style="font-size:0.95rem; font-weight:600; margin-bottom:0.4rem;">Click to upload or drag & drop (Multiple Allowed)</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">PNG, JPG, WEBP — Max 5MB recommended</div>
+            </div>
+            <div id="preview-container" style="display:none; width: 100%;">
+              <div id="preview-grid" style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:1rem; justify-content:center;"></div>
+              <button type="button" class="btn btn-ghost btn-sm" id="remove-img-btn" style="margin-top:0.75rem;">Clear All Images</button>
+            </div>
+          </div>
+
+          <form id="upload-form" novalidate>
+            <div class="admin-form-grid">
+              <div class="admin-field">
+                <label for="proj-title">Project Title *</label>
+                <input type="text" id="proj-title" placeholder="e.g. Luxury Villa" required />
+              </div>
+              <div class="admin-field">
+                <label for="proj-category">Category *</label>
+                <select id="proj-category">
+                  <option value="residential">Residential</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="interior">Interior</option>
+                  <option value="renovation">Renovation</option>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label for="proj-area">Area / Size</label>
+                <input type="text" id="proj-area" placeholder="e.g. 3,200 sq.ft" />
+              </div>
+              <div class="admin-field">
+                <label for="proj-year">Year Completed</label>
+                <input type="text" id="proj-year" placeholder="e.g. 2024" />
+              </div>
+              <div class="admin-field full">
+                <label for="proj-desc">Project Description</label>
+                <textarea id="proj-desc" placeholder="Describe the project..." rows="3"></textarea>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:1.5rem;">
+              <button type="submit" class="btn btn-primary">Save Project</button>
+              <button type="button" class="btn btn-ghost" id="clear-btn">Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- MANAGE TAB -->
+      <div class="tab-content" id="tab-manage">
+        <div class="admin-panel">
+          <div class="admin-panel-title" style="justify-content:space-between;">
+            <span>Uploaded Projects</span>
+            <button class="btn btn-ghost btn-sm" id="clear-all-btn" style="color:#c44; border-color:rgba(220,60,60,0.3);">Clear All</button>
+          </div>
+          <div class="projects-admin-grid" id="manage-grid"></div>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-state-icon">📂</div>
+            <p>No projects uploaded yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI BLOG TAB -->
+      <div class="tab-content" id="tab-ai-blog">
+        <div class="admin-panel">
+          <div class="admin-panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+            Gemini AI Autopilot (30-Day Schedule)
+          </div>
+          <div style="background:var(--bg-glass); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md); margin-bottom:20px;">
+            <p style="margin-bottom:15px; font-size:0.9rem; color:var(--text-secondary);">Enter your Gemini API Key to automatically generate 90 construction-related blog posts (3 posts/day for 30 days). The system will schedule them automatically, requiring zero human interference. <strong>Do not close this page while it is generating.</strong></p>
+            <div class="admin-field" style="max-width:400px; margin-bottom:15px;">
+              <label>Gemini API Key *</label>
+              <input type="password" id="gemini-api-key" placeholder="AIzaSy..." />
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" id="start-ai-blog-btn">Generate 90 Posts Now</button>
+              <button class="btn btn-ghost" id="clear-ai-blog-btn" style="color:#c44; border:1px solid rgba(220,60,60,0.3);">Clear All Blogs</button>
+            </div>
+          </div>
+          
+          <div id="ai-progress-container" style="display:none; background:var(--bg-elevated); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem; font-weight:600;">
+              <span>Generation Progress</span>
+              <span id="ai-progress-text">0 / 90</span>
+            </div>
+            <div style="width:100%; height:8px; background:var(--bg-card); border-radius:4px; overflow:hidden;">
+              <div id="ai-progress-bar" style="width:0%; height:100%; background:var(--gold); transition:width 0.3s;"></div>
+            </div>
+            <div id="ai-log" style="margin-top:15px; font-size:0.8rem; color:var(--text-muted); max-height:150px; overflow-y:auto; font-family:monospace; line-height:1.5;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script is:inline>
+  // Auth Guard Double Check
+  if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
+    window.location.href = '/admin';
+  }
+
+  // Sidebar Tabs Switching
+  const tabs = document.querySelectorAll('.sidebar-link[data-tab]');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      tab.classList.add('active');
+      const tabName = tab.dataset.tab;
+      document.getElementById('tab-' + tabName).classList.add('active');
+      document.getElementById('page-title').textContent = tab.textContent.trim();
+      
+      if (tabName === 'manage') renderManageGrid();
+      if (tabName === 'contacts') renderContactsGrid();
+      updateOverviewStats();
+    });
+  });
+
+  // Log Out
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    sessionStorage.removeItem('omji_admin_auth');
+    window.location.href = '/admin';
+  });
+
+  // Local Storage Data Functions
+  function getProjects() {
+    return JSON.parse(localStorage.getItem('omji_projects') || '[]');
+  }
+  function saveProjects(arr) {
+    localStorage.setItem('omji_projects', JSON.stringify(arr));
+  }
+  function getContacts() {
+    return JSON.parse(localStorage.getItem('omji_contacts') || '[]');
+  }
+  function saveContacts(arr) {
+    localStorage.setItem('omji_contacts', JSON.stringify(arr));
+  }
+
+  // Toasts
+  let toastTimer;
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast toast-${type} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // Drag and Drop & Multiple Image base64 Upload handlers
+  let currentImages = []; // Array to store multiple base64 strings
+  const fileInput = document.getElementById('file-input');
+  const dropZone = document.getElementById('drop-zone');
+  const dropContent = document.getElementById('drop-zone-content');
+  const previewCont = document.getElementById('preview-container');
+  const previewGrid = document.getElementById('preview-grid');
+
+  function handleFiles(files) {
+    if (!files || files.length === 0) return;
+    
+    let added = 0;
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) {
+        showToast(`Skipped ${file.name} - not an image.`, 'error');
+        return;
+      }
+      if (file.size > 8 * 1024 * 1024) {
+        showToast(`Skipped ${file.name} - exceeds 8MB.`, 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImages.push(e.target.result);
+        renderPreviews();
+      };
+      reader.readAsDataURL(file);
+      added++;
+    });
+    
+    if (added > 0) {
+      dropContent.style.display = 'none';
+      previewCont.style.display = 'block';
+    }
+  }
+
+  function renderPreviews() {
+    if (currentImages.length === 0) {
+      dropContent.style.display = 'block';
+      previewCont.style.display = 'none';
+      previewGrid.innerHTML = '';
+      return;
+    }
+    
+    previewGrid.innerHTML = currentImages.map((src, index) => `
+      <div style="position:relative; width:100px; height:100px; border-radius:8px; overflow:hidden; border:1px solid var(--border);">
+        <img src="${src}" style="width:100%; height:100%; object-fit:cover;" />
+        <button type="button" onclick="removeImage(${index}, event)" style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.6); color:white; border:none; border-radius:50%; width:20px; height:20px; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center;">×</button>
+      </div>
+    `).join('');
+  }
+
+  window.removeImage = function(index, e) {
+    e.stopPropagation();
+    currentImages.splice(index, 1);
+    renderPreviews();
+  };
+
+  fileInput.addEventListener('change', () => {
+    handleFiles(fileInput.files);
+    fileInput.value = ''; // Reset so same file can be selected again
+  });
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('over');
+  });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('over');
+    if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+  });
+  document.getElementById('remove-img-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentImages = [];
+    renderPreviews();
+  });
+
+  // Submit Project Form
+  document.getElementById('upload-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('proj-title').value.trim();
+    if (!title) {
+      showToast('Project title is required.', 'error');
+      return;
+    }
+
+    const project = {
+      id: Date.now(),
+      title,
+      category: document.getElementById('proj-category').value,
+      area: document.getElementById('proj-area').value.trim(),
+      year: document.getElementById('proj-year').value.trim(),
+      description: document.getElementById('proj-desc').value.trim(),
+      imageCount: currentImages.length,
+      uploadedAt: new Date().toISOString()
+    };
+
+    if (currentImages.length > 0) {
+      try {
+        localStorage.setItem(`omji_project_photos_${project.id}`, JSON.stringify(currentImages));
+      } catch (err) {
+        showToast('Storage full! Could not save photos.', 'error');
+        return;
+      }
+    }
+
+    const projects = getProjects();
+    projects.push(project);
+    saveProjects(projects);
+
+    showToast('✅ Project saved! Live on website now.');
+    resetForm();
+    updateOverviewStats();
+  });
+
+  function resetForm() {
+    document.getElementById('upload-form').reset();
+    currentImages = [];
+    renderPreviews();
+  }
+  document.getElementById('clear-btn').addEventListener('click', resetForm);
+
+  // Manage Tab Render & Delete Operations
+  function renderManageGrid() {
+    const grid = document.getElementById('manage-grid');
+    const empty = document.getElementById('empty-state');
+    const projects = getProjects();
+
+    if (projects.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = projects.map(p => {
+      // Handle legacy single imageData, legacy multiple images, or new decoupled photos
+      let imgs = [];
+      if (p.images) {
+        imgs = p.images;
+      } else if (p.imageData) {
+        imgs = [p.imageData];
+      } else {
+        try {
+          imgs = JSON.parse(localStorage.getItem(`omji_project_photos_${p.id}`) || '[]');
+        } catch (e) { imgs = []; }
+      }
+      
+      const mainImg = imgs.length > 0 ? imgs[0] : null;
+      const countBadge = imgs.length > 1 ? `<div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);color:white;padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:600;">+${imgs.length - 1}</div>` : '';
+      
+      return `
+      <div class="proj-admin-card" id="proj-${p.id}">
+        <div style="position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:10px 10px 0 0;">
+          ${mainImg 
+            ? `<img style="width:100%;height:100%;object-fit:cover;" src="${mainImg}" alt="${p.title}" />${countBadge}` 
+            : `<div class="proj-admin-img-placeholder" style="height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);">🏗️</div>`}
+        </div>
+        <div class="proj-admin-info">
+          <div class="proj-admin-name" title="${p.title}">${p.title}</div>
+          <div class="proj-admin-cat">${p.category}${p.year ? ' · ' + p.year : ''}</div>
+          <div style="display:flex;">
+            <button class="btn-delete" onclick="deleteProject(${p.id})">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+      `;
+    }).join('');
+  }
+
+  window.deleteProject = function(id) {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    const filtered = getProjects().filter(p => p.id !== id);
+    saveProjects(filtered);
+    localStorage.removeItem(`omji_project_photos_${id}`);
+    renderManageGrid();
+    updateOverviewStats();
+    showToast('Project deleted successfully.');
+  };
+
+  document.getElementById('clear-all-btn').addEventListener('click', () => {
+    if (!confirm('Are you sure you want to delete ALL uploaded projects?')) return;
+    const projects = getProjects();
+    projects.forEach(p => localStorage.removeItem(`omji_project_photos_${p.id}`));
+    saveProjects([]);
+    renderManageGrid();
+    updateOverviewStats();
+    showToast('All projects cleared.');
+  });
+
+  // --- AI BLOG AUTOPILOT LOGIC ---
+  const aiStartBtn = document.getElementById('start-ai-blog-btn');
+  const aiClearBtn = document.getElementById('clear-ai-blog-btn');
+  const aiProgressContainer = document.getElementById('ai-progress-container');
+  const aiProgressBar = document.getElementById('ai-progress-bar');
+  const aiProgressText = document.getElementById('ai-progress-text');
+  const aiLog = document.getElementById('ai-log');
+  const geminiKeyInput = document.getElementById('gemini-api-key');
+
+  function logAi(msg) {
+    const d = document.createElement('div');
+    d.textContent = '> ' + msg;
+    aiLog.appendChild(d);
+    aiLog.scrollTop = aiLog.scrollHeight;
+  }
+
+  aiClearBtn.addEventListener('click', () => {
+    if (confirm('Delete all scheduled and published blog posts?')) {
+      localStorage.setItem('omji_blog_posts', '[]');
+      showToast('All blog posts deleted.');
+    }
+  });
+
+  aiStartBtn.addEventListener('click', async () => {
+    const key = geminiKeyInput.value.trim();
+    if (!key) {
+      showToast('Please enter your Gemini API Key.', 'error');
+      return;
+    }
+
+    aiStartBtn.disabled = true;
+    aiProgressContainer.style.display = 'block';
+    aiLog.innerHTML = '';
+    
+    let existingPosts = JSON.parse(localStorage.getItem('omji_blog_posts') || '[]');
+    logAi(`Starting AI Autopilot. Found ${existingPosts.length} existing posts.`);
+    
+    const totalPosts = 90;
+    const postsPerDay = 3;
+    
+    const topics = [
+      'RCC Construction techniques', 'Modern Brickwork patterns', 'High quality steel Fe 500D',
+      'Construction interior design', 'House foundation planning', 'Cement grading M20 M25 M30',
+      'Civil engineering safety', 'Jaipur building guidelines', 'Waterproofing solutions',
+      'Cost estimation in construction', 'Architecture trends 2025', 'Choosing right aggregates'
+    ];
+    const emojis = ['🏗️', '🧱', '🧪', '📋', '🛡️', '💰', '🏠', '✨', '🛠️', '📐'];
+
+    for (let i = 1; i <= totalPosts; i++) {
+      const dayOffset = Math.floor((i - 1) / postsPerDay);
+      const publishDate = new Date();
+      publishDate.setDate(publishDate.getDate() + dayOffset);
+      
+      const randomTopic = topics[Math.floor(Math.random() * topics.length)];
+      const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      logAi(`[${i}/${totalPosts}] Requesting Gemini for topic: ${randomTopic}...`);
+      
+      const prompt = `Write a short, engaging, 400-word SEO-friendly blog post for a construction company based in Jaipur about "${randomTopic}". 
+        Return ONLY valid JSON with these EXACT keys:
+        "title": (Catchy Title),
+        "slug": (url-friendly-slug-with-random-id),
+        "excerpt": (150 chars max summary),
+        "content": (HTML string with <p> and <h2> tags for the body. Make it highly professional and informative. Do not use markdown backticks in the value.)
+        Do NOT wrap the JSON in markdown code blocks (\`\`\`json). Return purely the JSON object.`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+
+        if (!response.ok) throw new Error('API Error: ' + response.status);
+        
+        const data = await response.json();
+        let textResult = data.candidates[0].content.parts[0].text.trim();
+        if (textResult.startsWith('\`\`\`json')) textResult = textResult.substring(7);
+        if (textResult.startsWith('\`\`\`')) textResult = textResult.substring(3);
+        if (textResult.endsWith('\`\`\`')) textResult = textResult.substring(0, textResult.length - 3);
+        
+        const generated = JSON.parse(textResult);
+        
+        const newPost = {
+          title: generated.title,
+          slug: generated.slug + '-' + Math.floor(Math.random() * 10000),
+          excerpt: generated.excerpt,
+          content: generated.content,
+          cat: 'Construction Insights',
+          emoji: randomEmoji,
+          publishDate: publishDate.toISOString(),
+          readTime: '4 min read',
+          author: 'Admin',
+          image: `https://source.unsplash.com/800x450/?construction,building,${dayOffset * i}`
+        };
+
+        existingPosts.push(newPost);
+        localStorage.setItem('omji_blog_posts', JSON.stringify(existingPosts));
+        
+        logAi(`✅ Created post: ${newPost.title} (Scheduled for ${publishDate.toDateString()})`);
+        
+        const pct = Math.floor((i / totalPosts) * 100);
+        aiProgressBar.style.width = pct + '%';
+        aiProgressText.textContent = `${i} / ${totalPosts}`;
+        
+        // Wait 3 seconds to avoid rate limits
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+      } catch (err) {
+        logAi(`❌ Failed post ${i}: ${err.message}`);
+        console.error(err);
+        await new Promise(resolve => setTimeout(resolve, 5000)); // wait longer on fail
+      }
+    }
+    
+    logAi(`🎉 Finished generating 90 posts!`);
+    showToast('AI Generation Complete!');
+    aiStartBtn.disabled = false;
+  });
+
+  // Contacts Tab Render & Delete
+  function renderContactsGrid() {
+    const grid = document.getElementById('contacts-grid');
+    const empty = document.getElementById('contacts-empty-state');
+    if (!grid || !empty) return;
+    const contacts = getContacts();
+
+    if (contacts.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    grid.innerHTML = contacts.map(c => {
+      const date = new Date(c.submittedAt).toLocaleString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      const waLink = c.phone ? `https://wa.me/${c.phone.replace(/[^0-9]/g, '')}` : '#';
+      return `
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;border-bottom:1px solid var(--border-light);padding-bottom:12px;">
+          <div>
+            <div style="font-weight:700;color:var(--text-primary);font-size:1.1rem;margin-bottom:4px;">${c.name}</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">${date}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="deleteContact(${c.id})" style="color:#c44;">Delete</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Phone:</strong> <a href="${waLink}" target="_blank" style="color:var(--bronze);">${c.phone}</a></div>
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Email:</strong> ${c.email || 'N/A'}</div>
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Area:</strong> ${c.area || 'N/A'}</div>
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Service:</strong> ${c.service || 'N/A'}</div>
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Plot:</strong> ${c.plotSize || 'N/A'}</div>
+          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Budget:</strong> ${c.budget || 'N/A'}</div>
+        </div>
+        <div style="background:var(--off-white);padding:12px;border-radius:6px;font-size:0.85rem;color:var(--text-body);line-height:1.5;">
+          <strong style="color:var(--text-secondary);display:block;margin-bottom:4px;">Message:</strong>
+          ${c.message || 'No message provided.'}
+        </div>
+        ${c.phone ? `<a href="${waLink}" target="_blank" class="btn btn-primary btn-sm" style="margin-top:16px;">WhatsApp Now</a>` : ''}
+      </div>
+      `;
+    }).join('');
+  }
+
+  window.deleteContact = function(id) {
+    if (!confirm('Are you sure you want to delete this contact request?')) return;
+    const filtered = getContacts().filter(c => c.id !== id);
+    saveContacts(filtered);
+    renderContactsGrid();
+    showToast('Contact request deleted.');
+  };
+
+  document.getElementById('clear-contacts-btn')?.addEventListener('click', () => {
+    if (!confirm('Are you sure you want to delete ALL contact requests?')) return;
+    saveContacts([]);
+    renderContactsGrid();
+    showToast('All contact requests cleared.');
+  });
+
+  // Overview metric values update
+  function updateOverviewStats() {
+    const projects = getProjects();
+    document.getElementById('total-count').textContent = projects.length;
+    
+    if (projects.length > 0) {
+      const last = new Date(projects[projects.length - 1].uploadedAt);
+      document.getElementById('last-upload-val').textContent = last.toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      });
+    } else {
+      document.getElementById('last-upload-val').textContent = '—';
+    }
+  }
+
+  // Initial Run
+  updateOverviewStats();
+</script>
+</body>
+</html>

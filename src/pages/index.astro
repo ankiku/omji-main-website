@@ -1,0 +1,1597 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const phases = [
+  {
+    num: "01",
+    title: "Site Preparation",
+    headline: "Every Landmark Begins with Preparation",
+    desc: "Before any construction begins, our team conducts comprehensive land surveys, establishes precise site layouts, and executes controlled excavation. Every centimeter is measured, every contour is mapped.",
+    steps: [
+      "Land Survey",
+      "Site Layout",
+      "Excavation",
+      "Earthwork",
+      "Levelling",
+    ],
+    image: "/images/phase-01.png",
+    images: [
+      "/images/phase-01-step-1.png",
+      "/images/phase-01-step-2.png",
+      "/images/phase-01-step-3.png",
+      "/images/phase-01-step-4.png",
+      "/images/phase-01-step-5.png",
+    ],
+  },
+  {
+    num: "02",
+    title: "Foundation",
+    headline: "Strong Foundations Create Lasting Structures",
+    desc: "The foundation is the soul of every structure. We follow a rigorous multi-stage process — from excavation to PCC, footing reinforcement, casting, and column starters — ensuring the base is engineered to last generations.",
+    steps: [
+      "Excavation",
+      "Dressing",
+      "PCC",
+      "Footing Reinforcement",
+      "Footing Casting",
+      "Column Starter",
+    ],
+    image: "/images/phase-02.png",
+    images: [
+      "/images/phase-02-step-1.png",
+      "/images/phase-02-step-2.png",
+      "/images/phase-02-step-3.png",
+      "/images/phase-02-step-4.png",
+      "/images/phase-02-step-5.png",
+      "/images/phase-02-step-6.png",
+    ],
+  },
+  {
+    num: "03",
+    title: "Plinth Level",
+    headline: "Building Strength from the Ground Up",
+    desc: "The plinth level bridges the foundation and superstructure. Foundation walls are raised, precise backfilling and compaction are executed, and the plinth beam and DPC layer are installed to prevent moisture ingress.",
+    steps: [
+      "Foundation Wall",
+      "Backfilling",
+      "Compaction",
+      "Plinth Beam",
+      "DPC",
+      "Ground Preparation",
+    ],
+    image: "/images/phase-03.png",
+    images: [
+      "/images/phase-03-step-1.png",
+      "/images/phase-03-step-2.png",
+      "/images/phase-03-step-3.png",
+      "/images/phase-03-step-4.png",
+      "/images/phase-03-step-5.png",
+      "/images/phase-03-step-6.png",
+    ],
+  },
+  {
+    num: "04",
+    title: "RCC Structure",
+    headline: "Precision in Every Column, Beam & Slab",
+    desc: "The RCC (Reinforced Cement Concrete) phase is where the building takes its structural form. Columns rise, beams connect, slabs span, and each floor is cast with exact steel reinforcement and machine-mixed concrete.",
+    steps: [
+      "Columns",
+      "Beams",
+      "Slab Shuttering",
+      "Steel Reinforcement",
+      "Concrete Pouring",
+      "Curing",
+      "Next Floor",
+    ],
+    image: "/images/phase-04.png",
+    images: [
+      "/images/phase-04-step-1.png",
+      "/images/phase-04-step-2.png",
+      "/images/phase-04-step-3.png",
+      "/images/phase-04-step-4.png",
+      "/images/phase-04-step-5.png",
+      "/images/phase-04-step-6.png",
+      "/images/phase-04-step-7.png",
+    ],
+  },
+  {
+    num: "05",
+    title: "Masonry Work",
+    headline: "Solid Walls Built with Precision",
+    desc: "Once the RCC skeleton is in place, skilled masons erect walls using premium bricks and blocks. Lintels are cast above every opening, staircases are formed, and parapet walls complete the enclosure.",
+    steps: ["Brickwork", "Blockwork", "Lintels", "Staircase"],
+    image: "/images/phase-05.png",
+    images: [
+      "/images/phase-05-step-1.png",
+      "/images/phase-05-step-2.png",
+      "/images/phase-05-step-3.png",
+      "/images/phase-05-step-4.png",
+    ],
+  },
+  {
+    num: "06",
+    title: "Structural Completion",
+    headline: "Delivering Structural Excellence",
+    desc: "The culmination of engineering precision — the complete RCC structure stands with masonry in place, the roof structure secured, and the final building frame ready for finishing. A testament to quality construction.",
+    steps: [
+      "Entire RCC Structure",
+      "Complete Masonry",
+      "Roof Structure",
+      "Final Building Frame",
+    ],
+    image: "/images/phase-06.png",
+    images: [
+      "/images/phase-06-step-1.png",
+      "/images/phase-06-step-2.png",
+      "/images/phase-06-step-3.png",
+      "/images/phase-06-step-4.png",
+    ],
+  },
+];
+
+const qualityItems = [
+  {
+    icon: "🏗️",
+    title: "Premium Cement",
+    desc: "OPC 53 grade from trusted manufacturers like UltraTech & Ambuja",
+  },
+  {
+    icon: "🔩",
+    title: "TMT Steel",
+    desc: "Fe 500D grade for maximum structural strength — JSW & TATA brands",
+  },
+  {
+    icon: "🧱",
+    title: "High Grade Concrete",
+    desc: "M25/M30 machine-mixed with quality Jaipur-sourced aggregates",
+  },
+  {
+    icon: "⚙️",
+    title: "Machine Mixing",
+    desc: "Zero hand-mixing — consistent quality guaranteed on every pour",
+  },
+  {
+    icon: "💧",
+    title: "Proper Curing",
+    desc: "28-day wet curing for full concrete strength development",
+  },
+  {
+    icon: "🔬",
+    title: "Quality Testing",
+    desc: "Cube tests, slump tests, and third-party audits on every project",
+  },
+  {
+    icon: "👷",
+    title: "Experienced Engineers",
+    desc: "Minimum 10 years of structural engineering experience",
+  },
+  {
+    icon: "📋",
+    title: "Site Supervision",
+    desc: "Full-time dedicated project manager on every Jaipur site",
+  },
+];
+
+const dashStats = [
+  { icon: "📊", num: "97", suffix: "%", label: "On-Time Delivery" },
+  { icon: "🏢", num: "250", suffix: "+", label: "Projects in Jaipur" },
+  { icon: "🧱", num: "45000", suffix: "+", label: "Cu.m Concrete Poured" },
+  { icon: "🔩", num: "8500", suffix: "T", label: "Steel Reinforced" },
+  { icon: "👷", num: "200", suffix: "+", label: "Team Members" },
+];
+
+
+
+const testimonials = [
+  {
+    name: "Rajesh Sharma",
+    role: "Homeowner, Jagatpura, Jaipur",
+    text: "OMJI Construction built our dream home in Jagatpura. The quality of construction is outstanding — daily updates, proper material reports, and the team was always on-site. Best construction company in Jaipur!",
+    initials: "RS",
+  },
+  {
+    name: "Priya Agarwal",
+    role: "Developer, Mansarovar, Jaipur",
+    text: "We have partnered with OMJI Construction on three commercial projects in Jaipur. Their RCC work quality is unmatched — on-time delivery, zero structural defects, and professional management.",
+    initials: "PA",
+  },
+  {
+    name: "Vikram Singh",
+    role: "Business Owner, Tonk Road, Jaipur",
+    text: "Our showroom on Tonk Road was completed ahead of schedule. OMJI Construction exceeded expectations with their foundation design and flawless concrete execution. Highly recommend them in Jaipur.",
+    initials: "VS",
+  },
+];
+
+const blogPosts = [
+  {
+    slug: "home-construction-checklist",
+    emoji: "📋",
+    cat: "Home Building Tips",
+    title: "How Much Does It Cost to Build a House in Jaipur? (2025 Guide)",
+    excerpt:
+      "Complete cost breakdown for building a home in Jaipur — from land to finishing. Area-wise rates and material costs explained.",
+  },
+  {
+    slug: "interior-trends-2025",
+    emoji: "🏗️",
+    cat: "Construction Guide",
+    title: "Step-by-Step House Construction Process Explained Simply",
+    excerpt:
+      "Don't know where to start? We explain the entire home building process in simple language — from plot purchase to moving in.",
+  },
+  {
+    slug: "build-or-buy-guide",
+    emoji: "🧪",
+    cat: "Material Guide",
+    title: "Best Construction Materials for Jaipur's Climate",
+    excerpt:
+      "Jaipur's hot climate needs specific materials. Learn which cement, bricks, and concrete grade works best for Rajasthan weather.",
+  },
+];
+
+const processSteps = [
+  { icon: "📞", title: "You Call Us", desc: "Free site visit & cost estimate" },
+  { icon: "📐", title: "We Plan", desc: "Design, materials & timeline" },
+  { icon: "🏗️", title: "We Build", desc: "Foundation to roof — we handle it" },
+  { icon: "🔑", title: "You Get Keys", desc: "Quality checked, ready to use" },
+];
+
+const trustBadges = [
+  { icon: "✅", text: "5-Year Structural Warranty" },
+  { icon: "💰", text: "Fixed-Price Guarantee" },
+  { icon: "📹", text: "Live CCTV Site Access" },
+  { icon: "📊", text: "Daily Progress Reports" },
+  { icon: "🏆", text: "10+ Years Experience" },
+];
+
+const serveRegions = [
+  {
+    city: "Jaipur",
+    type: "Primary City",
+    icon: "🏰",
+    areas: [
+      "Mansarovar", "Vaishali Nagar", "Jagatpura", "Malviya Nagar",
+      "Tonk Road", "C-Scheme", "Pratap Nagar", "Sodala", "Sitapura",
+      "Sanganer", "Vidhyadhar Nagar", "Jhotwara", "Ajmer Road",
+      "Nirman Nagar", "Bani Park", "Murlipura", "VKI Area", "Shyam Nagar",
+    ],
+  },
+  {
+    city: "Sikar",
+    type: "District",
+    icon: "🕌",
+    areas: [
+      "Sikar City", "Lachhmangarh", "Fatehpur", "Ramgarh Shekhawati",
+      "Danta Ramgarh", "Neem Ka Thana",
+    ],
+  },
+  {
+    city: "Ajmer",
+    type: "District",
+    icon: "⛩️",
+    areas: [
+      "Ajmer City", "Pushkar", "Nasirabad", "Beawar", "Kekri", "Bijainagar",
+    ],
+  },
+  {
+    city: "Rural Jaipur",
+    type: "Rural & Peri-Urban",
+    icon: "🌾",
+    areas: [
+      "Amber", "Jobner", "Chaksu", "Phagi", "Bassi", "Shahpura",
+      "Kotputli", "Viratnagar", "Renwal", "Mauzmabad",
+    ],
+  },
+];
+
+// Keep for legacy SEO use
+const jaipurAreas = serveRegions.flatMap(r => r.areas);
+
+const partnerBrands = [
+  "UltraTech Cement",
+  "Ambuja Cement",
+  "JSW Steel",
+  "TATA Tiscon",
+  "ACC Cement",
+  "Dalmia Cement",
+];
+
+const faqs = [
+  {
+    question: "What is the cost of building a house in Jaipur?",
+    answer:
+      "The cost of building a house in Jaipur ranges from ₹1,800 to ₹3,500 per sq ft depending on the quality of materials, design complexity, and location. For a standard 2,000 sq ft home, expect ₹36 lakh to ₹70 lakh for complete construction. Contact us for a free, detailed estimate for your specific plot.",
+  },
+  {
+    question: "How long does it take to build a home in Jaipur?",
+    answer:
+      "A standard residential home (2,000–4,000 sq ft) takes 10–14 months from foundation to finishing. Larger projects or commercial buildings may take 16–24 months. We provide a clear timeline upfront and have a 97% on-time delivery rate.",
+  },
+  {
+    question: "Which is the best construction company in Jaipur?",
+    answer:
+      "OMJI Construction is one of Jaipur's most trusted construction companies with 250+ completed projects, a 97% on-time delivery rate, and a 5-year structural warranty. We use only premium materials (OPC 53 cement, Fe 500D steel) and provide daily progress reports with full transparency.",
+  },
+  {
+    question: "What materials does OMJI Construction use?",
+    answer:
+      "We use only tested, premium-grade materials: OPC 53 grade cement (UltraTech/Ambuja), Fe 500D TMT steel (JSW/TATA), M25/M30 machine-mixed concrete, and quality aggregates sourced locally from Rajasthan. Every material batch is tested before use.",
+  },
+  {
+    question: "Do you provide a warranty on construction?",
+    answer:
+      "Yes! Every OMJI Construction project comes with a 5-year structural warranty backed by documentation and third-party quality audits. We stand behind our work because we use only the best materials and follow proper construction processes.",
+  },
+  {
+    question: "Which areas in Jaipur do you serve?",
+    answer:
+      "We serve Jaipur (all major colonies: Mansarovar, Vaishali Nagar, Jagatpura, Malviya Nagar, Sitapura, VKI Area, Tonk Road, C-Scheme and more), Sikar district, Ajmer district, and rural/peri-urban areas of Jaipur including Amber, Jobner, Chaksu, Bassi, Shahpura, and Kotputli. Call us to confirm your location.",
+  },
+];
+---
+
+<BaseLayout faqSchema={faqs}>
+  <!-- ═══════════════════════════════════
+       HERO SECTION
+       ═══════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <canvas class="hero-canvas" id="heroCanvas"></canvas>
+
+    <!-- ░░░ VINTAGE BLURRED PHOTO COLLAGE BACKGROUND ░░░ -->
+    <div class="hero-photo-bg" aria-hidden="true">
+      <!-- Tile 1: eager-load (above fold) -->
+      <div class="hero-photo-tile hero-photo-tile--1">
+        <img src="/images/phase-04.png" alt="" loading="eager" fetchpriority="low" decoding="async" />
+      </div>
+      <!-- Tiles 2-8: lazy-load for performance -->
+      <div class="hero-photo-tile hero-photo-tile--2">
+        <img src="/images/phase-06.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--3">
+        <img src="/images/phase-02.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--4">
+        <img src="/images/phase-05.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--5">
+        <img src="/images/phase-03.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--6">
+        <img src="/images/phase-01.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--7">
+        <img src="/images/phase-04-step-3.png" alt="" loading="lazy" decoding="async" />
+      </div>
+      <div class="hero-photo-tile hero-photo-tile--8">
+        <img src="/images/phase-06-step-2.png" alt="" loading="lazy" decoding="async" />
+      </div>
+    </div>
+
+    <!-- Vintage overlay layers: sandstone wash + vignette -->
+    <div class="hero-vintage-wash" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+    <div class="hero-overlay"></div>
+    <div class="jali-pattern-overlay" style="opacity: 0.35; z-index: 1;"></div>
+
+
+
+    <div class="hero-content pillar-flanks" style="padding: 0 40px;">
+      <!-- Heritage label badge -->
+      <div class="hero-label">
+        <span class="story-phase-dot"></span>
+        Jaipur's Trusted Construction Company
+      </div>
+
+      <!-- Main headline with Mandana Floral Frame -->
+      <div class="mandana-corners" style="padding: 1.5rem 3rem; display: inline-block; margin-bottom: 1rem;">
+        <h1 class="hero-title" style="margin: 0;">
+          Nothing Hidden<br />
+          <span class="gold-text">Everything Shared</span>
+        </h1>
+      </div>
+
+      <!-- Vintage ornamental divider -->
+      <div class="hero-ornament">
+        <span>✦ ✦ ✦</span>
+      </div>
+
+      <p class="hero-sub">
+       Track your project in real time with live progress updates, site photos, and CCTV access—from excavation to handover.
+</p>
+      <div class="hero-cta">
+        <a href="/contact" class="btn btn-primary btn-lg">Get Free Estimate</a>
+        <a
+          href="https://wa.me/919929398279"
+          target="_blank"
+          class="btn btn-outline btn-lg">WhatsApp Us</a
+        >
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll to Explore</span>
+      <div class="scroll-line"></div>
+    </div>
+
+  </section>
+
+
+  <!-- ░░░ MARBLE INLAY DIVIDER ░░░ -->
+  <div class="marble-inlay-divider" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <div class="marble-inlay-icon"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       TRUST BADGES RIBBON
+       ═══════════════════════════════════ -->
+  <section class="trust-ribbon" id="trust">
+    <div class="container">
+      <div class="trust-badges reveal">
+        {
+          trustBadges.map((badge) => (
+            <div class="trust-badge">
+              <span class="trust-badge-icon">{badge.icon}</span>
+              <span class="trust-badge-text">{badge.text}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       OMJI SITE REGISTER — LIVE TRANSPARENCY
+       ═══════════════════════════════════ -->
+  <section
+    class="section"
+    id="site-register"
+    style="background:linear-gradient(160deg,var(--bg-secondary) 0%,var(--bg) 100%);position:relative;overflow:hidden;"
+  >
+    <div
+      style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--border-ornament),var(--gold),var(--border-ornament),transparent);"
+    >
+    </div>
+    <div
+      style="position:absolute;inset:0;background-image:url(&quot;data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238A6A44' fill-opacity='0.03'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3C/g%3E%3C/svg%3E&quot;);pointer-events:none;"
+    >
+    </div>
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:1;">
+      <div class="section-header reveal">
+        <div class="section-tag">Our Biggest Promise</div>
+        <h2 class="display-md">
+          You See Everything, <span class="gold-text">Every Single Day</span>
+        </h2>
+        <p class="section-subtitle">
+          Every OMJI project gets its own live digital dashboard — the <strong
+            >OMJI Site Register</strong
+          >. Real-time photos, phase tracking, engineer checklists, material
+          test records, and <strong>live CCTV camera access</strong> — all in one
+          place, shared with you daily.
+        </p>
+      </div>
+
+      <!-- Main feature panel -->
+      <div
+        class="reveal antique-gold-border"
+        style="background:linear-gradient(145deg,var(--bg-card),var(--bg-elevated));border-radius:var(--radius-xl);overflow:hidden;margin-bottom:3rem;"
+      >
+        <div
+          style="height:3px;background:linear-gradient(90deg,var(--maroon),var(--gold),var(--gold-light));"
+        >
+        </div>
+        <div
+          class="dashboard-grid"
+          style="padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;"
+        >
+          <!-- Left content -->
+          <div>
+            <div
+              style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-full);padding:6px 18px;margin-bottom:1.5rem;"
+            >
+              <span
+                style="width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px rgba(34,197,94,0.5);"
+              ></span>
+              <span
+                style="font-family:var(--font-display);font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:#22c55e;font-weight:600;"
+                >Live on Every Project</span
+              >
+            </div>
+            <h3 class="heading-lg" style="margin-bottom:1rem;">
+              Your Personal <span class="gold-text"
+                >Construction Dashboard</span>
+            </h3>
+            <p class="body-md" style="margin-bottom:1.5rem;">
+              From Day 1, every client receives a private link to their
+              project's live dashboard — daily site photos, task checklists,
+              concrete test results, structural drawings, and even <strong
+                style="color:var(--text-primary);"
+                >live CCTV access to your construction site</strong
+              >. Watch your home being built — anytime, from anywhere. No more
+              "what's happening at my site?"
+            </p>
+            <div
+              style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;"
+            >
+              {
+                [
+                  {
+                    icon: "📸",
+                    label: "Daily Photo Log",
+                    desc: "Site photos uploaded every evening — exact timestamp & stage",
+                    highlight: false,
+                  },
+                  {
+                    icon: "✅",
+                    label: "Engineer Sign-offs",
+                    desc: "Every steel, pour & plaster checked and digitally recorded",
+                    highlight: false,
+                  },
+                  {
+                    icon: "📐",
+                    label: "Drawing Control Register",
+                    desc: "All structural drawings, version-controlled and accessible",
+                    highlight: false,
+                  },
+                  {
+                    icon: "🧪",
+                    label: "Curing & Cube Test Log",
+                    desc: "M25 concrete strength records — 7-day and 28-day verified",
+                    highlight: false,
+                  },
+                  {
+                    icon: "📹",
+                    label: "Live CCTV Access",
+                    desc: "Watch your site live — 24/7 camera feed on your phone, anytime from anywhere",
+                    highlight: true,
+                  },
+                ].map((f) => (
+                  <div
+                    style={`display:flex;align-items:flex-start;gap:12px;padding:11px 14px;background:${f.highlight ? "rgba(183,138,60,0.1)" : "var(--bg-glass)"};border:1px solid ${f.highlight ? "var(--border-ornament)" : "var(--border)"};border-radius:var(--radius-md);position:relative;`}
+                  >
+                    <span style="font-size:1.1rem;flex-shrink:0;">
+                      {f.icon}
+                    </span>
+                    <div>
+                      <div style="font-family:var(--font-heading);font-size:0.86rem;font-weight:700;color:var(--text-primary);margin-bottom:2px;display:flex;align-items:center;gap:8px;">
+                        {f.label}
+                        {f.highlight && (
+                          <span style="font-family:var(--font-display);font-size:0.55rem;font-weight:700;letter-spacing:0.15em;background:#22c55e;color:white;padding:2px 7px;border-radius:4px;">
+                            LIVE
+                          </span>
+                        )}
+                      </div>
+                      <div style="font-size:0.74rem;color:var(--text-muted);">
+                        {f.desc}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <a
+              href="https://site.omjiconstruction.com/p/bhavya-gems-and-jewels-43hg"
+              target="_blank"
+              rel="noopener"
+              class="btn btn-primary btn-lg"
+              style="gap:12px;"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                ><circle cx="12" cy="12" r="10"></circle><polyline
+                  points="12 6 12 12 16 14"></polyline></svg
+              >
+              See a Live Project Dashboard →
+            </a>
+          </div>
+
+          <!-- Right: mock dashboard UI -->
+          <div style="position:relative;" class="scalloped-arch on-card antique-gold-border">
+            <div
+              style="background:var(--bg-secondary);overflow:hidden;"
+            >
+              <!-- Title bar -->
+              <div
+                style="background:linear-gradient(135deg,#1C1A17,#2D2520);padding:12px 18px;display:flex;align-items:center;gap:10px;"
+              >
+                <div style="display:flex;gap:6px;">
+                  <div
+                    style="width:7px;height:7px;border-radius:50%;background:#ef4444;"
+                  >
+                  </div><div
+                    style="width:7px;height:7px;border-radius:50%;background:#f59e0b;"
+                  >
+                  </div><div
+                    style="width:7px;height:7px;border-radius:50%;background:#22c55e;"
+                  >
+                  </div>
+                </div>
+                <div
+                  style="flex:1;text-align:center;font-family:var(--font-display);font-size:0.58rem;letter-spacing:0.15em;color:rgba(255,255,255,0.45);"
+                >
+                  OMJI SITE REGISTER — LIVE
+                </div>
+              </div>
+              <!-- Project header -->
+              <div
+                style="padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg-card);"
+              >
+                <div
+                  style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:3px;"
+                >
+                  ✦ BHAVYA GEMS AND JEWELS
+                </div>
+                <div
+                  style="font-family:var(--font-heading);font-size:0.95rem;font-weight:700;color:var(--text-primary);"
+                >
+                  Sitapura, Jaipur, Rajasthan
+                </div>
+                <div style="display:flex;gap:10px;margin-top:6px;">
+                  <span style="font-size:0.62rem;color:var(--text-muted);"
+                    >📅 01 Jul 2026</span
+                  >
+                  <span style="font-size:0.62rem;color:var(--text-muted);"
+                    >🏁 31 Dec 2026</span
+                  >
+                </div>
+              </div>
+              <!-- Stats -->
+              <div
+                class="dashboard-stats-grid"
+                style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);"
+              >
+                <div
+                  style="padding:12px;text-align:center;border-right:1px solid var(--border);"
+                >
+                  <div
+                    style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:#22c55e;"
+                  >
+                    5%
+                  </div>
+                  <div style="font-size:0.6rem;color:var(--text-muted);">
+                    Complete
+                  </div>
+                </div>
+                <div
+                  style="padding:12px;text-align:center;border-right:1px solid var(--border);"
+                >
+                  <div
+                    style="font-family:var(--font-display);font-size:0.8rem;font-weight:700;color:var(--gold);"
+                  >
+                    On Track
+                  </div>
+                  <div style="font-size:0.6rem;color:var(--text-muted);">
+                    Schedule
+                  </div>
+                </div>
+                <div style="padding:12px;text-align:center;">
+                  <div
+                    style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);"
+                  >
+                    0
+                  </div>
+                  <div style="font-size:0.6rem;color:var(--text-muted);">
+                    Delayed
+                  </div>
+                </div>
+              </div>
+              <!-- Tabs -->
+              <div
+                class="dashboard-tabs"
+                style="display:flex;overflow:hidden;background:var(--bg-elevated);border-bottom:1px solid var(--border);"
+              >
+                {
+                  [
+                    "Dashboard",
+                    "Building Hub",
+                    "Drawings",
+                    "Photo Log",
+                    "Curing Log",
+                  ].map((t, i) => (
+                    <div
+                      style={`padding:9px 10px;font-size:0.6rem;font-weight:600;white-space:nowrap;cursor:pointer;${i === 0 ? "color:var(--gold);border-bottom:2px solid var(--gold);" : "color:var(--text-muted);"}`}
+                    >
+                      {t}
+                    </div>
+                  ))
+                }
+                <div
+                  style="padding:9px 10px;font-size:0.6rem;font-weight:700;white-space:nowrap;cursor:pointer;color:#22c55e;display:flex;align-items:center;gap:4px;"
+                >
+                  <span
+                    style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0;"
+                  ></span>CCTV Live
+                </div>
+              </div>
+              <!-- Phase list -->
+              <div
+                style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;"
+              >
+                {
+                  [
+                    {
+                      phase: "Phase 1: Mobilization & Pre-Construction",
+                      pct: 89,
+                    },
+                    { phase: "Phase 2: Excavation & Earthwork", pct: 9 },
+                    { phase: "Phase 3: Foundation — PCC & Footing", pct: 0 },
+                    { phase: "Phase 5: Ground Floor Columns", pct: 0 },
+                  ].map((p) => (
+                    <div>
+                      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                        <div style="font-size:0.62rem;color:var(--text-secondary);font-weight:500;">
+                          {p.phase}
+                        </div>
+                        <div style="font-family:var(--font-display);font-size:0.62rem;font-weight:700;color:var(--gold);margin-left:8px;flex-shrink:0;">
+                          {p.pct}%
+                        </div>
+                      </div>
+                      <div style="height:3px;background:var(--bg);border-radius:2px;overflow:hidden;">
+                        <div
+                          style={`height:100%;width:${p.pct}%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;`}
+                        />
+                      </div>
+                    </div>
+                  ))
+                }
+                <div style="text-align:center;padding-top:4px;">
+                  <span style="font-size:0.6rem;color:var(--text-muted);"
+                    >+ 20 more phases tracked in real-time...</span>
+                </div>
+              </div>
+            </div>
+            <!-- LIVE badge -->
+            <div
+              style="position:absolute;top:-10px;right:-10px;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border-radius:var(--radius-full);padding:5px 12px;font-family:var(--font-display);font-size:0.58rem;letter-spacing:0.12em;font-weight:700;box-shadow:0 4px 16px rgba(34,197,94,0.4);display:flex;align-items:center;gap:5px;"
+            >
+              <span
+                style="width:5px;height:5px;border-radius:50%;background:white;"
+              ></span> LIVE
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 secondary strength cards -->
+      <div
+        class="strength-cards-grid"
+        style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;"
+      >
+        {
+          [
+            {
+              icon: "🔒",
+              title: "High-Security RCC Strong Rooms",
+              desc: "Specialized solid RCC strong room construction for vaults and locker rooms — engineered with continuous 10×8 ft walls, no brick infill.",
+            },
+            {
+              icon: "🧪",
+              title: "M25 Grade + Fe 500D Steel",
+              desc: "Every pour uses M25 concrete mixed at the plant, with cube samples cast per truck. Fe 500D TMT bars for maximum tensile strength.",
+            },
+            {
+              icon: "📐",
+              title: "Certified Architect Drawings",
+              desc: "Executed from approved structural drawings — column layouts, footing details, lift shaft specs, and tank schematics — all version controlled.",
+            },
+          ].map((h) => (
+            <div class="antique-gold-border" style="border-radius:var(--radius-lg);transition:all 0.3s;">
+              <div style="background:linear-gradient(145deg,var(--bg-card),var(--bg-elevated));border-radius:calc(var(--radius-lg) - 4px);padding:28px 22px;text-align:center;height:100%;">
+                <div style="font-size:2rem;margin-bottom:1rem;">{h.icon}</div>
+                <div style="font-family:var(--font-heading);font-size:0.92rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem;">
+                  {h.title}
+                </div>
+                <div style="font-size:0.76rem;color:var(--text-muted);line-height:1.65;">
+                  {h.desc}
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       HOW WE BUILD — SIMPLE 4-STEP PROCESS
+       ═══════════════════════════════════ -->
+  <section class="process-section" id="process" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="section-header reveal">
+        <div class="section-tag">Simple Process</div>
+        <div class="mandana-corners" style="padding: 1rem 2rem; display: inline-block;">
+          <h2 class="display-md" style="margin: 0;">
+            How We <span class="gold-text">Build Your Home</span>
+          </h2>
+        </div>
+        <p class="section-subtitle">
+          Building a home shouldn't be confusing. Here's our simple 4-step
+          process — you relax, we build.
+        </p>
+      </div>
+      <div class="process-grid">
+        {
+          processSteps.map((step, i) => (
+            <div class={`process-step reveal reveal-d${i + 1}`}>
+              <div class="process-step-num">{step.icon}</div>
+              <div class="process-step-title">{step.title}</div>
+              <div class="process-step-desc">{step.desc}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       COST ESTIMATOR CTA
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="estimate" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="cost-cta reveal antique-gold-border mandana-corners" style="background:var(--bg-card);border-radius:var(--radius-xl);overflow:hidden; display:block;">
+        <div style="padding: clamp(40px, 6vw, 64px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
+          <div class="cost-cta-content">
+          <h3>
+            Get Your Free <span class="gold-text">Construction Estimate</span>
+          </h3>
+          <p>
+            Tell us about your plot and requirements. We'll give you a detailed
+            cost breakdown within 24 hours — absolutely free, no obligations.
+          </p>
+          <div class="cost-cta-features">
+            <div class="cost-cta-feature">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--bronze)"
+                stroke-width="3"
+                ><polyline points="20 6 9 17 4 12"></polyline></svg
+              >
+              Free Site Visit
+            </div>
+            <div class="cost-cta-feature">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--bronze)"
+                stroke-width="3"
+                ><polyline points="20 6 9 17 4 12"></polyline></svg
+              >
+              Detailed Quotation
+            </div>
+            <div class="cost-cta-feature">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--bronze)"
+                stroke-width="3"
+                ><polyline points="20 6 9 17 4 12"></polyline></svg
+              >
+              No Hidden Costs
+            </div>
+          </div>
+        </div>
+        <a href="/contact" class="btn btn-primary btn-lg">Get Free Estimate →</a
+        >
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       SCROLL STORYTELLING — CONSTRUCTION PHASES
+       ═══════════════════════════════════ -->
+  <!-- ═══════════════════════════════════
+       INTERACTIVE CONSTRUCTION PHASES
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="phases">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Construction Journey</div>
+        <h2 class="display-md">
+          Our Step-by-Step <span class="gold-text">Build Process</span>
+        </h2>
+        <p class="section-subtitle">
+          We follow a strict, engineering-first construction process to ensure
+          your structure lasts generations.
+        </p>
+      </div>
+
+      <div class="phases-interactive reveal">
+        <!-- Navigation Tabs (Left) -->
+        <div class="phases-tabs">
+          {
+            phases.map((phase, idx) => (
+              <button
+                class={`phase-tab-btn ${idx === 0 ? "active" : ""}`}
+                data-phase-idx={idx}
+              >
+                <span class="phase-tab-num">{phase.num}</span>
+                <span class="phase-tab-title">{phase.title}</span>
+              </button>
+            ))
+          }
+        </div>
+
+        <!-- Content Panes (Right) -->
+        <div class="phases-content-wrapper">
+          {
+            phases.map((phase, idx) => (
+              <div
+                class={`phase-pane antique-gold-border ${idx === 0 ? "active" : ""}`}
+                data-phase-pane={idx}
+                style="background:var(--bg-card);"
+              >
+                <div class="phase-pane-grid" style="padding: clamp(1.5rem, 4vw, 3rem);">
+                  <div class="phase-pane-info">
+                    <span class="label">Phase {phase.num}</span>
+                    <h3
+                      class="heading-lg"
+                      style="margin: 0.5rem 0 1rem; color: var(--text-primary);"
+                    >
+                      {phase.headline}
+                    </h3>
+                    <p class="body-md" style="margin-bottom: 1.5rem;">
+                      {phase.desc}
+                    </p>
+
+                    <div class="phase-pane-steps-title">Key Checklist:</div>
+                    <div class="phase-pane-steps-grid">
+                      {phase.steps.map((step) => (
+                        <span class="phase-pane-step-tag">
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="var(--bronze)"
+                            stroke-width="3"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          {step}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="phase-pane-visual">
+                    <div class="phase-visual phase-visual--img arch-frame">
+                      <img
+                        src={phase.image}
+                        alt={`${phase.title} — ${phase.headline} | OMJI Construction Jaipur`}
+                        class="phase-visual-img active"
+                        loading="lazy"
+                      />
+                      <div class="phase-visual-overlay" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       QUALITY SECTION
+       ═══════════════════════════════════ -->
+  <section class="section" id="quality">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Our Standards</div>
+        <h2 class="display-md">
+          Why Jaipur Trusts <span class="gold-text">OMJI Construction</span>
+        </h2>
+        <p class="section-subtitle">
+          Every material is tested, every process is supervised, and every
+          standard is exceeded. That\'s why 250+ families trust us.
+        </p>
+      </div>
+      <div class="quality-grid">
+        {
+          qualityItems.map((item, i) => (
+            <div class={`quality-card reveal reveal-d${i + 1} antique-gold-border`} style="background:var(--bg-card);">
+              <div class="quality-icon">{item.icon}</div>
+              <div class="quality-title">{item.title}</div>
+              <div class="quality-desc">{item.desc}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       LIVE CONSTRUCTION DASHBOARD
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="dashboard" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="section-header reveal">
+        <div class="section-tag">Our Track Record</div>
+        <h2 class="display-md">
+          Construction <span class="gold-text">in Numbers</span>
+        </h2>
+        <p class="section-subtitle">
+          Real metrics from our projects across Jaipur and Rajasthan.
+        </p>
+      </div>
+      <div class="dashboard-grid">
+        {
+          dashStats.map((stat, i) => (
+            <div class={`dash-stat reveal reveal-d${i + 1} antique-gold-border`} style="background:var(--bg-card);">
+              <div class="dash-stat-icon">{stat.icon}</div>
+              <div
+                class="dash-stat-num"
+                data-count={stat.num}
+                data-suffix={stat.suffix}
+              >
+                0
+              </div>
+              <div class="dash-stat-label">{stat.label}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       FEATURED PROJECTS — JAIPUR
+       ═══════════════════════════════════ -->
+  <section class="section" id="projects">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Our Work in Jaipur</div>
+        <h2 class="display-md">
+          Featured <span class="gold-text">Jaipur Projects</span>
+        </h2>
+        <p class="section-subtitle">
+          Homes, offices, and warehouses built across Jaipur with detailed
+          engineering metrics.
+        </p>
+      </div>
+      <div class="projects-grid" id="homeProjectsGrid">
+        <!-- Rendered dynamically from localStorage -->
+      </div>
+      <div id="no-home-projects-msg" style="display:none; text-align:center; padding: 3rem; color: var(--text-muted); background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border);">
+        No projects uploaded yet.
+      </div>
+      <div style="text-align:center;margin-top:3rem;">
+        <a href="/projects" class="btn btn-outline">View All Projects →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox Modal for Homepage -->
+  <style>
+    .project-card { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+    .project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .project-card-image { width: 100%; height: 220px; object-fit: cover; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    .project-card-placeholder { width: 100%; height: 220px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; font-size: 3rem; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+    
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85); z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      padding: 2rem; backdrop-filter: blur(8px);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--bg-card); width: 100%; max-width: 900px;
+      max-height: 90vh; border-radius: var(--radius-lg);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--border-ornament);
+    }
+    .modal-header {
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .modal-title { font-family: var(--font-heading); font-size: 1.5rem; color: var(--text-primary); font-weight: 700; margin: 0; }
+    .modal-close {
+      background: rgba(0,0,0,0.05); border: none; width: 36px; height: 36px;
+      border-radius: 50%; font-size: 1.2rem; cursor: pointer; color: var(--text-primary);
+      display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { background: rgba(220,60,60,0.1); color: #c44; }
+    .modal-body { padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
+    
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .gallery-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    .modal-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem; }
+    .modal-meta-tag { background: var(--bg-elevated); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.85rem; color: var(--text-secondary); border: 1px solid var(--border); font-weight: 500; }
+  </style>
+
+  <div class="modal-overlay" id="homeProjectModal">
+    <div class="modal-content antique-gold-border mandana-corners">
+      <div class="modal-header">
+        <h3 class="modal-title" id="homeModalTitle">Project Title</h3>
+        <button class="modal-close" id="homeModalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta" id="homeModalMeta"></div>
+        <div id="homeModalDesc" style="color:var(--text-secondary); font-size:0.95rem; line-height:1.6;"></div>
+        <div class="gallery-grid" id="homeModalGallery"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       MATERIAL PARTNERS
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="partners">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Materials We Use</div>
+        <h2 class="display-md">
+          Trusted <span class="gold-text">Brand Partners</span>
+        </h2>
+        <p class="section-subtitle">
+          We only use certified materials from India's top brands — no
+          compromises.
+        </p>
+      </div>
+      <div class="partners-grid reveal">
+        {partnerBrands.map((brand) => <div class="partner-logo">{brand}</div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       TESTIMONIALS — JAIPUR CLIENTS
+       ═══════════════════════════════════ -->
+  <section class="section" id="testimonials">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Client Reviews</div>
+        <h2 class="display-md">
+          What Jaipur <span class="gold-text">Clients Say</span>
+        </h2>
+      </div>
+      <div class="testimonial-grid">
+        {
+          testimonials.map((t, i) => (
+            <div class={`testimonial-card reveal reveal-d${i + 1} antique-gold-border mandana-corners`} style="background:var(--bg-card);">
+              <div class="testimonial-stars">★★★★★</div>
+              <p class="testimonial-text">"{t.text}"</p>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">{t.initials}</div>
+                <div>
+                  <div class="testimonial-name">{t.name}</div>
+                  <div class="testimonial-role">{t.role}</div>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       AREAS WE SERVE — REGIONAL MAP
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="areas" style="position:relative;overflow:hidden;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="section-header reveal">
+        <div class="section-tag">Where We Build</div>
+        <h2 class="display-md">
+          Our Construction Reach Across
+          <span class="gold-text">Rajasthan</span>
+        </h2>
+        <p class="section-subtitle">
+          From the royal streets of Jaipur to the heritage heartlands of Sikar and Ajmer —
+          OMJI Construction serves urban colonies, industrial zones, and rural areas across Rajasthan.
+        </p>
+      </div>
+
+      <!-- Region cards in vintage scroll layout -->
+      <div class="reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:3.5rem;">
+        {serveRegions.map((region, i) => (
+          <div style={`background:linear-gradient(145deg,var(--bg-card),var(--bg-elevated));border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card);transition:all 0.3s;position:relative;`}>
+            <!-- Top accent bar with maroon for primary, gold for others -->
+            <div style={`height:3px;background:${i === 0 ? 'linear-gradient(90deg,var(--maroon),var(--gold))' : 'linear-gradient(90deg,var(--gold),var(--gold-light))'};`}></div>
+            <div style="padding:22px 20px;">
+              <!-- City header -->
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <span style="font-size:1.6rem;">{region.icon}</span>
+                <div>
+                  <div style="font-family:var(--font-display);font-size:0.95rem;font-weight:700;color:var(--text-primary);letter-spacing:0.04em;">{region.city}</div>
+                  <div style="font-family:var(--font-display);font-size:0.55rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:1px;">{region.type}</div>
+                </div>
+              </div>
+              <!-- Ornamental rule -->
+              <div style="height:1px;background:linear-gradient(90deg,var(--border-ornament),transparent);margin-bottom:12px;"></div>
+              <!-- Area pills -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                {region.areas.map(area => (
+                  <span style="font-size:0.68rem;color:var(--text-muted);background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-full);padding:3px 9px;font-weight:500;">{area}</span>
+                ))}
+              </div>
+            </div>
+            <!-- Primary badge for Jaipur -->
+            {i === 0 && (
+              <div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--maroon),#8B2626);color:var(--bg);font-family:var(--font-display);font-size:0.52rem;letter-spacing:0.15em;font-weight:700;padding:3px 8px;border-radius:4px;">HQ</div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <!-- Bottom vintage banner -->
+      <div class="reveal antique-gold-border mandana-corners" style="text-align:center;padding:2.5rem;background:linear-gradient(135deg,var(--bg-card),var(--bg-elevated));border-radius:var(--radius-xl);position:relative;overflow:hidden;">
+        <!-- Top ornament -->
+        <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+        <!-- Diamond pattern -->
+        <div style="position:absolute;inset:0;background-image:url(&quot;data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20 Z' fill='%238A6A44' fill-opacity='0.03'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+        <!-- Ornamental diamonds -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1rem;">
+          <div style="flex:1;max-width:100px;height:1px;background:linear-gradient(90deg,transparent,var(--border-ornament));"></div>
+          <span style="color:var(--gold);font-size:0.9rem;">✦</span>
+          <span style="color:var(--gold);font-size:0.7rem;">✦</span>
+          <span style="color:var(--gold);font-size:0.9rem;">✦</span>
+          <div style="flex:1;max-width:100px;height:1px;background:linear-gradient(90deg,var(--border-ornament),transparent);"></div>
+        </div>
+        <p style="font-family:var(--font-serif);font-size:1.05rem;font-style:italic;color:var(--text-secondary);max-width:600px;margin:0 auto 1.2rem;line-height:1.8;position:relative;z-index:1;">
+          "Not sure if we serve your area? Call or WhatsApp us — if you're anywhere in Jaipur, Sikar, or Ajmer districts, we'll be there."
+        </p>
+        <a href="https://wa.me/919929398279" target="_blank" rel="noopener" class="btn btn-primary" style="gap:10px;position:relative;z-index:1;">
+          📞 Check Your Area — WhatsApp Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       FAQ SECTION (SEO POWERHOUSE)
+       ═══════════════════════════════════ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Common Questions</div>
+        <h2 class="display-md">
+          Frequently Asked <span class="gold-text">Questions</span>
+        </h2>
+        <p class="section-subtitle">
+          Everything you need to know about building a home or commercial
+          property in Jaipur.
+        </p>
+      </div>
+      <div class="faq-list reveal">
+        {
+          faqs.map((faq, i) => (
+            <div class="faq-item antique-gold-border" id={`faq-${i}`} style="background:var(--bg-card);border-radius:var(--radius-md);margin-bottom:1rem;">
+              <button class="faq-question" data-faq={i}>
+                <span>{faq.question}</span>
+                <div class="faq-icon" />
+              </button>
+              <div class="faq-answer" id={`faq-answer-${i}`}>
+                <div class="faq-answer-inner">{faq.answer}</div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       BLOG PREVIEW
+       ═══════════════════════════════════ -->
+  <section class="section section-alt" id="blog">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-tag">Helpful Guides</div>
+        <h2 class="display-md">From Our <span class="gold-text">Blog</span></h2>
+      </div>
+      <div class="blog-grid">
+        {
+          blogPosts.map((post, i) => (
+            <a
+              href={`/blog/${post.slug}`}
+              class={`blog-card reveal reveal-d${i + 1} antique-gold-border`} style="background:var(--bg-card);"
+            >
+              <div class="blog-card-img">{post.emoji}</div>
+              <div class="blog-card-body">
+                <div class="blog-card-cat">{post.cat}</div>
+                <div class="blog-card-title">{post.title}</div>
+                <p class="blog-card-excerpt">{post.excerpt}</p>
+                <span class="blog-card-link">Read Article →</span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       FINAL CTA
+       ═══════════════════════════════════ -->
+  <section class="cta-section" id="cta" style="position:relative;">
+    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
+    <div class="container" style="position:relative;z-index:2;">
+      <div class="reveal antique-gold-border mandana-corners" style="position:relative;z-index:2;background:var(--bg-card);border-radius:var(--radius-xl);">
+        <div style="padding: 4rem;">
+          <div class="section-tag" style="margin:0 auto 1.5rem;">Let's Build</div>
+          <h2 class="display-lg" style="margin-bottom:1rem;">
+            Ready to Build Your<br />
+            <span class="gold-text">Dream Home in Jaipur?</span>
+          </h2>
+        <p class="body-lg" style="max-width:520px;margin:0 auto 2.5rem;">
+          Free consultation. No commitment. Just tell us your vision — we'll
+          make it real with engineering excellence.
+        </p>
+        <div
+          style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;"
+        >
+          <a href="/contact" class="btn btn-primary btn-lg">Get Free Estimate</a
+          >
+          <a
+            href="https://wa.me/919929398279"
+            target="_blank"
+            class="btn btn-outline btn-lg">WhatsApp Us</a
+          >
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════
+       PAGE SCRIPTS
+       ═══════════════════════════════════ -->
+  <script is:inline>
+    // ── Hero Canvas: Architectural Grid Network ──
+    (function () {
+      const canvas = document.getElementById("heroCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      let W,
+        H,
+        particles = [],
+        mouse = { x: -1000, y: -1000 };
+
+      function resize() {
+        W = canvas.width = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+      resize();
+      window.addEventListener("resize", resize);
+      canvas.addEventListener("mousemove", (e) => {
+        const r = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left;
+        mouse.y = e.clientY - r.top;
+      });
+      canvas.addEventListener("mouseleave", () => {
+        mouse.x = -1000;
+        mouse.y = -1000;
+      });
+
+      const count = Math.min(100, Math.floor((W * H) / 8000));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          size: Math.random() * 1.5 + 0.5,
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Grid lines
+        ctx.strokeStyle = "rgba(156,119,83,0.06)";
+        ctx.lineWidth = 0.5;
+        const gridSize = 60;
+        for (let x = 0; x < W; x += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, H);
+          ctx.stroke();
+        }
+        for (let y = 0; y < H; y += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+
+        // Particles + connections
+        particles.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+
+          const dm = Math.hypot(mouse.x - p.x, mouse.y - p.y);
+          if (dm < 150) {
+            p.x += (p.x - mouse.x) * 0.01;
+            p.y += (p.y - mouse.y) * 0.01;
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(156,119,83,${dm < 150 ? 0.6 : 0.2})`;
+          ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(156,119,83,${(1 - dist / 120) * 0.2})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+
+        function initHomeProjects() {
+        const grid = document.getElementById('homeProjectsGrid');
+        const noMsg = document.getElementById('no-home-projects-msg');
+        if (!grid) return;
+        
+        const savedProjects = JSON.parse(localStorage.getItem('omji_projects') || '[]');
+        if (savedProjects.length === 0) {
+          grid.style.display = 'none';
+          noMsg.style.display = 'block';
+        } else {
+          // Show max 6 on homepage
+          grid.innerHTML = savedProjects.slice(0, 6).map((p, i) => {
+            let photos = [];
+            if (p.images) photos = p.images;
+            else if (p.imageData) photos = [p.imageData];
+            else {
+              try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
+            }
+            const mainImg = photos.length > 0 ? photos[0] : null;
+            
+            return `
+              <div class="project-card reveal antique-gold-border scalloped-arch on-card" onclick="openHomeModal(${p.id})">
+                ${mainImg 
+                  ? `<img src="${mainImg}" class="project-card-image" alt="${p.title}" loading="lazy" />` 
+                  : `<div class="project-card-placeholder">🏗️</div>`}
+                <div class="project-card-body">
+                  <div class="project-card-type" style="text-transform:uppercase;font-size:0.75rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:4px;">${p.category}</div>
+                  <div class="project-card-name" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:12px;">${p.title}</div>
+                  <div class="project-card-meta" style="display:flex;gap:8px;flex-wrap:wrap;">
+                    ${p.area ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📐 ${p.area}</span>` : ''}
+                    ${p.year ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📅 ${p.year}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Home Modal Logic
+        const modal = document.getElementById('homeProjectModal');
+        const modalClose = document.getElementById('homeModalClose');
+        const modalTitle = document.getElementById('homeModalTitle');
+        const modalMeta = document.getElementById('homeModalMeta');
+        const modalDesc = document.getElementById('homeModalDesc');
+        const modalGallery = document.getElementById('homeModalGallery');
+
+        window.openHomeModal = function(id) {
+          const p = savedProjects.find(x => x.id === id);
+          if (!p) return;
+          modalTitle.textContent = p.title;
+          let metaHtml = `<span class="modal-meta-tag">${p.category}</span>`;
+          if (p.area) metaHtml += `<span class="modal-meta-tag">📐 Area: ${p.area}</span>`;
+          if (p.year) metaHtml += `<span class="modal-meta-tag">📅 Year: ${p.year}</span>`;
+          modalMeta.innerHTML = metaHtml;
+          modalDesc.textContent = p.description || 'No description provided.';
+          
+          let photos = [];
+          if (p.images) photos = p.images;
+          else if (p.imageData) photos = [p.imageData];
+          else {
+            try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
+          }
+          
+          if (photos.length > 0) {
+            modalGallery.innerHTML = photos.map(src => `<img src="${src}" class="gallery-img" loading="lazy" />`).join('');
+          } else {
+            modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
+          }
+          
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        };
+
+        if(modalClose) {
+          modalClose.addEventListener('click', () => {
+            modal.classList.remove('open');
+            document.body.style.overflow = '';
+          });
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+              modal.classList.remove('open');
+              document.body.style.overflow = '';
+            }
+          });
+        }
+      }
+      initHomeProjects();
+      
+      requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    // ── Interactive Phases Tabs ──
+    (function () {
+      const tabs = document.querySelectorAll(".phase-tab-btn");
+      const panes = document.querySelectorAll(".phase-pane");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const idx = tab.getAttribute("data-phase-idx");
+
+          tabs.forEach((t) => t.classList.remove("active"));
+          panes.forEach((p) => p.classList.remove("active"));
+
+          tab.classList.add("active");
+          const targetPane = document.querySelector(
+            `[data-phase-pane="${idx}"]`,
+          );
+          if (targetPane) targetPane.classList.add("active");
+        });
+      });
+    })();
+
+    // ── FAQ Accordion ──
+    (function () {
+      const faqButtons = document.querySelectorAll(".faq-question");
+      faqButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const faqItem = btn.closest(".faq-item");
+          const answer = faqItem.querySelector(".faq-answer");
+          const isOpen = faqItem.classList.contains("open");
+
+          // Close all others
+          document.querySelectorAll(".faq-item.open").forEach((item) => {
+            if (item !== faqItem) {
+              item.classList.remove("open");
+              item.querySelector(".faq-answer").style.maxHeight = "0";
+            }
+          });
+
+          // Toggle current
+          if (isOpen) {
+            faqItem.classList.remove("open");
+            answer.style.maxHeight = "0";
+          } else {
+            faqItem.classList.add("open");
+            answer.style.maxHeight = answer.scrollHeight + "px";
+          }
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

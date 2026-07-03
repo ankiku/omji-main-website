@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Contact OMJI Construction Jaipur — Free Construction Consultation"
+  description="Contact OMJI Construction for a free construction consultation in Jaipur. Call, WhatsApp, or fill the form. We respond within 30 minutes. Office: Murlipura, Jaipur."
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb"><a href="/">Home</a><span>/</span><span style="color:var(--bronze)">Contact</span></div>
+      <div class="section-tag">Get in Touch</div>
+      <h1 class="page-hero-title">Let's Build <span class="gold-text">Together</span></h1>
+      <p class="page-hero-sub">Have a project in mind? Fill the form, call us, or WhatsApp directly. We respond within 30 minutes during business hours.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+        <div class="reveal">
+          <div class="glass-card" style="padding:40px 36px;">
+            <h2 class="heading-md" style="margin-bottom:0.5rem;">Send Us a Message</h2>
+            <p class="body-md" style="margin-bottom:2rem;">Tell us about your project. We'll get back within 30 minutes.</p>
+            <form id="contactForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">Your Name *</label>
+                  <input class="form-input" type="text" id="firstName" placeholder="Your full name" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Phone / WhatsApp *</label>
+                  <input class="form-input" type="tel" id="phone" placeholder="+91 99293 98279" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="email">Email</label>
+                  <input class="form-input" type="email" id="email" placeholder="you@example.com" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="city">Area in Jaipur</label>
+                  <input class="form-input" type="text" id="city" placeholder="e.g. Mansarovar, Jagatpura" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="service">What Do You Need?</label>
+                <select class="form-input form-select" id="service">
+                  <option value="">Select a service</option>
+                  <option>Home Construction (New Build)</option>
+                  <option>Commercial Building</option>
+                  <option>Foundation & RCC Work</option>
+                  <option>Renovation / Repair</option>
+                  <option>Just Want to Discuss</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="plotSize">Plot / Built-up Area</label>
+                  <input class="form-input" type="text" id="plotSize" placeholder="e.g. 2000 sq ft" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="budget">Budget Range</label>
+                  <select class="form-input form-select" id="budget">
+                    <option value="">Select range</option>
+                    <option>Under ₹25 Lakh</option>
+                    <option>₹25–50 Lakh</option>
+                    <option>₹50 Lakh–1 Crore</option>
+                    <option>₹1–5 Crore</option>
+                    <option>₹5 Crore+</option>
+                    <option>Not Sure Yet</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="message">Tell Us About Your Project</label>
+                <textarea class="form-input form-textarea" id="message" placeholder="Describe your project — what you want to build, location, timeline expectations..."></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;" id="submitBtn">
+                Send Message
+              </button>
+              <div class="form-success" id="formSuccess">
+                ✅ Thank you! We've received your message and will contact you within 30 minutes during business hours.
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="reveal-right">
+          <div class="section-tag">Quick Contact</div>
+          <h2 class="heading-lg" style="margin-bottom:0.5rem;">We're Here <span class="gold-text">For You</span></h2>
+          <p class="body-md" style="margin-bottom:2rem;">Reach us through any channel. Walk-ins welcome Mon–Sat, 9 AM – 6 PM at our Jaipur office.</p>
+
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bronze)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .84h3a2 2 0 012 1.72c.12.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 8.09a16 16 0 006 5.91l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.58 2.81.7A2 2 0 0122 14.92z"/></svg>
+              </div>
+              <div class="contact-detail">
+                <strong>Call Us</strong>
+                <span><a href="tel:+919929398279" style="color:var(--text-muted);">+91 99293 98279</a></span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--bronze)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.129.558 4.127 1.532 5.859L.053 23.553a.5.5 0 00.609.611l5.819-1.456A11.942 11.942 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.958 0-3.786-.521-5.36-1.428l-.384-.224-3.986.997.997-3.878-.248-.4A9.957 9.957 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+              </div>
+              <div class="contact-detail">
+                <strong>WhatsApp (Fastest)</strong>
+                <span><a href="https://wa.me/919929398279" style="color:var(--bronze);">Chat Now →</a></span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bronze)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="contact-detail">
+                <strong>Email</strong>
+                <span><a href="mailto:contact@omjiconstruction.com" style="color:var(--text-muted);">contact@omjiconstruction.com</a></span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bronze)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div class="contact-detail">
+                <strong>Jaipur Office</strong>
+                <span>Vaid ji ka chouraha, 282, Pratap Nagar Vistar, Vishwakarma Industrial Area, Murlipura, Jaipur – 302039, Rajasthan</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:2rem;padding:20px;background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);">
+            <div class="label" style="margin-bottom:0.8rem;">Response Time</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+                <span style="color:var(--text-muted);">WhatsApp</span>
+                <span style="color:var(--white);font-weight:600;">Within 15 min</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+                <span style="color:var(--text-muted);">Phone Call</span>
+                <span style="color:var(--white);font-weight:600;">Immediate</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+                <span style="color:var(--text-muted);">Email / Form</span>
+                <span style="color:var(--white);font-weight:600;">Within 30 min</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.82rem;">
+                <span style="color:var(--text-muted);">Site Visit</span>
+                <span style="color:var(--white);font-weight:600;">Within 48 hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Google Maps Embed -->
+      <div class="map-embed reveal">
+        <iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3554.4984240751996!2d75.7656209!3d26.9827926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db30c33a9254d%3A0xeabf5e82b7c617b0!2sVishwakarma%20Industrial%20Area%2C%20Jaipur%2C%20Rajasthan!5e0!3m2!1sen!2sin!4v1719999999999"
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade"
+          title="OMJI Construction Office Location - Jaipur, Rajasthan"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+    const form = document.getElementById('contactForm');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      if (btn) btn.textContent = 'Sending...';
+
+      // Save contact to localStorage for admin dashboard
+      const contact = {
+        id: Date.now(),
+        name: document.getElementById('firstName')?.value.trim() || '',
+        phone: document.getElementById('phone')?.value.trim() || '',
+        email: document.getElementById('email')?.value.trim() || '',
+        area: document.getElementById('city')?.value.trim() || '',
+        service: document.getElementById('service')?.value || '',
+        plotSize: document.getElementById('plotSize')?.value.trim() || '',
+        budget: document.getElementById('budget')?.value || '',
+        message: document.getElementById('message')?.value.trim() || '',
+        submittedAt: new Date().toISOString(),
+        read: false
+      };
+      const contacts = JSON.parse(localStorage.getItem('omji_contacts') || '[]');
+      contacts.unshift(contact);
+      localStorage.setItem('omji_contacts', JSON.stringify(contacts));
+
+      setTimeout(() => {
+        document.getElementById('formSuccess')?.classList.add('show');
+        form.reset();
+        if (btn) btn.textContent = 'Send Message';
+        setTimeout(() => document.getElementById('formSuccess')?.classList.remove('show'), 5000);
+      }, 1200);
+    });
+  </script>
+</BaseLayout>

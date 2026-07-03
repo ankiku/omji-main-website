@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+
+# Allow Googlebot and other crawlers access to our styles and assets
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://omjiconstruction.com/sitemap.xml
