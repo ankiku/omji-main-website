@@ -214,7 +214,7 @@ import '../../styles/global.css';
             Dashboard Instructions
           </div>
           <div style="display:flex; flex-direction:column; gap:12px;">
-            <p style="font-size:0.9rem; line-height:1.6; color:var(--text-body);">This admin dashboard runs entirely on the browser using LocalStorage. You can upload images, fill in details, and list or delete them. Uploads will be merged with the hardcoded projects on the live portfolio page.</p>
+            <p style="font-size:0.9rem; line-height:1.6; color:var(--text-body);">This admin dashboard manages your construction projects, contact form submissions, and AI blog autopilot. Uploads and updates are securely synced with the server API and will instantly reflect on the live website.</p>
           </div>
         </div>
       </div>
@@ -352,6 +352,28 @@ import '../../styles/global.css';
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
   }
+
+  // Fetch real data from APIs
+  async function loadData() {
+    try {
+      const pRes = await fetch('/api/projects');
+      if (pRes.ok) localProjects = await pRes.json();
+    } catch(e) {}
+    try {
+      const cRes = await fetch('/api/contacts');
+      if (cRes.ok) localContacts = await cRes.json();
+    } catch(e) {}
+    try {
+      const bRes = await fetch('/api/blogs');
+      if (bRes.ok) localBlogs = await bRes.json();
+    } catch(e) {}
+    
+    // Re-render active tabs once data loads
+    updateOverviewStats();
+    if (document.getElementById('tab-manage').classList.contains('active')) renderManageGrid();
+    if (document.getElementById('tab-contacts').classList.contains('active')) renderContactsGrid();
+  }
+  loadData();
 
   // Sidebar Tabs Switching
   const tabs = document.querySelectorAll('.sidebar-link[data-tab]');
