@@ -487,8 +487,8 @@ const faqs = [
         >
         </div>
         <div
-          class="dashboard-grid"
-          style="padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;"
+          class="dashboard-layout"
+          style="padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 400px), 1fr));gap:clamp(2rem, 5vw, 4rem);align-items:center;"
         >
           <!-- Left content -->
           <div>
@@ -757,11 +757,11 @@ const faqs = [
   <!-- ═══════════════════════════════════
        COST ESTIMATOR CTA
        ═══════════════════════════════════ -->
-  <section class="section section-alt" id="estimate" style="position:relative;">
+  <section class="section section-alt" id="estimate" style="position:relative; padding-bottom: 2rem;">
     <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
     <div class="container" style="position:relative;z-index:2;">
       <div class="cost-cta reveal antique-gold-border mandana-corners" style="background:var(--bg-card);border-radius:var(--radius-xl);overflow:hidden; display:block;">
-        <div style="padding: clamp(40px, 6vw, 64px); display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
+        <div style="padding: clamp(20px, 5vw, 64px); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 2rem; align-items: center;">
           <div class="cost-cta-content">
           <h3>
             Get Your Free <span class="gold-text">Construction Estimate</span>
@@ -822,7 +822,7 @@ const faqs = [
   <!-- ═══════════════════════════════════
        INTERACTIVE CONSTRUCTION PHASES
        ═══════════════════════════════════ -->
-  <section class="section section-alt" id="phases">
+  <section class="section section-alt" id="phases" style="padding-top: 2rem;">
     <div class="container">
       <div class="section-header reveal">
         <div class="section-tag">Construction Journey</div>
@@ -943,42 +943,6 @@ const faqs = [
       </div>
     </div>
   </section>
-
-  <!-- ═══════════════════════════════════
-       LIVE CONSTRUCTION DASHBOARD
-       ═══════════════════════════════════ -->
-  <section class="section section-alt" id="dashboard" style="position:relative;">
-    <div class="jali-pattern-overlay" style="opacity: 0.15; z-index: 1;"></div>
-    <div class="container" style="position:relative;z-index:2;">
-      <div class="section-header reveal">
-        <div class="section-tag">Our Track Record</div>
-        <h2 class="display-md">
-          Construction <span class="gold-text">in Numbers</span>
-        </h2>
-        <p class="section-subtitle">
-          Real metrics from our projects across Jaipur and Rajasthan.
-        </p>
-      </div>
-      <div class="dashboard-grid">
-        {
-          dashStats.map((stat, i) => (
-            <div class={`dash-stat reveal reveal-d${i + 1} antique-gold-border`} style="background:var(--bg-card);">
-              <div class="dash-stat-icon">{stat.icon}</div>
-              <div
-                class="dash-stat-num"
-                data-count={stat.num}
-                data-suffix={stat.suffix}
-              >
-                0
-              </div>
-              <div class="dash-stat-label">{stat.label}</div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
   <!-- ═══════════════════════════════════
        FEATURED PROJECTS — JAIPUR
        ═══════════════════════════════════ -->
@@ -1082,37 +1046,6 @@ const faqs = [
   </section>
 
   <!-- ═══════════════════════════════════
-       TESTIMONIALS — JAIPUR CLIENTS
-       ═══════════════════════════════════ -->
-  <section class="section" id="testimonials">
-    <div class="container">
-      <div class="section-header reveal">
-        <div class="section-tag">Client Reviews</div>
-        <h2 class="display-md">
-          What Jaipur <span class="gold-text">Clients Say</span>
-        </h2>
-      </div>
-      <div class="testimonial-grid">
-        {
-          testimonials.map((t, i) => (
-            <div class={`testimonial-card reveal reveal-d${i + 1} antique-gold-border mandana-corners`} style="background:var(--bg-card);">
-              <div class="testimonial-stars">★★★★★</div>
-              <p class="testimonial-text">"{t.text}"</p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">{t.initials}</div>
-                <div>
-                  <div class="testimonial-name">{t.name}</div>
-                  <div class="testimonial-role">{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════
        AREAS WE SERVE — REGIONAL MAP
        ═══════════════════════════════════ -->
   <section class="section section-alt" id="areas" style="position:relative;overflow:hidden;">
@@ -1131,7 +1064,7 @@ const faqs = [
       </div>
 
       <!-- Region cards in vintage scroll layout -->
-      <div class="reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-bottom:3.5rem;">
+      <div class="reveal" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr));gap:1.5rem;margin-bottom:3.5rem;">
         {serveRegions.map((region, i) => (
           <div style={`background:linear-gradient(145deg,var(--bg-card),var(--bg-elevated));border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card);transition:all 0.3s;position:relative;`}>
             <!-- Top accent bar with maroon for primary, gold for others -->
@@ -1213,36 +1146,6 @@ const faqs = [
                 <div class="faq-answer-inner">{faq.answer}</div>
               </div>
             </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════
-       BLOG PREVIEW
-       ═══════════════════════════════════ -->
-  <section class="section section-alt" id="blog">
-    <div class="container">
-      <div class="section-header reveal">
-        <div class="section-tag">Helpful Guides</div>
-        <h2 class="display-md">From Our <span class="gold-text">Blog</span></h2>
-      </div>
-      <div class="blog-grid">
-        {
-          blogPosts.map((post, i) => (
-            <a
-              href={`/blog/${post.slug}`}
-              class={`blog-card reveal reveal-d${i + 1} antique-gold-border`} style="background:var(--bg-card);"
-            >
-              <div class="blog-card-img">{post.emoji}</div>
-              <div class="blog-card-body">
-                <div class="blog-card-cat">{post.cat}</div>
-                <div class="blog-card-title">{post.title}</div>
-                <p class="blog-card-excerpt">{post.excerpt}</p>
-                <span class="blog-card-link">Read Article →</span>
-              </div>
-            </a>
           ))
         }
       </div>
