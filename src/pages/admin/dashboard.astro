@@ -607,6 +607,14 @@ import '../../styles/global.css';
   const aiLog = document.getElementById('ai-log');
   const geminiKeyInput = document.getElementById('gemini-api-key');
 
+  if (envGeminiKey) {
+    geminiKeyInput.parentElement.style.display = 'none';
+    const msg = document.createElement('div');
+    msg.style.cssText = 'font-size:0.85rem; color:#4a90e2; background:rgba(74, 144, 226, 0.1); padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid rgba(74, 144, 226, 0.3);';
+    msg.innerHTML = '<strong>✓ Secure API Key Detected</strong><br/>Your Gemini API Key is securely loaded from environment variables.';
+    geminiKeyInput.parentElement.parentElement.insertBefore(msg, geminiKeyInput.parentElement);
+  }
+
   function logAi(msg) {
     const d = document.createElement('div');
     d.textContent = '> ' + msg;
@@ -627,7 +635,7 @@ import '../../styles/global.css';
   });
 
   aiStartBtn.addEventListener('click', async () => {
-    const key = geminiKeyInput.value.trim();
+    const key = envGeminiKey || geminiKeyInput.value.trim();
     if (!key) {
       showToast('Please enter your Gemini API Key.', 'error');
       return;
