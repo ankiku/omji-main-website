@@ -1,75 +1,57 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'fs';
+import path from 'path';
+
+const slug = Astro.url.searchParams.get('id');
+
+let post = null;
+try {
+  const DATA_FILE = path.join(process.cwd(), 'data', 'blogs.json');
+  if (fs.existsSync(DATA_FILE)) {
+    const savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    const now = new Date().getTime();
+    const found = savedBlogs.find(p => p.slug === slug);
+    if (found && new Date(found.publishDate).getTime() <= now) {
+      post = found;
+    }
+  }
+} catch(e) {}
 ---
-<BaseLayout title="Blog Post — OMJI Construction" description="Read this article on OMJI Construction.">
-  <div id="blog-content-wrapper" style="display:none;">
-    <section class="page-hero">
-      <div class="container">
-        <div class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span id="bc-title" style="color:var(--bronze)">Article</span></div>
-        <div class="section-tag" id="post-cat">Category</div>
-        <h1 class="page-hero-title" id="post-title" style="max-width: 900px;">Loading...</h1>
-        <div style="display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.9rem;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">OM</div>
-            <span id="post-author" style="color:var(--text-primary);font-weight:600;">Admin</span>
+<BaseLayout 
+  title={post ? `${post.title} — OMJI Construction` : "Post Not Found"} 
+  description={post ? post.excerpt : "Blog post not found."}
+>
+  {post ? (
+    <div id="blog-content-wrapper">
+      <section class="page-hero">
+        <div class="container">
+          <div class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span style="color:var(--bronze)">{post.title.length > 30 ? post.title.substring(0, 30) + '...' : post.title}</span></div>
+          <div class="section-tag">{post.cat}</div>
+          <h1 class="page-hero-title" style="max-width: 900px;">{post.title}</h1>
+          <div style="display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.9rem;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">OM</div>
+              <span style="color:var(--text-primary);font-weight:600;">{post.author || 'Admin'}</span>
+            </div>
+            <span>{new Date(post.publishDate).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
+            <span>{post.readTime || '5 min read'}</span>
           </div>
-          <span id="post-date">Date</span>
-          <span id="post-readtime">5 min read</span>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" style="padding-top:2rem;">
-      <div class="container" style="max-width: 800px; margin: 0 auto;">
-        <img id="post-image" src="" alt="Blog Image" style="width:100%; height:450px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:3rem; display:none;" />
-        <div class="article-body" id="post-content">
-          <!-- Content injected via JS -->
+      <section class="section" style="padding-top:2rem;">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+          {post.image && <img src={post.image} alt={post.title} style="width:100%; height:450px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:3rem;" />}
+          <div class="article-body" set:html={post.content}></div>
         </div>
-      </div>
-    </section>
-  </div>
-
-  <div id="not-found" style="display:none; text-align:center; padding: 10rem 2rem;">
-    <h1 class="display-lg">Post Not Found</h1>
-    <p class="body-lg" style="margin: 1rem 0 2rem;">This post may have been removed or is not yet published.</p>
-    <a href="/blog" class="btn btn-primary">Back to Blog</a>
-  </div>
-
-  <script is:inline>
-    document.addEventListener("DOMContentLoaded", () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const slug = urlParams.get('id');
-      
-      const savedBlogs = JSON.parse(localStorage.getItem('omji_blog_posts') || '[]');
-      const post = savedBlogs.find(p => p.slug === slug);
-      const now = new Date().getTime();
-      
-      if (!post || new Date(post.publishDate).getTime() > now) {
-        document.getElementById('not-found').style.display = 'block';
-        return;
-      }
-      
-      document.title = post.title + " — OMJI Construction";
-      document.querySelector('meta[name="description"]')?.setAttribute("content", post.excerpt);
-      
-      document.getElementById('bc-title').textContent = post.title.length > 30 ? post.title.substring(0, 30) + '...' : post.title;
-      document.getElementById('post-cat').textContent = post.cat;
-      document.getElementById('post-title').textContent = post.title;
-      document.getElementById('post-author').textContent = post.author || 'Admin';
-      
-      const dateObj = new Date(post.publishDate);
-      document.getElementById('post-date').textContent = dateObj.toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'});
-      document.getElementById('post-readtime').textContent = post.readTime || '5 min read';
-      
-      if (post.image) {
-        const img = document.getElementById('post-image');
-        img.src = post.image;
-        img.alt = post.title;
-        img.style.display = 'block';
-      }
-      
-      document.getElementById('post-content').innerHTML = post.content;
-      document.getElementById('blog-content-wrapper').style.display = 'block';
-    });
-  </script>
+      </section>
+    </div>
+  ) : (
+    <div id="not-found" style="text-align:center; padding: 10rem 2rem;">
+      <h1 class="display-lg">Post Not Found</h1>
+      <p class="body-lg" style="margin: 1rem 0 2rem;">This post may have been removed or is not yet published.</p>
+      <a href="/blog" class="btn btn-primary">Back to Blog</a>
+    </div>
+  )}
 </BaseLayout>

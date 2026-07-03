@@ -168,14 +168,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script is:inline>
     const form = document.getElementById('contactForm');
-    form?.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       if (btn) btn.textContent = 'Sending...';
 
-      // Save contact to localStorage for admin dashboard
       const contact = {
-        id: Date.now(),
         name: document.getElementById('firstName')?.value.trim() || '',
         phone: document.getElementById('phone')?.value.trim() || '',
         email: document.getElementById('email')?.value.trim() || '',
@@ -183,20 +181,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         service: document.getElementById('service')?.value || '',
         plotSize: document.getElementById('plotSize')?.value.trim() || '',
         budget: document.getElementById('budget')?.value || '',
-        message: document.getElementById('message')?.value.trim() || '',
-        submittedAt: new Date().toISOString(),
-        read: false
+        message: document.getElementById('message')?.value.trim() || ''
       };
-      const contacts = JSON.parse(localStorage.getItem('omji_contacts') || '[]');
-      contacts.unshift(contact);
-      localStorage.setItem('omji_contacts', JSON.stringify(contacts));
 
-      setTimeout(() => {
+      try {
+        await fetch('/api/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(contact)
+        });
+        
         document.getElementById('formSuccess')?.classList.add('show');
         form.reset();
-        if (btn) btn.textContent = 'Send Message';
         setTimeout(() => document.getElementById('formSuccess')?.classList.remove('show'), 5000);
-      }, 1200);
+      } catch (err) {
+        alert('Failed to send message. Please try again.');
+      }
+      
+      if (btn) btn.textContent = 'Send Message';
     });
   </script>
 </BaseLayout>

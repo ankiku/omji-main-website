@@ -116,7 +116,10 @@
 
 <div class="toast" id="toast"></div>
 
-<script is:inline define:vars={{ envGeminiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
+<script is:inline define:vars={{ initialProjects, initialContacts, initialBlogs, envGeminiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
+  let localProjects = initialProjects;
+  let localContacts = initialContacts;
+  let localBlogs = initialBlogs;
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
   }
@@ -364,19 +367,10 @@
     window.location.href = '/admin';
   });
 
-  // Local Storage Data Functions
-  function getProjects() {
-    return JSON.parse(localStorage.getItem('omji_projects') || '[]');
-  }
-  function saveProjects(arr) {
-    localStorage.setItem('omji_projects', JSON.stringify(arr));
-  }
-  function getContacts() {
-    return JSON.parse(localStorage.getItem('omji_contacts') || '[]');
-  }
-  function saveContacts(arr) {
-    localStorage.setItem('omji_contacts', JSON.stringify(arr));
-  }
+  // API Data Functions (Replacing LocalStorage)
+  function getProjects() { return localProjects; }
+  function getContacts() { return localContacts; }
+  function getBlogs() { return localBlogs; }
 
   // Toasts
   let toastTimer;
@@ -467,13 +461,17 @@
   });
 
   // Submit Project Form
-  document.getElementById('upload-form').addEventListener('submit', (e) => {
+  document.getElementById('upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = document.getElementById('proj-title').value.trim();
     if (!title) {
       showToast('Project title is required.', 'error');
       return;
     }
+    
+    const submitBtn = document.querySelector('#upload-form button[type="submit"]');
+    submitBtn.textContent = 'Uploading...';
+    submitBtn.disabled = true;
 
     const project = {
       id: Date.now(),
@@ -482,101 +480,90 @@
       area: document.getElementById('proj-area').value.trim(),
       year: document.getElementById('proj-year').value.trim(),
       description: document.getElementById('proj-desc').value.trim(),
-      imageCount: currentImages.length,
+      images: currentImages, 
       uploadedAt: new Date().toISOString()
     };
 
-    if (currentImages.length > 0) {
-      try {
-        localStorage.setItem(`omji_project_photos_${project.id}`, JSON.stringify(currentImages));
-      } catch (err) {
-        showToast('Storage full! Could not save photos.', 'error');
-        return;
+    try {
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(project)
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        localProjects.push(data.project);
+        showToast('Project uploaded successfully!');
+        
+        document.getElementById('upload-form').reset();
+        currentImages = [];
+        renderPreviews();
+        updateOverviewStats();
+      } else {
+        showToast('Failed: ' + data.error, 'error');
       }
+    } catch(err) {
+      showToast('Error uploading project.', 'error');
     }
-
-    const projects = getProjects();
-    projects.push(project);
-    saveProjects(projects);
-
-    showToast('✅ Project saved! Live on website now.');
-    resetForm();
-    updateOverviewStats();
+    
+    submitBtn.textContent = 'Upload Project';
+    submitBtn.disabled = false;
   });
 
-  function resetForm() {
-    document.getElementById('upload-form').reset();
-    currentImages = [];
-    renderPreviews();
-  }
-  document.getElementById('clear-btn').addEventListener('click', resetForm);
-
-  // Manage Tab Render & Delete Operations
+  // Manage Tab Render & Delete
   function renderManageGrid() {
     const grid = document.getElementById('manage-grid');
-    const empty = document.getElementById('empty-state');
+    const emptyState = document.getElementById('empty-state');
     const projects = getProjects();
-
+    
     if (projects.length === 0) {
       grid.innerHTML = '';
-      empty.style.display = 'block';
+      emptyState.style.display = 'flex';
       return;
     }
-    empty.style.display = 'none';
-
+    emptyState.style.display = 'none';
+    
     grid.innerHTML = projects.map(p => {
-      // Handle legacy single imageData, legacy multiple images, or new decoupled photos
-      let imgs = [];
-      if (p.images) {
-        imgs = p.images;
-      } else if (p.imageData) {
-        imgs = [p.imageData];
-      } else {
-        try {
-          imgs = JSON.parse(localStorage.getItem(`omji_project_photos_${p.id}`) || '[]');
-        } catch (e) { imgs = []; }
-      }
-      
-      const mainImg = imgs.length > 0 ? imgs[0] : null;
-      const countBadge = imgs.length > 1 ? `<div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);color:white;padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:600;">+${imgs.length - 1}</div>` : '';
-      
+      let mainImg = p.images && p.images.length > 0 ? p.images[0] : null;
       return `
-      <div class="proj-admin-card" id="proj-${p.id}">
-        <div style="position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; border-radius:10px 10px 0 0;">
-          ${mainImg 
-            ? `<img style="width:100%;height:100%;object-fit:cover;" src="${mainImg}" alt="${p.title}" />${countBadge}` 
-            : `<div class="proj-admin-img-placeholder" style="height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-elevated);">🏗️</div>`}
-        </div>
-        <div class="proj-admin-info">
-          <div class="proj-admin-name" title="${p.title}">${p.title}</div>
-          <div class="proj-admin-cat">${p.category}${p.year ? ' · ' + p.year : ''}</div>
-          <div style="display:flex;">
-            <button class="btn-delete" onclick="deleteProject(${p.id})">🗑 Delete</button>
+        <div class="project-admin-card">
+          ${mainImg ? `<img src="${mainImg}" class="project-admin-img" style="width:100%;height:120px;object-fit:cover;" />` : `<div style="height:120px;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;">🏗️</div>`}
+          <div style="padding:15px;">
+            <div style="font-weight:600;margin-bottom:5px;">${p.title}</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:15px;">${p.category} • ${p.images ? p.images.length : 0} photos</div>
+            <button class="btn btn-outline btn-sm delete-btn" data-id="${p.id}" style="width:100%;color:#c44;border-color:rgba(220,60,60,0.3);">Delete</button>
           </div>
         </div>
-      </div>
       `;
     }).join('');
+    
+    grid.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (confirm('Are you sure you want to delete this project?')) {
+          const id = parseInt(e.target.dataset.id);
+          try {
+            await fetch('/api/projects', {
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id })
+            });
+            localProjects = localProjects.filter(p => p.id !== id);
+            renderManageGrid();
+            updateOverviewStats();
+            showToast('Project deleted.');
+          } catch(err) {
+            showToast('Failed to delete', 'error');
+          }
+        }
+      });
+    });
   }
 
-  window.deleteProject = function(id) {
-    if (!confirm('Are you sure you want to delete this project?')) return;
-    const filtered = getProjects().filter(p => p.id !== id);
-    saveProjects(filtered);
-    localStorage.removeItem(`omji_project_photos_${id}`);
-    renderManageGrid();
-    updateOverviewStats();
-    showToast('Project deleted successfully.');
-  };
-
-  document.getElementById('clear-all-btn').addEventListener('click', () => {
-    if (!confirm('Are you sure you want to delete ALL uploaded projects?')) return;
-    const projects = getProjects();
-    projects.forEach(p => localStorage.removeItem(`omji_project_photos_${p.id}`));
-    saveProjects([]);
-    renderManageGrid();
-    updateOverviewStats();
-    showToast('All projects cleared.');
+  document.getElementById('clear-all-btn').addEventListener('click', async () => {
+    if (confirm('Delete ALL projects? This cannot be undone.')) {
+      showToast('Bulk delete not enabled for API yet.', 'error');
+    }
   });
 
   // --- AI BLOG AUTOPILOT LOGIC ---
@@ -587,9 +574,6 @@
   const aiProgressText = document.getElementById('ai-progress-text');
   const aiLog = document.getElementById('ai-log');
   const geminiKeyInput = document.getElementById('gemini-api-key');
-  if (envGeminiKey) {
-    geminiKeyInput.value = envGeminiKey;
-  }
 
   function logAi(msg) {
     const d = document.createElement('div');
@@ -598,10 +582,15 @@
     aiLog.scrollTop = aiLog.scrollHeight;
   }
 
-  aiClearBtn.addEventListener('click', () => {
+  aiClearBtn.addEventListener('click', async () => {
     if (confirm('Delete all scheduled and published blog posts?')) {
-      localStorage.setItem('omji_blog_posts', '[]');
-      showToast('All blog posts deleted.');
+      try {
+        await fetch('/api/blogs', { method: 'DELETE' });
+        localBlogs = [];
+        showToast('All blog posts deleted.');
+      } catch(err) {
+        showToast('Failed to clear blogs', 'error');
+      }
     }
   });
 
@@ -616,8 +605,7 @@
     aiProgressContainer.style.display = 'block';
     aiLog.innerHTML = '';
     
-    let existingPosts = JSON.parse(localStorage.getItem('omji_blog_posts') || '[]');
-    logAi(`Starting AI Autopilot. Found ${existingPosts.length} existing posts.`);
+    logAi(`Starting AI Autopilot. Found ${localBlogs.length} existing posts.`);
     
     const totalPosts = 90;
     const postsPerDay = 3;
@@ -646,7 +634,7 @@
         "slug": (url-friendly-slug-with-random-id),
         "excerpt": (150 chars max summary),
         "content": (HTML string with <p> and <h2> tags for the body. Make it highly professional and informative. Do not use markdown backticks in the value.)
-        Do NOT wrap the JSON in markdown code blocks (\`\`\`json). Return purely the JSON object.`;
+        Do NOT wrap the JSON in markdown code blocks. Return purely the JSON object.`;
 
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
@@ -659,10 +647,6 @@
         
         const data = await response.json();
         let textResult = data.candidates[0].content.parts[0].text.trim();
-        if (textResult.startsWith('\`\`\`json')) textResult = textResult.substring(7);
-        if (textResult.startsWith('\`\`\`')) textResult = textResult.substring(3);
-        if (textResult.endsWith('\`\`\`')) textResult = textResult.substring(0, textResult.length - 3);
-        
         const generated = JSON.parse(textResult);
         
         const newPost = {
@@ -678,8 +662,12 @@
           image: `https://source.unsplash.com/800x450/?construction,building,${dayOffset * i}`
         };
 
-        existingPosts.push(newPost);
-        localStorage.setItem('omji_blog_posts', JSON.stringify(existingPosts));
+        await fetch('/api/blogs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newPost)
+        });
+        localBlogs.push(newPost);
         
         logAi(`✅ Created post: ${newPost.title} (Scheduled for ${publishDate.toDateString()})`);
         
@@ -687,13 +675,11 @@
         aiProgressBar.style.width = pct + '%';
         aiProgressText.textContent = `${i} / ${totalPosts}`;
         
-        // Wait 3 seconds to avoid rate limits
         await new Promise(resolve => setTimeout(resolve, 3000));
         
       } catch (err) {
         logAi(`❌ Failed post ${i}: ${err.message}`);
-        console.error(err);
-        await new Promise(resolve => setTimeout(resolve, 5000)); // wait longer on fail
+        await new Promise(resolve => setTimeout(resolve, 5000));
       }
     }
     
@@ -716,51 +702,51 @@
     }
     empty.style.display = 'none';
 
-    grid.innerHTML = contacts.map(c => {
-      const date = new Date(c.submittedAt).toLocaleString('en-IN', {
-        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-      });
-      const waLink = c.phone ? `https://wa.me/${c.phone.replace(/[^0-9]/g, '')}` : '#';
-      return `
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;box-shadow:var(--shadow-sm);">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;border-bottom:1px solid var(--border-light);padding-bottom:12px;">
+    grid.innerHTML = contacts.map(c => `
+      <div style="background:var(--bg-elevated); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md);">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
           <div>
-            <div style="font-weight:700;color:var(--text-primary);font-size:1.1rem;margin-bottom:4px;">${c.name}</div>
-            <div style="font-size:0.8rem;color:var(--text-muted);">${date}</div>
+            <div style="font-weight:700; font-size:1.1rem; color:var(--gold);">${c.name}</div>
+            <div style="font-size:0.85rem; color:var(--text-secondary);">${new Date(c.date || c.submittedAt || Date.now()).toLocaleString()}</div>
           </div>
-          <button class="btn btn-ghost btn-sm" onclick="deleteContact(${c.id})" style="color:#c44;">Delete</button>
+          <button class="btn btn-ghost btn-sm delete-contact-btn" data-id="${c.id}" style="color:#c44; border:1px solid rgba(220,60,60,0.3);">Dismiss</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Phone:</strong> <a href="${waLink}" target="_blank" style="color:var(--bronze);">${c.phone}</a></div>
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Email:</strong> ${c.email || 'N/A'}</div>
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Area:</strong> ${c.area || 'N/A'}</div>
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Service:</strong> ${c.service || 'N/A'}</div>
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Plot:</strong> ${c.plotSize || 'N/A'}</div>
-          <div style="font-size:0.85rem;"><strong style="color:var(--text-secondary);">Budget:</strong> ${c.budget || 'N/A'}</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.9rem; margin-bottom:15px; background:var(--bg-card); padding:10px; border-radius:4px;">
+          <div><strong>📞 Phone:</strong> ${c.phone}</div>
+          <div><strong>✉️ Email:</strong> ${c.email || 'N/A'}</div>
+          <div><strong>🏗️ Service:</strong> ${c.service || 'N/A'}</div>
+          <div><strong>📍 Area:</strong> ${c.area || 'N/A'}</div>
         </div>
-        <div style="background:var(--off-white);padding:12px;border-radius:6px;font-size:0.85rem;color:var(--text-body);line-height:1.5;">
-          <strong style="color:var(--text-secondary);display:block;margin-bottom:4px;">Message:</strong>
-          ${c.message || 'No message provided.'}
+        <div>
+          <div style="font-size:0.85rem; font-weight:600; margin-bottom:5px;">Message:</div>
+          <div style="font-size:0.9rem; color:var(--text-secondary); line-height:1.5;">${c.message || 'No message provided.'}</div>
         </div>
-        ${c.phone ? `<a href="${waLink}" target="_blank" class="btn btn-primary btn-sm" style="margin-top:16px;">WhatsApp Now</a>` : ''}
       </div>
-      `;
-    }).join('');
+    `).join('');
+
+    grid.querySelectorAll('.delete-contact-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (!confirm('Are you sure you want to dismiss this request?')) return;
+        const id = parseInt(e.currentTarget.dataset.id);
+        try {
+          await fetch('/api/contacts', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+          localContacts = localContacts.filter(c => c.id !== id);
+          renderContactsGrid();
+        } catch(err) {
+          showToast('Failed to delete contact', 'error');
+        }
+      });
+    });
   }
 
-  window.deleteContact = function(id) {
-    if (!confirm('Are you sure you want to delete this contact request?')) return;
-    const filtered = getContacts().filter(c => c.id !== id);
-    saveContacts(filtered);
-    renderContactsGrid();
-    showToast('Contact request deleted.');
-  };
-
-  document.getElementById('clear-contacts-btn')?.addEventListener('click', () => {
-    if (!confirm('Are you sure you want to delete ALL contact requests?')) return;
-    saveContacts([]);
-    renderContactsGrid();
-    showToast('All contact requests cleared.');
+  document.getElementById('clear-contacts-btn')?.addEventListener('click', async () => {
+    if (confirm('Delete ALL contact requests?')) {
+      showToast('Bulk delete not enabled for API yet.', 'error');
+    }
   });
 
   // Overview metric values update

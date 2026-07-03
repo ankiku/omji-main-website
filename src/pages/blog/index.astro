@@ -1,7 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'fs';
+import path from 'path';
 
-const posts = []; // We will load from localStorage now
+let savedBlogs = [];
+try {
+  const DATA_FILE = path.join(process.cwd(), 'data', 'blogs.json');
+  if (fs.existsSync(DATA_FILE)) {
+    savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+  }
+} catch(e) {}
+
+const now = new Date().getTime();
+const publishedBlogs = savedBlogs.filter(p => new Date(p.publishDate).getTime() <= now).sort((a,b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime());
+
 
 const categories = ['All', 'Foundation', 'RCC Construction', 'Concrete Technology', 'Site Management', 'Structural Safety', 'Civil Engineering'];
 ---
@@ -25,52 +37,32 @@ const categories = ['All', 'Foundation', 'RCC Construction', 'Concrete Technolog
           <button class={`filter-btn ${cat === 'All' ? 'active' : ''}`} data-blogfilter={cat}>{cat}</button>
         ))}
       </div>
-      <div class="blog-grid" id="blogGrid">
-        <!-- Rendered dynamically from localStorage -->
+      <div class="blog-grid" id="blogGrid" style={publishedBlogs.length === 0 ? 'display:none;' : ''}>
+        {publishedBlogs.map((post, i) => (
+          <a href={`/blog/view?id=${post.slug}`} class={`blog-card reveal reveal-d${(i % 3) + 1}`} data-blogcat={post.cat}>
+            {post.image 
+              ? <img src={post.image} class="blog-card-img" style="object-fit:cover; width:100%; height:100%; border-radius: 0;" alt={post.title} />
+              : <div class="blog-card-img" style="font-size: 3rem; display:flex; align-items:center; justify-content:center;">{post.emoji || '📰'}</div>
+            }
+            <div class="blog-card-body">
+              <div class="blog-card-cat">{post.cat}</div>
+              <div class="blog-card-title">{post.title}</div>
+              <p class="blog-card-excerpt">{post.excerpt}</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="blog-card-link">Read Article →</span>
+                <span style="font-size:0.72rem;color:var(--text-muted);">{new Date(post.publishDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})} · {post.readTime || '5 min'}</span>
+              </div>
+            </div>
+          </a>
+        ))}
       </div>
-      <div id="no-blogs-msg" style="display:none; text-align:center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border); margin-top: 2rem;">
+      <div id="no-blogs-msg" style={publishedBlogs.length === 0 ? 'display:block; text-align:center; padding: 4rem; color: var(--text-muted); font-size: 1.1rem; background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border); margin-top: 2rem;' : 'display:none;'}>
         No blog posts have been published yet.
       </div>
     </div>
   </section>
 
   <script is:inline>
-    const grid = document.getElementById('blogGrid');
-    const noMsg = document.getElementById('no-blogs-msg');
-    
-    // Load from localStorage
-    const savedBlogs = JSON.parse(localStorage.getItem('omji_blog_posts') || '[]');
-    const now = new Date().getTime();
-    
-    // Filter scheduled posts
-    const publishedBlogs = savedBlogs.filter(p => new Date(p.publishDate).getTime() <= now);
-    
-    if (publishedBlogs.length === 0) {
-      grid.style.display = 'none';
-      noMsg.style.display = 'block';
-    } else {
-      grid.innerHTML = publishedBlogs.sort((a,b) => new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()).map((post, i) => {
-        let imageHtml = `<div class="blog-card-img" style="font-size: 3rem; display:flex; align-items:center; justify-content:center;">${post.emoji || '📰'}</div>`;
-        if (post.image) {
-          imageHtml = `<img src="${post.image}" class="blog-card-img" style="object-fit:cover; width:100%; height:100%; border-radius: 0;" alt="${post.title}" />`;
-        }
-        
-        return `
-          <a href="/blog/view?id=${post.slug}" class="blog-card reveal reveal-d${(i % 3) + 1}" data-blogcat="${post.cat}">
-            ${imageHtml}
-            <div class="blog-card-body">
-              <div class="blog-card-cat">${post.cat}</div>
-              <div class="blog-card-title">${post.title}</div>
-              <p class="blog-card-excerpt">${post.excerpt}</p>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span class="blog-card-link">Read Article →</span>
-                <span style="font-size:0.72rem;color:var(--text-muted);">${new Date(post.publishDate).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})} · ${post.readTime || '5 min'}</span>
-              </div>
-            </div>
-          </a>
-        `;
-      }).join('');
-    }
 
     const filterBtns = document.querySelectorAll('#blogFilterBar .filter-btn');
     const cards = document.querySelectorAll('#blogGrid .blog-card');
