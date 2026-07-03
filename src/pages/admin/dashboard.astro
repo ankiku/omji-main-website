@@ -718,6 +718,8 @@ import '../../styles/global.css';
     ];
     const emojis = ['🏗️', '🧱', '🧪', '📋', '🛡️', '💰', '🏠', '✨', '🛠️', '📐'];
 
+    let consecutiveFailures = 0;
+
     for (let i = 1; i <= totalPosts; i++) {
       const dayOffset = Math.floor((i - 1) / postsPerDay);
       const publishDate = new Date();
@@ -743,10 +745,21 @@ import '../../styles/global.css';
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
 
-        if (!response.ok) throw new Error('API Error: ' + response.status);
+        if (!response.ok) {
+          const status = response.status;
+          if (status === 429 || status === 401 || status === 403 || status === 500) {
+            logAi(`🛑 Fatal API Error ${status}. Stopping autopilot.`);
+            logAi(status === 429 ? '⏳ Rate limit hit. Wait a few minutes and try again.' : `❌ Error ${status} — check your API key and try again.`);
+            showToast(`Stopped: API Error ${status}`, 'error');
+            break;
+          }
+          throw new Error('API Error: ' + status);
+        }
         
         const data = await response.json();
         let textResult = data.candidates[0].content.parts[0].text.trim();
+        // Strip markdown code fences if present
+        textResult = textResult.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
         const generated = JSON.parse(textResult);
         
         const newPost = {
@@ -759,6 +772,7 @@ import '../../styles/global.css';
           publishDate: publishDate.toISOString(),
           readTime: '4 min read',
           author: 'Admin',
+          status: 'scheduled',
           image: `https://source.unsplash.com/800x450/?construction,building,${dayOffset * i}`
         };
 
@@ -779,11 +793,19 @@ import '../../styles/global.css';
         
       } catch (err) {
         logAi(`❌ Failed post ${i}: ${err.message}`);
+        consecutiveFailures++;
+        if (consecutiveFailures >= 3) {
+          logAi(`🛑 3 consecutive failures. Stopping autopilot to avoid wasting API quota.`);
+          showToast('Stopped after 3 consecutive failures.', 'error');
+          break;
+        }
         await new Promise(resolve => setTimeout(resolve, 5000));
+        continue;
       }
+      consecutiveFailures = 0; // Reset on success
     }
     
-    logAi(`🎉 Finished generating 90 posts!`);
+    logAi(`🎉 Finished! Generated ${localBlogs.length} posts total.`);
     showToast('AI Generation Complete!');
     aiStartBtn.disabled = false;
   });
