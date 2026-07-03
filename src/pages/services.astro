@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
+import { Image } from 'astro:assets';
+const staticImages = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*.{jpeg,jpg,png,gif}');
 const services = [
   {
     icon: '📐', num: '01', title: 'Home Construction in Jaipur',
@@ -60,11 +61,13 @@ const services = [
           <article class="reveal" style={`display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;`}>
             <div style={i % 2 !== 0 ? 'order:2' : ''}>
               <div class="phase-visual phase-visual--img arch-frame" style="aspect-ratio:4/3;">
-                <img 
-                  src={`/images/phase-0${Math.min(i + 1, 6)}.png`} 
+                <Image 
+                  src={staticImages[`../assets/images/phase-0${Math.min(i + 1, 6)}.png`]()} 
                   alt={`${svc.title} | OMJI Construction Jaipur`} 
                   class="phase-visual-img active" 
                   loading="lazy"
+                  width={600}
+                  height={600}
                 />
                 <div class="phase-visual-overlay"></div>
                 <div class="phase-visual-badge" style="transform:translateY(0);opacity:1;">
