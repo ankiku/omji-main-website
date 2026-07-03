@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from 'astro:assets';
 
+const staticImages = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*.{jpeg,jpg,png,gif}');
 const phases = [
   {
     num: "01",
@@ -342,29 +344,29 @@ const faqs = [
     <div class="hero-photo-bg" aria-hidden="true">
       <!-- Tile 1: eager-load (above fold) -->
       <div class="hero-photo-tile hero-photo-tile--1">
-        <img src="/images/phase-04.png" alt="" loading="eager" fetchpriority="low" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-04.png']()} alt="" loading="eager" fetchpriority="high" decoding="async" />
       </div>
       <!-- Tiles 2-8: lazy-load for performance -->
       <div class="hero-photo-tile hero-photo-tile--2">
-        <img src="/images/phase-06.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-06.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--3">
-        <img src="/images/phase-02.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-02.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--4">
-        <img src="/images/phase-05.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-05.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--5">
-        <img src="/images/phase-03.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-03.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--6">
-        <img src="/images/phase-01.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-01.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--7">
-        <img src="/images/phase-04-step-3.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-04-step-3.png']()} alt="" loading="lazy" decoding="async" />
       </div>
       <div class="hero-photo-tile hero-photo-tile--8">
-        <img src="/images/phase-06-step-2.png" alt="" loading="lazy" decoding="async" />
+        <Image src={staticImages['../assets/images/phase-06-step-2.png']()} alt="" loading="lazy" decoding="async" />
       </div>
     </div>
 
@@ -970,11 +972,13 @@ const faqs = [
 
                   <div class="phase-pane-visual">
                     <div class="phase-visual phase-visual--img arch-frame">
-                      <img
-                        src={phase.image}
+                      <Image
+                        src={staticImages[phase.image.replace('/images/', '../assets/images/')]()}
                         alt={`${phase.title} — ${phase.headline} | OMJI Construction Jaipur`}
                         class="phase-visual-img active"
                         loading="lazy"
+                        width={600}
+                        height={600}
                       />
                       <div class="phase-visual-overlay" />
                     </div>
