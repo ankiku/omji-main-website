@@ -315,7 +315,7 @@ import '../../styles/global.css';
         <div class="admin-panel">
           <div class="admin-panel-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
-            Gemini AI Autopilot (30-Day Schedule)
+            Gemini AI Autopilot
           </div>
           <div style="background:var(--bg-glass); border:1px solid var(--border); padding:20px; border-radius:var(--radius-md); margin-bottom:20px;">
             <p style="margin-bottom:15px; font-size:0.9rem; color:var(--text-secondary);">Enter your Gemini API Key and schedule parameters to automatically generate and schedule SEO-friendly construction blogs.</p>
@@ -342,7 +342,7 @@ import '../../styles/global.css';
           <div id="ai-progress-container" style="display:none; background:var(--bg-elevated); padding:20px; border-radius:var(--radius-md); border:1px solid var(--border);">
             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.9rem; font-weight:600;">
               <span>Generation Progress</span>
-              <span id="ai-progress-text">0 / 90</span>
+              <span id="ai-progress-text">0 / 0</span>
             </div>
             <div style="width:100%; height:8px; background:var(--bg-card); border-radius:4px; overflow:hidden;">
               <div id="ai-progress-bar" style="width:0%; height:100%; background:var(--gold); transition:width 0.3s;"></div>
@@ -680,9 +680,15 @@ import '../../styles/global.css';
   if (envGeminiKey) {
     geminiKeyInput.parentElement.style.display = 'none';
     const msg = document.createElement('div');
-    msg.style.cssText = 'font-size:0.85rem; color:#4a90e2; background:rgba(74, 144, 226, 0.1); padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid rgba(74, 144, 226, 0.3);';
-    msg.innerHTML = '<strong>✓ Secure API Key Detected</strong><br/>Your Gemini API Key is securely loaded from environment variables.';
+    msg.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; color:#4a90e2; background:rgba(74, 144, 226, 0.1); padding:10px; border-radius:6px; margin-bottom:15px; border:1px solid rgba(74, 144, 226, 0.3);';
+    msg.innerHTML = '<div><strong>✓ Secure API Key Detected</strong><br/>Your Gemini API Key is securely loaded from environment variables.</div><button id="override-key-btn" class="btn btn-ghost btn-sm" style="color:#4a90e2; border-color:rgba(74,144,226,0.3);">Override</button>';
     geminiKeyInput.parentElement.parentElement.insertBefore(msg, geminiKeyInput.parentElement);
+
+    document.getElementById('override-key-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      geminiKeyInput.parentElement.style.display = 'block';
+      msg.style.display = 'none';
+    });
   }
 
   function logAi(msg) {
@@ -705,7 +711,7 @@ import '../../styles/global.css';
   });
 
   aiStartBtn.addEventListener('click', async () => {
-    const key = envGeminiKey || geminiKeyInput.value.trim();
+    const key = geminiKeyInput.value.trim() || envGeminiKey;
     if (!key) {
       showToast('Please enter your Gemini API Key.', 'error');
       return;
@@ -719,6 +725,8 @@ import '../../styles/global.css';
     
     const totalPosts = parseInt(document.getElementById('ai-total-blogs').value) || 30;
     const postsPerDay = parseInt(document.getElementById('ai-blogs-per-day').value) || 1;
+    
+    document.getElementById('ai-progress-text').textContent = `0 / ${totalPosts}`;
     
     const topics = [
       'RCC Construction techniques', 'Modern Brickwork patterns', 'High quality steel Fe 500D',
