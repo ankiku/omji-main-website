@@ -1459,24 +1459,28 @@ const faqs = [
           }
         }
 
-        function initHomeProjects() {
+        async function initHomeProjects() {
         const grid = document.getElementById('homeProjectsGrid');
         const noMsg = document.getElementById('no-home-projects-msg');
         if (!grid) return;
         
-        const savedProjects = JSON.parse(localStorage.getItem('omji_projects') || '[]');
+        let savedProjects = [];
+        try {
+          const res = await fetch('/api/projects');
+          if (res.ok) {
+            savedProjects = await res.json();
+          }
+        } catch(e) {
+          console.error("Failed to fetch projects", e);
+        }
+
         if (savedProjects.length === 0) {
           grid.style.display = 'none';
           noMsg.style.display = 'block';
         } else {
           // Show max 6 on homepage
           grid.innerHTML = savedProjects.slice(0, 6).map((p, i) => {
-            let photos = [];
-            if (p.images) photos = p.images;
-            else if (p.imageData) photos = [p.imageData];
-            else {
-              try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
-            }
+            let photos = p.images || (p.imageData ? [p.imageData] : []);
             const mainImg = photos.length > 0 ? photos[0] : null;
             
             return `
@@ -1505,6 +1509,16 @@ const faqs = [
         const modalDesc = document.getElementById('homeModalDesc');
         const modalGallery = document.getElementById('homeModalGallery');
 
+        let currentPhotos = [];
+        let currentPhotoIndex = 0;
+
+        window.changeHomePhoto = function(dir) {
+          if(currentPhotos.length <= 1) return;
+          currentPhotoIndex = (currentPhotoIndex + dir + currentPhotos.length) % currentPhotos.length;
+          document.getElementById('home-modal-img').src = currentPhotos[currentPhotoIndex];
+          document.getElementById('home-modal-counter').textContent = (currentPhotoIndex + 1) + ' / ' + currentPhotos.length;
+        };
+
         window.openHomeModal = function(id) {
           const p = savedProjects.find(x => x.id === id);
           if (!p) return;
@@ -1515,15 +1529,20 @@ const faqs = [
           modalMeta.innerHTML = metaHtml;
           modalDesc.textContent = p.description || 'No description provided.';
           
-          let photos = [];
-          if (p.images) photos = p.images;
-          else if (p.imageData) photos = [p.imageData];
-          else {
-            try { photos = JSON.parse(localStorage.getItem('omji_project_photos_' + p.id) || '[]'); } catch(e){}
-          }
+          currentPhotos = p.images || (p.imageData ? [p.imageData] : []);
+          currentPhotoIndex = 0;
           
-          if (photos.length > 0) {
-            modalGallery.innerHTML = photos.map(src => `<img src="${src}" class="gallery-img" loading="lazy" />`).join('');
+          if (currentPhotos.length > 0) {
+            modalGallery.innerHTML = `
+              <div style="position:relative; width:100%; text-align:center; background:#111; border-radius:8px; overflow:hidden;">
+                <img id="home-modal-img" src="${currentPhotos[0]}" style="max-width:100%; max-height:60vh; object-fit:contain;" />
+                ${currentPhotos.length > 1 ? `
+                  <button onclick="changeHomePhoto(-1)" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center;">❮</button>
+                  <button onclick="changeHomePhoto(1)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center;">❯</button>
+                  <div id="home-modal-counter" style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.5); color:#fff; padding:4px 10px; border-radius:12px; font-size:0.8rem;">1 / ${currentPhotos.length}</div>
+                ` : ''}
+              </div>
+            `;
           } else {
             modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
           }
