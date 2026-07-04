@@ -809,44 +809,25 @@ ul, ol { list-style: none; }
   position: absolute;
   inset: 0;
   z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 50%);
-  gap: 0;
   overflow: hidden;
+  background-color: var(--bg-body);
 }
-.hero-photo-tile {
-  overflow: hidden;
-  position: relative;
-}
-.hero-photo-tile img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Sepia + desaturate + darken for vintage look */
-  filter: sepia(70%) saturate(0.5) brightness(0.45) contrast(0.85) hue-rotate(-8deg);
-  transform-origin: center;
-  animation: kenBurnsZoom 28s ease-in-out infinite alternate;
-  will-change: transform;
-}
-/* Stagger Ken Burns per tile */
-.hero-photo-tile--1 img { animation-delay: 0s;    animation-duration: 28s; }
-.hero-photo-tile--2 img { animation-delay: -7s;   animation-duration: 32s; }
-.hero-photo-tile--3 img { animation-delay: -14s;  animation-duration: 26s; }
-.hero-photo-tile--4 img { animation-delay: -3s;   animation-duration: 30s; }
-.hero-photo-tile--5 img { animation-delay: -10s;  animation-duration: 34s; }
-.hero-photo-tile--6 img { animation-delay: -5s;   animation-duration: 29s; }
-.hero-photo-tile--7 img { animation-delay: -18s;  animation-duration: 27s; }
-.hero-photo-tile--8 img { animation-delay: -12s;  animation-duration: 31s; }
-/* Alternating zoom direction */
-.hero-photo-tile--2 img,
-.hero-photo-tile--4 img,
-.hero-photo-tile--6 img,
-.hero-photo-tile--8 img { animation-direction: alternate-reverse; }
 
-@keyframes kenBurnsZoom {
-  0%   { transform: scale(1.08); }
-  100% { transform: scale(1.22); }
+.hero-photo-bg.fast-loading-bg {
+  background: radial-gradient(circle at 15% 50%, rgba(183, 138, 60, 0.25), transparent 60%),
+              radial-gradient(circle at 85% 30%, rgba(121, 33, 31, 0.25), transparent 60%),
+              radial-gradient(circle at 50% 80%, rgba(38, 38, 38, 0.8), transparent 70%);
+  background-color: #1a1614;
+  animation: meshFlow 15s ease-in-out infinite alternate;
+}
+
+@keyframes meshFlow {
+  0% {
+    background-position: 0% 0%, 0% 0%, 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%, -50% 50%, 50% -50%;
+  }
 }
 
 /* Vintage sandstone color-wash layer on top of photos */

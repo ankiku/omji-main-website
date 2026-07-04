@@ -344,34 +344,9 @@ const faqs = [
   <section class="hero" id="hero">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
 
-    <!-- ░░░ VINTAGE BLURRED PHOTO COLLAGE BACKGROUND ░░░ -->
-    <div class="hero-photo-bg" aria-hidden="true">
-      <!-- Tile 1: eager-load (above fold) -->
-      <div class="hero-photo-tile hero-photo-tile--1">
-        <Image src={staticImages['../assets/images/phase-04.png']()} alt="" loading="eager" fetchpriority="high" decoding="async" />
-      </div>
-      <!-- Tiles 2-8: lazy-load for performance -->
-      <div class="hero-photo-tile hero-photo-tile--2">
-        <Image src={staticImages['../assets/images/phase-06.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--3">
-        <Image src={staticImages['../assets/images/phase-02.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--4">
-        <Image src={staticImages['../assets/images/phase-05.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--5">
-        <Image src={staticImages['../assets/images/phase-03.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--6">
-        <Image src={staticImages['../assets/images/phase-01.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--7">
-        <Image src={staticImages['../assets/images/phase-04-step-3.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
-      <div class="hero-photo-tile hero-photo-tile--8">
-        <Image src={staticImages['../assets/images/phase-06-step-2.png']()} alt="" loading="lazy" decoding="async" />
-      </div>
+    <!-- ░░░ VINTAGE CSS MESH BACKGROUND (Fast Loading) ░░░ -->
+    <div class="hero-photo-bg fast-loading-bg" aria-hidden="true">
+      <div class="mesh-gradient"></div>
     </div>
 
     <!-- Vintage overlay layers: sandstone wash + vignette -->
