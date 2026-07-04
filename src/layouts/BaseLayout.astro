@@ -1,4 +1,6 @@
 ---
+import fs from 'fs';
+import { getDataPath } from '../lib/data-store.js';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
@@ -85,6 +87,18 @@ const faqJsonLd = faqSchema ? {
     }
   }))
 } : null;
+
+// Settings (Google Analytics)
+let googleAnalyticsId = null;
+try {
+  const settingsPath = getDataPath('settings.json');
+  if (fs.existsSync(settingsPath)) {
+    const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+    if (settings.googleAnalyticsId) {
+      googleAnalyticsId = settings.googleAnalyticsId;
+    }
+  }
+} catch (e) {}
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -93,6 +107,16 @@ const faqJsonLd = faqSchema ? {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="generator" content={Astro.generator} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  {googleAnalyticsId && (
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+    <script is:inline define:vars={{ gaId: googleAnalyticsId }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', gaId);
+    </script>
+  )}
 
   <!-- SEO -->
   <title>{fullTitle}</title>
