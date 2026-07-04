@@ -1,0 +1,143 @@
+---
+export const prerender = false;
+import { getFinances, getMaterials } from '../../lib/data-store.js';
+
+const finances = getFinances();
+const materials = getMaterials();
+
+let totalPocket = 0;
+let totalPaid = 0;
+let totalRec = 0;
+
+finances.forEach(f => {
+  const amt = parseFloat(f.amount || 0);
+  if(f.type === 'out_of_pocket') totalPocket += amt;
+  if(f.type === 'paid_out') totalPaid += amt;
+  if(f.type === 'received') totalRec += amt;
+});
+
+let pending = (totalPaid + totalPocket) - totalRec;
+
+let matStats = {};
+materials.forEach(m => {
+  let name = m.name || 'Unknown';
+  let qty = parseFloat(m.quantity || 0);
+  let u = m.unit || '';
+  let key = `${name} (${u})`;
+  
+  if(!matStats[key]) matStats[key] = { qty:0, amt:0 };
+  matStats[key].qty += qty;
+  matStats[key].amt += parseFloat(m.amount || 0);
+});
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Site Summary Report | Omji Construction</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
+    body { font-family: 'Outfit', sans-serif; background: #f9f9f9; color: #333; margin: 0; padding: 40px; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #eee; padding-bottom: 20px; }
+    .header h1 { margin: 0; color: #B08D57; font-size: 2.5rem; }
+    .header p { color: #777; margin-top: 5px; }
+    
+    .section-title { font-size: 1.5rem; color: #B08D57; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 40px; margin-bottom: 20px; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stat-card { background: #fafafa; padding: 20px; border-radius: 8px; border: 1px solid #eee; text-align: center; }
+    .stat-card h3 { margin: 0; font-size: 2rem; color: #333; }
+    .stat-card p { margin: 5px 0 0 0; color: #777; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+    th, td { padding: 12px 15px; border-bottom: 1px solid #eee; text-align: left; }
+    th { background: #fafafa; color: #555; font-weight: 600; }
+    
+    .print-btn { display: block; width: 200px; margin: 0 auto 30px auto; padding: 12px 24px; background: #B08D57; color: #fff; border: none; border-radius: 4px; font-size: 1.1rem; cursor: pointer; text-align: center; font-family: inherit; font-weight: 600; }
+    .print-btn:hover { background: #9A6F28; }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .container { box-shadow: none; padding: 0; max-width: 100%; }
+      .print-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+
+  <div class="container">
+    <div class="header">
+      <h1>Site Summary Report</h1>
+      <p>Omji Construction | Generated on {new Date().toLocaleDateString()}</p>
+    </div>
+
+    <!-- Finances Summary -->
+    <h2 class="section-title">Financial Summary</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>₹{totalPocket.toLocaleString()}</h3>
+        <p>Spent from Pocket</p>
+      </div>
+      <div class="stat-card">
+        <h3>₹{totalPaid.toLocaleString()}</h3>
+        <p>Paid Out</p>
+      </div>
+      <div class="stat-card">
+        <h3 style="color:#28a745;">₹{totalRec.toLocaleString()}</h3>
+        <p>Received</p>
+      </div>
+      <div class="stat-card">
+        <h3 style={pending > 0 ? 'color:#dc3545;' : (pending < 0 ? 'color:#28a745;' : '')}>₹{pending.toLocaleString()}</h3>
+        <p>Outstanding</p>
+      </div>
+    </div>
+
+    <!-- Materials Summary -->
+    <h2 class="section-title">Materials Received at Site</h2>
+    <div class="stats-grid">
+      {Object.keys(matStats).length === 0 ? (
+        <div class="stat-card"><p>No materials recorded.</p></div>
+      ) : (
+        Object.keys(matStats).map(k => (
+          <div class="stat-card">
+            <h3>{matStats[k].qty}</h3>
+            <p>{k}</p>
+          </div>
+        ))
+      )}
+    </div>
+
+    <!-- Recent Transactions -->
+    <h2 class="section-title">Recent Transactions</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {finances.length === 0 ? (
+          <tr><td colspan="4" style="text-align:center;">No transactions found</td></tr>
+        ) : (
+          finances.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,20).map(f => (
+            <tr>
+              <td>{new Date(f.date).toLocaleDateString()}</td>
+              <td style="text-transform: capitalize;">{f.type.replace('_', ' ')}</td>
+              <td>{f.description}</td>
+              <td>₹{parseFloat(f.amount||0).toLocaleString()}</td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </table>
+
+  </div>
+
+</body>
+</html>

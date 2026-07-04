@@ -51,3 +51,21 @@ export function getProjects() {
     return JSON.parse(data || '[]');
   } catch(e) { return []; }
 }
+
+export function getFinances() {
+  const DATA_FILE = getDataPath('finances.json');
+  if (!fs.existsSync(DATA_FILE)) return [];
+  try {
+    const data = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(data || '[]');
+  } catch(e) { return []; }
+}
+
+export function getMaterials() {
+  const DATA_FILE = getDataPath('materials.json');
+  if (!fs.existsSync(DATA_FILE)) return [];
+  try {
+    const data = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(data || '[]');
+  } catch(e) { return []; }
+}
