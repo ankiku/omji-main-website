@@ -449,12 +449,27 @@ import '../../styles/global.css';
       <div class="tab-content" id="tab-settings">
         <div class="admin-panel">
           <div class="admin-panel-title">Site Settings</div>
-          <div class="form-group">
-            <label class="form-label" for="settings-ga">Google Analytics Measurement ID</label>
-            <input type="text" class="form-input" id="settings-ga" placeholder="e.g. G-XXXXXXXXXX">
-            <div style="font-size:0.8rem;color:var(--text-muted);margin-top:5px;">This will automatically inject the Google Analytics tracking script into the head of all pages.</div>
+          
+          <div id="ga-display-section" style="display:none; padding:15px; border:1px solid var(--border); border-radius:8px; margin-bottom:15px; background:var(--bg-elevated);">
+            <div style="font-weight:600; margin-bottom:5px;">Google Analytics Status: <span style="color:var(--success);">Active</span></div>
+            <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom:10px;">Current ID: <strong id="current-ga-id" style="color:var(--text-primary);"></strong></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-ghost" id="edit-ga-btn" style="padding:6px 12px; font-size:0.8rem;">Edit</button>
+              <button class="btn btn-ghost" id="delete-ga-btn" style="padding:6px 12px; font-size:0.8rem; color:#ef4444; border-color:#ef4444;">Delete</button>
+            </div>
           </div>
-          <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+          
+          <div id="ga-edit-section">
+            <div class="form-group">
+              <label class="form-label" for="settings-ga">Google Analytics Measurement ID</label>
+              <input type="text" class="form-input" id="settings-ga" placeholder="e.g. G-XXXXXXXXXX">
+              <div style="font-size:0.8rem;color:var(--text-muted);margin-top:5px;">This will automatically inject the Google Analytics tracking script into the head of all pages.</div>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+              <button class="btn btn-ghost" id="cancel-ga-edit-btn" style="display:none;">Cancel</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -491,9 +506,7 @@ import '../../styles/global.css';
       const sRes = await fetch('/api/settings');
       if (sRes.ok) {
         const settings = await sRes.json();
-        if (settings.googleAnalyticsId) {
-          document.getElementById('settings-ga').value = settings.googleAnalyticsId;
-        }
+        updateGAUIState(settings.googleAnalyticsId);
       }
     } catch(e) {}
     
@@ -503,6 +516,63 @@ import '../../styles/global.css';
     if (document.getElementById('tab-contacts').classList.contains('active')) renderContactsGrid();
   }
   loadData();
+
+  // Settings UI State Logic
+  function updateGAUIState(gaId) {
+    if (gaId && gaId.trim() !== '') {
+      document.getElementById('ga-display-section').style.display = 'block';
+      document.getElementById('ga-edit-section').style.display = 'none';
+      document.getElementById('current-ga-id').innerText = gaId;
+      document.getElementById('settings-ga').value = gaId;
+    } else {
+      document.getElementById('ga-display-section').style.display = 'none';
+      document.getElementById('ga-edit-section').style.display = 'block';
+      document.getElementById('cancel-ga-edit-btn').style.display = 'none';
+      document.getElementById('settings-ga').value = '';
+    }
+  }
+
+  const editGaBtn = document.getElementById('edit-ga-btn');
+  const cancelGaBtn = document.getElementById('cancel-ga-edit-btn');
+  const deleteGaBtn = document.getElementById('delete-ga-btn');
+
+  if (editGaBtn) {
+    editGaBtn.addEventListener('click', () => {
+      document.getElementById('ga-display-section').style.display = 'none';
+      document.getElementById('ga-edit-section').style.display = 'block';
+      document.getElementById('cancel-ga-edit-btn').style.display = 'block';
+    });
+  }
+
+  if (cancelGaBtn) {
+    cancelGaBtn.addEventListener('click', () => {
+      const currentVal = document.getElementById('current-ga-id').innerText;
+      updateGAUIState(currentVal);
+    });
+  }
+
+  if (deleteGaBtn) {
+    deleteGaBtn.addEventListener('click', async () => {
+      if(confirm('Are you sure you want to remove the Google Analytics ID?')) {
+        deleteGaBtn.innerText = 'Deleting...';
+        try {
+          const res = await fetch('/api/settings', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ googleAnalyticsId: null })
+          });
+          if (res.ok) {
+            updateGAUIState(null);
+          } else {
+            alert('Failed to delete.');
+          }
+        } catch (err) {
+          alert('Error: ' + err.message);
+        }
+        deleteGaBtn.innerText = 'Delete';
+      }
+    });
+  }
 
   // Settings Save Logic
   const saveSettingsBtn = document.getElementById('save-settings-btn');
@@ -515,11 +585,14 @@ import '../../styles/global.css';
         const res = await fetch('/api/settings', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ googleAnalyticsId: gaId })
+          body: JSON.stringify({ googleAnalyticsId: gaId || null })
         });
         if (res.ok) {
           saveSettingsBtn.innerText = 'Saved!';
-          setTimeout(() => saveSettingsBtn.innerText = 'Save Settings', 2000);
+          setTimeout(() => {
+            saveSettingsBtn.innerText = 'Save Settings';
+            updateGAUIState(gaId);
+          }, 1000);
         } else {
           alert('Failed to save settings.');
           saveSettingsBtn.innerText = 'Save Settings';
