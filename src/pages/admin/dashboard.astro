@@ -791,7 +791,7 @@ import '../../styles/global.css';
           readTime: '4 min read',
           author: 'Admin',
           status: 'scheduled',
-          image: `https://source.unsplash.com/800x450/?construction,building,${dayOffset * i}`
+          image: `https://picsum.photos/seed/build${dayOffset * i * Math.floor(Math.random() * 100)}/800/450`
         };
 
         await fetch('/api/blogs', {
