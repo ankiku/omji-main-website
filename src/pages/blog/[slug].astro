@@ -29,16 +29,18 @@ if (slug) {
     <div id="blog-content-wrapper">
       <section class="page-hero">
         <div class="container">
-          <div class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span style="color:var(--bronze)">{post.title.length > 30 ? post.title.substring(0, 30) + '...' : post.title}</span></div>
-          <div class="section-tag">{post.cat}</div>
-          <h1 class="page-hero-title" style="max-width: 900px;">{post.title}</h1>
-          <div style="display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.9rem;">
-            <div style="display:flex;align-items:center;gap:8px;">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">OM</div>
-              <span style="color:var(--text-primary);font-weight:600;">{post.author || 'Admin'}</span>
+          <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+            <div class="breadcrumb" style="justify-content: flex-start; margin-left: 0;"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span style="color:var(--bronze)">{post.title.length > 30 ? post.title.substring(0, 30) + '...' : post.title}</span></div>
+            <div class="section-tag" style="margin-left: 0;">{post.cat}</div>
+            <h1 class="page-hero-title" style="margin-left: 0; text-align: left;">{post.title}</h1>
+            <div style="display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.9rem;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">OM</div>
+                <span style="color:var(--text-primary);font-weight:600;">{post.author || 'Admin'}</span>
+              </div>
+              <span>{new Date(post.publishDate).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
+              <span>{post.readTime || '5 min read'}</span>
             </div>
-            <span>{new Date(post.publishDate).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
-            <span>{post.readTime || '5 min read'}</span>
           </div>
         </div>
       </section>
