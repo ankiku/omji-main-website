@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { Image, getImage } from 'astro:assets';
+import { getProjects } from '../lib/data-store.js';
+
+const serverProjects = getProjects();
 
 const staticImages = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*.{jpeg,jpg,png,gif}');
 
@@ -1007,11 +1010,33 @@ const faqs = [
         </p>
       </div>
       <div class="projects-grid" id="homeProjectsGrid">
-        <!-- Rendered dynamically from localStorage -->
+        {serverProjects.slice(0, 6).map((p) => {
+           const photos = p.images || (p.imageData ? [p.imageData] : []);
+           const mainImg = photos.length > 0 ? photos[0] : null;
+           return (
+             <div class="project-card reveal visible antique-gold-border scalloped-arch on-card" onclick={`openHomeModal(${p.id})`}>
+               {mainImg ? (
+                 <img src={mainImg} class="project-card-image" alt={p.title} loading="lazy" />
+               ) : (
+                 <div class="project-card-placeholder">🏗️</div>
+               )}
+               <div class="project-card-body">
+                 <div class="project-card-type" style="text-transform:uppercase;font-size:0.75rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:4px;">{p.category}</div>
+                 <div class="project-card-name" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:12px;">{p.title}</div>
+                 <div class="project-card-meta" style="display:flex;gap:8px;flex-wrap:wrap;">
+                   {p.area && <span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📐 {p.area}</span>}
+                   {p.year && <span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📅 {p.year}</span>}
+                 </div>
+               </div>
+             </div>
+           );
+        })}
       </div>
-      <div id="no-home-projects-msg" style="display:none; text-align:center; padding: 3rem; color: var(--text-muted); background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border);">
-        No projects uploaded yet.
-      </div>
+      {serverProjects.length === 0 && (
+        <div id="no-home-projects-msg" style="text-align:center; padding: 3rem; color: var(--text-muted); background: var(--bg-elevated); border-radius: var(--radius-lg); border: 1px dashed var(--border);">
+          No projects uploaded yet.
+        </div>
+      )}
       <div style="text-align:center;margin-top:3rem;">
         <a href="/projects" class="btn btn-outline">View All Projects →</a>
       </div>
@@ -1334,46 +1359,8 @@ const faqs = [
       animate();
 
       async function initHomeProjects() {
-        const grid = document.getElementById('homeProjectsGrid');
-        const noMsg = document.getElementById('no-home-projects-msg');
-        if (!grid) return;
-        
-        let savedProjects = [];
-        try {
-          const res = await fetch('/api/projects');
-          if (res.ok) {
-            savedProjects = await res.json();
-          }
-        } catch(e) {
-          console.error("Failed to fetch projects", e);
-        }
-
-        if (savedProjects.length === 0) {
-          grid.style.display = 'none';
-          noMsg.style.display = 'block';
-        } else {
-          // Show max 6 on homepage
-          grid.innerHTML = savedProjects.slice(0, 6).map((p, i) => {
-            let photos = p.images || (p.imageData ? [p.imageData] : []);
-            const mainImg = photos.length > 0 ? photos[0] : null;
-            
-            return `
-              <div class="project-card reveal visible antique-gold-border scalloped-arch on-card" onclick="openHomeModal(${p.id})">
-                ${mainImg 
-                  ? `<img src="${mainImg}" class="project-card-image" alt="${p.title}" loading="lazy" />` 
-                  : `<div class="project-card-placeholder">🏗️</div>`}
-                <div class="project-card-body">
-                  <div class="project-card-type" style="text-transform:uppercase;font-size:0.75rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:4px;">${p.category}</div>
-                  <div class="project-card-name" style="font-family:var(--font-heading);font-size:1.2rem;font-weight:700;margin-bottom:12px;">${p.title}</div>
-                  <div class="project-card-meta" style="display:flex;gap:8px;flex-wrap:wrap;">
-                    ${p.area ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📐 ${p.area}</span>` : ''}
-                    ${p.year ? `<span class="project-meta-tag" style="font-size:0.8rem;background:var(--bg-glass);padding:4px 8px;border-radius:4px;border:1px solid var(--border);">📅 ${p.year}</span>` : ''}
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
+        // SSR now renders the grid on the server, so we only need to handle the modal fetching.
+        // The modal logic is kept below.
 
         // Home Modal Logic
         const modal = document.getElementById('homeProjectModal');
