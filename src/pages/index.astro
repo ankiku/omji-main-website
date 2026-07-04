@@ -713,6 +713,36 @@ const faqs = [
                     style="width:5px;height:5px;border-radius:50%;background:#22c55e;flex-shrink:0;"
                   ></span>CCTV Live
                 </div>
+              </div>
+              <!-- Phase list -->
+              <div
+                style="padding:15px;background:var(--bg-card);border-bottom-left-radius:8px;border-bottom-right-radius:8px;"
+              >
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  {
+                    [
+                      { phase: "Phase 1: Mobilization & Pre-Construction", pct: 100 },
+                      { phase: "Phase 2: Excavation & Earthwork", pct: 9 },
+                      { phase: "Phase 3: Foundation — PCC & Footing", pct: 0 },
+                      { phase: "Phase 4: Plinth Level & DPC", pct: 0 },
+                      { phase: "Phase 5: Ground Floor Columns", pct: 0 },
+                    ].map((p) => (
+                      <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.75rem;">
+                        <span style="color:var(--text-primary);font-weight:600;"
+                          >{p.phase}</span
+                        >
+                        <span style="color:var(--gold);font-weight:700;"
+                          >{p.pct}%</span
+                        >
+                      </div>
+                    ))
+                  }
+                  <div style="text-align:center;margin-top:5px;">
+                    <span
+                      style="font-size:0.6rem;color:var(--text-muted);background:var(--bg-elevated);padding:3px 8px;border-radius:20px;border:1px solid var(--border);"
+                      >+ 20 more phases tracked in real-time...</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
