@@ -1152,6 +1152,7 @@ import '../../styles/global.css';
           <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
             ${isScheduled ? `<button class="btn btn-ghost btn-sm blog-publish-btn" data-slug="${b.slug}" style="color:#4a4;border-color:rgba(80,180,80,0.3);font-size:0.75rem;">Publish Now</button>` : ''}
             ${isPublished ? `<button class="btn btn-ghost btn-sm blog-unpublish-btn" data-slug="${b.slug}" style="color:#e90;border-color:rgba(238,153,0,0.3);font-size:0.75rem;">Unpublish</button>` : ''}
+            ${!b.image ? `<button class="btn btn-ghost btn-sm blog-gen-image-btn" data-slug="${b.slug}" data-title="${encodeURIComponent(b.title)}" style="color:#a855f7;border-color:rgba(168,85,247,0.3);font-size:0.75rem;">Gen Image</button>` : ''}
             <button class="btn btn-ghost btn-sm blog-edit-btn" data-slug="${b.slug}" style="font-size:0.75rem;">Edit</button>
             <button class="btn btn-ghost btn-sm blog-index-btn" data-url="https://omjiconstruction.com/blog/${b.slug}" style="color:#007bff;border-color:rgba(0,123,255,0.3);font-size:0.75rem;">Index</button>
             <button class="btn btn-ghost btn-sm blog-delete-btn" data-slug="${b.slug}" style="color:#c44;border-color:rgba(220,60,60,0.3);font-size:0.75rem;">Delete</button>
@@ -1161,6 +1162,35 @@ import '../../styles/global.css';
     }).join('');
 
     // Attach event listeners
+    blogsManageGrid.querySelectorAll('.blog-gen-image-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const slug = btn.dataset.slug;
+        const title = decodeURIComponent(btn.dataset.title || '');
+        
+        btn.innerHTML = 'Generating...';
+        btn.disabled = true;
+        
+        try {
+          const image = `https://image.pollinations.ai/prompt/${encodeURIComponent(title + ', highly detailed architectural photography, construction site, 8k resolution')}?width=800&height=450&nologo=true`;
+          
+          await fetch('/api/blogs', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slug, image })
+          });
+          
+          const idx = localBlogs.findIndex(b => b.slug === slug);
+          if (idx !== -1) { localBlogs[idx].image = image; }
+          showToast('Image generated successfully!');
+          renderBlogsGrid();
+        } catch (err) {
+          showToast('Failed to generate image', 'error');
+          btn.innerHTML = 'Gen Image';
+          btn.disabled = false;
+        }
+      });
+    });
+
     blogsManageGrid.querySelectorAll('.blog-index-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const url = btn.dataset.url;
