@@ -7,7 +7,7 @@ export async function GET() {
   
   let blogs = [];
   try {
-    const dataPath = getDataPath();
+    const dataPath = getDataPath('blogs.json');
     if (fs.existsSync(dataPath)) {
       blogs = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
       // Only include published blogs
