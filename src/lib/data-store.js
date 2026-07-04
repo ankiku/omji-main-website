@@ -42,3 +42,12 @@ export function getUploadPath(filename = '') {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   return path.join(dir, filename);
 }
+
+export function getProjects() {
+  const DATA_FILE = getDataPath('projects.json');
+  if (!fs.existsSync(DATA_FILE)) return [];
+  try {
+    const data = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(data || '[]');
+  } catch(e) { return []; }
+}

@@ -2,7 +2,7 @@ export const prerender = false;
 import fs from 'fs';
 import path from 'path';
 
-import { getDataPath, getUploadPath } from '../../lib/data-store.js';
+import { getDataPath, getUploadPath, getProjects } from '../../lib/data-store.js';
 
 const DATA_FILE = getDataPath('projects.json');
 const PUBLIC_UPLOAD_DIR = getUploadPath();
@@ -13,13 +13,7 @@ const DIST_UPLOAD_DIR = path.join(process.cwd(), 'dist', 'client', 'uploads');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 });
 
-function getProjects() {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  try {
-    const data = fs.readFileSync(DATA_FILE, 'utf-8');
-    return JSON.parse(data || '[]');
-  } catch(e) { return []; }
-}
+
 
 function saveProjects(data) {
   const dir = path.dirname(DATA_FILE);
