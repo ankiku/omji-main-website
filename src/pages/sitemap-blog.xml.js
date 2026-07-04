@@ -10,8 +10,9 @@ export async function GET() {
     const dataPath = getDataPath('blogs.json');
     if (fs.existsSync(dataPath)) {
       blogs = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-      // Only include published blogs
-      blogs = blogs.filter(b => b.status === 'published');
+      // Include explicitly published blogs, or scheduled blogs whose publish date has passed
+      const now = new Date().getTime();
+      blogs = blogs.filter(b => b.status === 'published' || new Date(b.publishDate).getTime() <= now);
     }
   } catch(e) {
     console.error('Sitemap blog error:', e);
