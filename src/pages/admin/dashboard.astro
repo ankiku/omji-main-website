@@ -71,9 +71,13 @@ import '../../styles/global.css';
     .admin-panel { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
     .admin-panel-title { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-light); }
     
-    .stat-mini { background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; box-shadow: var(--shadow-sm); }
-    .stat-mini-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; color: var(--bronze); line-height: 1; margin-bottom: 8px; }
-    .stat-mini-lbl { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+    .stat-mini { background: linear-gradient(145deg, #FFFFFF, var(--bg-elevated)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: 0 4px 15px rgba(92,50,10,0.05); transition: all 0.3s ease; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+    .stat-mini::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--bronze)); opacity: 0; transition: opacity 0.3s; }
+    .stat-mini:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(92,50,10,0.12); border-color: var(--gold-pale); }
+    .stat-mini:hover::before { opacity: 1; }
+    .stat-mini-icon { position: absolute; right: 20px; top: 24px; color: var(--gold-pale); opacity: 0.5; width: 48px; height: 48px; pointer-events: none; }
+    .stat-mini-num { font-family: var(--font-display); font-size: 2.8rem; font-weight: 800; color: var(--bronze); line-height: 1; margin-bottom: 6px; z-index: 1; }
+    .stat-mini-lbl { font-size: 0.9rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; z-index: 1; }
 
     /* Upload & Forms */
     .upload-zone { border: 2px dashed var(--border-ornament); border-radius: var(--radius-md); padding: 40px 20px; text-align: center; background: var(--bg-glass); cursor: pointer; transition: all 0.2s; margin-bottom: 24px; }
@@ -197,28 +201,57 @@ import '../../styles/global.css';
 
       <!-- OVERVIEW TAB -->
       <div class="tab-content active" id="tab-overview">
-        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; margin-bottom:28px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:32px;">
+          <!-- Card 1 -->
           <div class="stat-mini">
+            <svg class="stat-mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             <div class="stat-mini-num" id="total-count">0</div>
-            <div class="stat-mini-lbl">Uploaded Projects</div>
+            <div class="stat-mini-lbl">Live Projects</div>
           </div>
+          <!-- Card 2 -->
           <div class="stat-mini">
-            <div class="stat-mini-num">8</div>
-            <div class="stat-mini-lbl">Static Default Projects</div>
+            <svg class="stat-mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <div class="stat-mini-num" id="overview-contacts-count">0</div>
+            <div class="stat-mini-lbl">Contact Inquiries</div>
           </div>
+          <!-- Card 3 -->
           <div class="stat-mini">
-            <div class="stat-mini-num" id="last-upload-val">—</div>
-            <div class="stat-mini-lbl">Last Upload Date</div>
+            <svg class="stat-mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path></svg>
+            <div class="stat-mini-num" id="overview-blogs-count">0</div>
+            <div class="stat-mini-lbl">AI Generated Blogs</div>
+          </div>
+          <!-- Card 4 -->
+          <div class="stat-mini" style="background: linear-gradient(145deg, #F9F2E7, var(--bg-elevated));">
+            <svg class="stat-mini-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            <div class="stat-mini-num" style="color:var(--success); font-size:2rem; margin-top:8px;">Online</div>
+            <div class="stat-mini-lbl">API & System Status</div>
           </div>
         </div>
 
-        <div class="admin-panel">
-          <div class="admin-panel-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            Dashboard Instructions
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+          <div class="admin-panel" style="margin-bottom:0;">
+            <div class="admin-panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              Dashboard Instructions
+            </div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <p style="font-size:0.95rem; line-height:1.7; color:var(--text-body);">Welcome to the OMJI Construction Admin Portal. From here, you can seamlessly manage all aspects of your digital presence.</p>
+              <ul style="font-size:0.9rem; line-height:1.8; color:var(--text-muted); padding-left:20px;">
+                <li><strong>Upload Project:</strong> Add new high-resolution webp images to your portfolio grid.</li>
+                <li><strong>Manage Projects:</strong> Remove or organize existing projects.</li>
+                <li><strong>Contact Requests:</strong> View real-time submissions from your website's contact form.</li>
+                <li><strong>AI Blog Autopilot:</strong> Automatically generate SEO-optimized construction articles using Google Gemini.</li>
+              </ul>
+            </div>
           </div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <p style="font-size:0.9rem; line-height:1.6; color:var(--text-body);">This admin dashboard manages your construction projects, contact form submissions, and AI blog autopilot. Uploads and updates are securely synced with the server API and will instantly reflect on the live website.</p>
+          
+          <div class="admin-panel" style="margin-bottom:0; background:var(--bg-elevated);">
+            <div class="admin-panel-title">Quick Actions</div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <button class="btn btn-primary" style="width:100%; text-align:center;" onclick="document.querySelector('[data-tab=\'upload\']').click()">+ Upload Project</button>
+              <button class="btn btn-ghost" style="width:100%; text-align:center; background:#fff;" onclick="document.querySelector('[data-tab=\'ai-blog\']').click()">Generate AI Blog</button>
+              <button class="btn btn-ghost" style="width:100%; text-align:center; background:#fff;" onclick="document.querySelector('[data-tab=\'contacts\']').click()">View Inquiries</button>
+            </div>
           </div>
         </div>
       </div>
@@ -920,16 +953,11 @@ import '../../styles/global.css';
   // Overview metric values update
   function updateOverviewStats() {
     const projects = getProjects();
+    const contacts = getContacts();
+    // Overview tab stats
     document.getElementById('total-count').textContent = projects.length;
-    
-    if (projects.length > 0) {
-      const last = new Date(projects[projects.length - 1].uploadedAt);
-      document.getElementById('last-upload-val').textContent = last.toLocaleDateString('en-IN', {
-        day: '2-digit', month: 'short', year: 'numeric'
-      });
-    } else {
-      document.getElementById('last-upload-val').textContent = '—';
-    }
+    document.getElementById('overview-contacts-count').textContent = contacts.length;
+    document.getElementById('overview-blogs-count').textContent = localBlogs ? localBlogs.length : 0;
   }
 
   // Initial Run
