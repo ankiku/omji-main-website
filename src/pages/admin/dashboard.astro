@@ -431,6 +431,15 @@ import '../../styles/global.css';
             <input type="text" id="edit-blog-cat" />
           </div>
           <div class="admin-field" style="margin-bottom:15px;">
+            <label>Cover Image (URL or Upload)</label>
+            <div style="display:flex;gap:10px;margin-bottom:10px;">
+              <input type="text" id="edit-blog-image" placeholder="Image URL (e.g. /uploads/img.jpg or https://...)" style="flex:1;" />
+              <input type="file" id="edit-blog-image-upload" accept="image/*" style="display:none;" />
+              <button class="btn btn-ghost" id="edit-blog-upload-btn" style="white-space:nowrap;">Upload File</button>
+            </div>
+            <img id="edit-blog-image-preview" src="" style="max-width:100%;max-height:200px;border-radius:4px;display:none;border:1px solid var(--border);" />
+          </div>
+          <div class="admin-field" style="margin-bottom:15px;">
             <label>Publish Date</label>
             <input type="datetime-local" id="edit-blog-date" />
           </div>
@@ -1266,6 +1275,15 @@ import '../../styles/global.css';
         document.getElementById('edit-blog-title').value = blog.title || '';
         document.getElementById('edit-blog-excerpt').value = blog.excerpt || '';
         document.getElementById('edit-blog-cat').value = blog.cat || '';
+        document.getElementById('edit-blog-image').value = blog.image || '';
+        const preview = document.getElementById('edit-blog-image-preview');
+        if (blog.image) {
+          preview.src = blog.image;
+          preview.style.display = 'block';
+        } else {
+          preview.src = '';
+          preview.style.display = 'none';
+        }
         document.getElementById('edit-blog-content').value = blog.content || '';
         const d = new Date(blog.publishDate);
         document.getElementById('edit-blog-date').value = d.toISOString().slice(0, 16);
@@ -1277,6 +1295,40 @@ import '../../styles/global.css';
 
   // Blog filter change
   if (blogFilter) blogFilter.addEventListener('change', renderBlogsGrid);
+
+  // Blog Edit Modal: Image Upload Logic
+  const blogImageInput = document.getElementById('edit-blog-image');
+  const blogImageUploadBtn = document.getElementById('edit-blog-upload-btn');
+  const blogImageUploadFile = document.getElementById('edit-blog-image-upload');
+  const blogImagePreview = document.getElementById('edit-blog-image-preview');
+
+  if (blogImageUploadBtn) {
+    blogImageUploadBtn.addEventListener('click', () => blogImageUploadFile.click());
+  }
+  if (blogImageInput) {
+    blogImageInput.addEventListener('input', () => {
+      if (blogImageInput.value.trim()) {
+        blogImagePreview.src = blogImageInput.value.trim();
+        blogImagePreview.style.display = 'block';
+      } else {
+        blogImagePreview.style.display = 'none';
+      }
+    });
+  }
+  if (blogImageUploadFile) {
+    blogImageUploadFile.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const base64 = ev.target.result;
+        blogImageInput.value = base64;
+        blogImagePreview.src = base64;
+        blogImagePreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   // Blog Edit Modal: Close
   document.getElementById('blog-edit-close')?.addEventListener('click', () => { blogEditModal.style.display = 'none'; document.body.style.overflow = ''; });
@@ -1290,6 +1342,7 @@ import '../../styles/global.css';
       title: document.getElementById('edit-blog-title').value.trim(),
       excerpt: document.getElementById('edit-blog-excerpt').value.trim(),
       cat: document.getElementById('edit-blog-cat').value.trim(),
+      image: document.getElementById('edit-blog-image').value.trim(),
       content: document.getElementById('edit-blog-content').value,
       publishDate: new Date(document.getElementById('edit-blog-date').value).toISOString(),
     };
