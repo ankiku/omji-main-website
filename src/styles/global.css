@@ -837,26 +837,26 @@ ul, ol { list-style: none; }
   overflow: hidden;
   pointer-events: none;
   z-index: 2; /* above the mesh, below the text */
-  opacity: 0.6;
+  opacity: 1; /* increased from 0.6 */
 }
 
 .jharokha-svg {
   position: absolute;
-  bottom: 10%;
-  width: 15vw;
-  max-width: 250px;
-  min-width: 150px;
+  bottom: 0%;
+  width: 25vw; /* increased size */
+  max-width: 400px;
+  min-width: 200px;
   height: auto;
-  opacity: 0.8;
-  filter: drop-shadow(0 0 10px rgba(183, 138, 60, 0.2));
+  opacity: 0.7; /* much more visible */
+  filter: drop-shadow(0 0 15px rgba(183, 138, 60, 0.4)); /* stronger glow */
 }
 
 .left-jharokha {
-  left: 5%;
+  left: -2%; /* push slightly off edge */
 }
 
 .right-jharokha {
-  right: 5%;
+  right: -2%;
   transform: scaleX(-1); /* mirror */
 }
 
@@ -865,8 +865,8 @@ ul, ol { list-style: none; }
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80px;
-  opacity: 0.5;
+  height: 150px; /* taller battlements */
+  opacity: 0.9; /* much more visible */
 }
 
 /* Vintage sandstone color-wash layer on top of photos */
