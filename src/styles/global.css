@@ -610,12 +610,12 @@ ul, ol { list-style: none; }
   height: 76px;
   display: flex;
   align-items: center;
-  /* Always visible — sandstone base so it never bleeds into hero */
-  background: rgba(232, 213, 176, 0.97);
+  /* Use a lighter parchment color so it contrasts strongly against the sandstone hero */
+  background: rgba(246, 237, 224, 0.97);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1.5px solid rgba(154,111,40,0.35);
-  box-shadow: 0 2px 20px rgba(92,50,10,0.12);
+  box-shadow: 0 4px 30px rgba(92,50,10,0.12);
   transition: all var(--dur-med) var(--ease-out);
 }
 .navbar::after {
@@ -630,7 +630,7 @@ ul, ol { list-style: none; }
   transition: opacity var(--dur-med);
 }
 .navbar.scrolled {
-  background: rgba(220, 200, 160, 0.98);
+  background: rgba(246, 237, 224, 0.99);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
   border-bottom: 1.5px solid rgba(154,111,40,0.5);

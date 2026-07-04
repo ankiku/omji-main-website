@@ -748,12 +748,13 @@ import '../../styles/global.css';
       
       logAi(`[${i}/${totalPosts}] Requesting Gemini for topic: ${randomTopic}...`);
       
-      const prompt = `Write a short, engaging, 400-word SEO-friendly blog post for a construction company based in Jaipur about "${randomTopic}". 
+      const prompt = `Write a comprehensive, engaging, and highly detailed SEO-friendly blog post (800 to 1200 words) for a construction company based in Jaipur about "${randomTopic}". 
+        The blog post must be in-depth, covering multiple subtopics, professional advice, and deep industry insights.
         Return ONLY valid JSON with these EXACT keys:
         "title": (Catchy Title),
         "slug": (url-friendly-slug-with-random-id),
         "excerpt": (150 chars max summary),
-        "content": (HTML string with <p> and <h2> tags for the body. Make it highly professional and informative. Do not use markdown backticks in the value.)
+        "content": (HTML string with <p> and <h2> tags for the body. Write at least 800 words. Do not use markdown backticks in the value.)
         Do NOT wrap the JSON in markdown code blocks. Return purely the JSON object.`;
 
       try {
