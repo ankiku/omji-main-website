@@ -45,7 +45,14 @@ if (slug) {
 
       <section class="section" style="padding-top:2rem;">
         <div class="container" style="max-width: 800px; margin: 0 auto;">
-          {post.image && <img src={post.image} alt={post.title} style="width:100%; height:450px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:3rem;" />}
+          {post.image && (
+            <div style="position:relative; width:100%; border-radius:var(--radius-lg); margin-bottom:3rem; overflow:hidden; border: 1px solid var(--border);">
+              <img src={post.image} alt={post.title} style="width:100%; height:450px; object-fit:cover; display:block;" />
+              <div style="position:absolute; bottom:15px; right:15px; background:rgba(0,0,0,0.65); color:white; padding:6px 14px; border-radius:4px; font-weight:700; font-size:1.1rem; letter-spacing:1px; backdrop-filter:blur(4px); pointer-events:none; border: 1px solid rgba(255,255,255,0.2);">
+                OMJI CONSTRUCTION
+              </div>
+            </div>
+          )}
           <div class="article-body" set:html={post.content}></div>
         </div>
       </section>
