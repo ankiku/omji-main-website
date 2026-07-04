@@ -1,132 +1,60 @@
 ---
+export const prerender = false;
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import fs from 'fs';
+import { getDataPath } from '../../lib/data-store.js';
 
-export const posts: Record<string, { title: string; cat: string; date: string; readTime: string; emoji: string; author: string; content: string }> = {
-  'foundation-techniques': {
-    title: 'Foundation Techniques: Choosing the Right Type for Your Soil',
-    cat: 'Foundation', date: 'June 15, 2025', readTime: '8 min read',
-    emoji: '🏗️', author: 'OMJI Engineering Team',
-    content: `<p>The foundation is arguably the most critical element of any structure. Choosing the wrong foundation type for your soil conditions can lead to settlement, cracking, and structural failure.</p><h2>1. Isolated Footings</h2><p>Best for: Firm soil with good bearing capacity (above 15 T/sq.m). Used for individual columns in low-rise buildings. Cost-effective and simple to construct.</p><h2>2. Strip/Continuous Footings</h2><p>Best for: Load-bearing wall construction. Distributes the load along the length of the wall. Common in residential villa construction.</p><h2>3. Raft Foundation</h2><p>Best for: Soft soil with low bearing capacity. Spreads the entire building load across a large concrete slab. More expensive but prevents differential settlement.</p><h2>4. Pile Foundation</h2><p>Best for: Very weak surface soil, high-rise buildings, or waterlogged areas. Piles are driven deep into the earth to reach stronger strata. Essential for buildings above 5 floors in most Indian cities.</p><h2>How OMJI Decides</h2><p>We always begin with a geotechnical soil investigation. The report tells us bearing capacity, water table level, and soil type — which directly determines the optimal foundation approach.</p>`,
-  },
-  'rcc-construction': {
-    title: 'Understanding RCC: Why Reinforcement Matters',
-    cat: 'RCC Construction', date: 'May 28, 2025', readTime: '7 min read',
-    emoji: '🧱', author: 'OMJI Structural Team',
-    content: `<p>RCC (Reinforced Cement Concrete) is the backbone of modern construction. But why do we need steel inside concrete?</p><h2>Concrete Alone is Not Enough</h2><p>Concrete has excellent compressive strength — it resists crushing forces well. But it is weak in tension. Steel, on the other hand, is excellent in tension. By combining both, RCC resists all types of structural loads.</p><h2>The Role of Steel Reinforcement</h2><p>TMT (Thermo-Mechanically Treated) steel bars are placed strategically in columns, beams, and slabs to handle tensile stresses. The grade we use — Fe 500D — provides both strength and ductility.</p><h2>Why Quality Matters</h2><p>Using substandard steel or incorrect placement can compromise the entire structure. At OMJI, every bar is tested, every lap length is verified, and every cover is maintained as per IS codes.</p><h2>Machine-Mixed Concrete</h2><p>We never allow hand-mixing on site. All concrete is machine-mixed to ensure consistent water-cement ratio, proper aggregate distribution, and maximum strength development.</p>`,
-  },
-  'concrete-grades': {
-    title: 'Concrete Grades Explained: M20 vs M25 vs M30',
-    cat: 'Concrete Technology', date: 'May 10, 2025', readTime: '6 min read',
-    emoji: '🧪', author: 'OMJI Engineering Team',
-    content: `<p>The "M" in concrete grade stands for Mix, and the number represents the compressive strength in MPa after 28 days of curing.</p><h2>M20 (20 MPa)</h2><p>Used for: PCC (plain cement concrete), minor structural elements, non-load-bearing walls. Not recommended for RCC work in multi-storey buildings.</p><h2>M25 (25 MPa)</h2><p>Used for: Standard residential RCC construction — columns, beams, slabs up to G+3 buildings. The most commonly used grade for residential projects.</p><h2>M30 (30 MPa)</h2><p>Used for: Commercial buildings, high-rise structures, heavy load-bearing elements. Provides additional safety margin for critical structural members.</p><h2>Our Standard Practice</h2><p>At OMJI Construction, we use M25 minimum for all RCC elements and M30 for columns in buildings above 3 floors. Every batch is tested with cube samples at 7 and 28 days.</p>`,
-  },
-  'site-management': {
-    title: 'Site Management Best Practices for Civil Construction',
-    cat: 'Site Management', date: 'April 22, 2025', readTime: '9 min read',
-    emoji: '📋', author: 'OMJI Project Management',
-    content: `<p>Professional site management is the difference between a project that finishes on time and one that spirals into delays and cost overruns.</p><h2>Daily Planning</h2><p>Every morning begins with a toolbox talk — reviewing the day's tasks, safety protocols, and material requirements. This prevents reactive firefighting.</p><h2>Material Management</h2><p>Materials are ordered just-in-time to prevent site clutter and theft. Every delivery is inspected, tested, and logged before acceptance.</p><h2>Quality Checkpoints</h2><p>We conduct stage-wise inspections at every milestone — excavation, foundation, each floor slab, and masonry. Nothing proceeds without sign-off.</p><h2>Documentation</h2><p>Daily progress photos, weekly reports, material consumption logs, and concrete pour records are maintained and shared with clients through our project portal.</p>`,
-  },
-  'structural-safety': {
-    title: 'Structural Safety: What Every Building Owner Must Know',
-    cat: 'Structural Safety', date: 'April 8, 2025', readTime: '5 min read',
-    emoji: '🛡️', author: 'OMJI Structural Team',
-    content: `<p>Your building's structural safety begins with design and extends through construction, occupancy, and maintenance.</p><h2>Load Calculations</h2><p>Every structure must be designed to withstand dead loads (self-weight), live loads (people, furniture), wind loads, and in seismic zones, earthquake forces.</p><h2>Safety Factors</h2><p>IS codes mandate safety factors of 1.5 for concrete and 1.15 for steel. This means the actual capacity is always higher than the design load — building in a margin of safety.</p><h2>Common Red Flags</h2><p>Cracks in columns (not walls), exposed reinforcement, water seepage near foundations, and visible deflection in beams are all signs that need immediate structural assessment.</p>`,
-  },
-  'construction-cost': {
-    title: 'What Drives Civil Construction Costs in 2025?',
-    cat: 'Civil Engineering', date: 'March 20, 2025', readTime: '10 min read',
-    emoji: '💰', author: 'OMJI Construction Team',
-    content: `<p>Understanding cost drivers helps you plan better and avoid surprises during construction.</p><h2>1. Material Costs (40-50%)</h2><p>Steel, cement, aggregates, and bricks form the largest cost component. Steel prices fluctuate seasonally. Buying at the right time can save 5-8% on material costs.</p><h2>2. Labour (25-30%)</h2><p>Skilled labour costs have risen significantly. A mason earns Rs 600-900/day in Mumbai. Structural workers command premium rates during peak construction season.</p><h2>3. Foundation Complexity</h2><p>A simple isolated footing costs a fraction of a pile foundation. Soil conditions directly impact your foundation cost — sometimes by 3-5x.</p><h2>4. RCC Quantity</h2><p>The quantity of concrete and steel determines a large portion of structural cost. Efficient structural design can reduce RCC quantities by 10-15% without compromising safety.</p>`,
-  },
-};
+let post = null;
+const { slug } = Astro.params;
 
-export async function getStaticPaths() {
-  return Object.keys(posts).map(slug => ({ params: { slug } }));
+if (slug) {
+  try {
+    const DATA_FILE = getDataPath('blogs.json');
+    if (fs.existsSync(DATA_FILE)) {
+      const savedBlogs = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+      const now = new Date().getTime();
+      const found = savedBlogs.find((p: any) => p.slug === slug);
+      if (found && new Date(found.publishDate).getTime() <= now) {
+        post = found;
+      }
+    }
+  } catch(e) {}
 }
-
-const { slug } = Astro.params as { slug: string };
-const post = posts[slug];
 ---
-<BaseLayout
-  title={`${post?.title ?? 'Blog'} — OMJI Construction`}
-  description={post?.content?.replace(/<[^>]+>/g, '').substring(0, 155) ?? ''}
+<BaseLayout 
+  title={post ? `${post.title} — OMJI Construction` : "Post Not Found"} 
+  description={post ? post.excerpt : "Blog post not found."}
 >
-  {!post ? (
-    <section class="page-hero">
-      <div class="container" style="text-align:center;">
-        <h1 class="page-hero-title">Post Not Found</h1>
-        <a href="/blog" class="btn btn-primary" style="margin-top:2rem;">Back to Blog</a>
-      </div>
-    </section>
-  ) : (
-  <>
-  <section class="page-hero" style="text-align:left;padding-bottom:40px;">
-    <div class="container">
-      <div class="breadcrumb" style="justify-content:flex-start;">
-        <a href="/">Home</a><span>/</span>
-        <a href="/blog">Blog</a><span>/</span>
-        <span style="color:var(--bronze)">{post.cat}</span>
-      </div>
-      <div class="section-tag" style="display:inline-flex;">{post.cat}</div>
-      <h1 style="font-size:clamp(1.8rem,4vw,3rem);max-width:760px;line-height:1.1;margin-bottom:1.5rem;">{post.title}</h1>
-      <div style="display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="testimonial-avatar" style="width:36px;height:36px;font-size:0.75rem;">O</div>
-          <div>
-            <div style="font-size:0.82rem;font-weight:600;">{post.author}</div>
-            <div style="font-size:0.72rem;color:var(--text-muted);">{post.date}</div>
+  {post ? (
+    <div id="blog-content-wrapper">
+      <section class="page-hero">
+        <div class="container">
+          <div class="breadcrumb"><a href="/">Home</a><span>/</span><a href="/blog">Blog</a><span>/</span><span style="color:var(--bronze)">{post.title.length > 30 ? post.title.substring(0, 30) + '...' : post.title}</span></div>
+          <div class="section-tag">{post.cat}</div>
+          <h1 class="page-hero-title" style="max-width: 900px;">{post.title}</h1>
+          <div style="display:flex;gap:1.5rem;align-items:center;margin-top:1.5rem;color:var(--text-muted);font-size:0.9rem;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">OM</div>
+              <span style="color:var(--text-primary);font-weight:600;">{post.author || 'Admin'}</span>
+            </div>
+            <span>{new Date(post.publishDate).toLocaleDateString('en-US', {month: 'long', day: 'numeric', year: 'numeric'})}</span>
+            <span>{post.readTime || '5 min read'}</span>
           </div>
         </div>
-        <span style="font-size:0.75rem;color:var(--text-muted);">· {post.readTime}</span>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <section class="section" style="padding-top:0;">
-    <div class="container">
-      <div style="display:grid;grid-template-columns:1fr 280px;gap:4rem;align-items:start;">
-        <article>
-          <div style="width:100%;height:260px;border-radius:var(--radius-lg);background:var(--bg-secondary);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:3rem;">{post.emoji}</div>
+      <section class="section" style="padding-top:2rem;">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+          {post.image && <img src={post.image} alt={post.title} style="width:100%; height:450px; object-fit:cover; border-radius:var(--radius-lg); margin-bottom:3rem;" />}
           <div class="article-body" set:html={post.content}></div>
-          <div style="margin-top:3rem;padding:20px;background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);">
-            <div class="label" style="margin-bottom:0.8rem;">Share This Article</div>
-            <div style="display:flex;gap:8px;">
-              <a href={`https://wa.me/?text=${encodeURIComponent(post.title)}`} target="_blank" class="btn btn-glass btn-sm">WhatsApp</a>
-              <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}`} target="_blank" class="btn btn-glass btn-sm">Twitter/X</a>
-            </div>
-          </div>
-        </article>
-
-        <aside style="position:sticky;top:88px;">
-          <div style="background:linear-gradient(135deg,var(--bronze-dark),var(--bronze));border-radius:var(--radius-lg);padding:28px;text-align:center;margin-bottom:1.5rem;">
-            <div style="font-size:2rem;margin-bottom:0.8rem;">🏗️</div>
-            <h3 style="color:white;font-size:1rem;margin-bottom:0.4rem;">Ready to Build?</h3>
-            <p style="color:rgba(255,255,255,0.7);font-size:0.78rem;margin-bottom:1.2rem;">Free consultation with our engineers.</p>
-            <a href="/contact" class="btn btn-outline" style="width:100%;justify-content:center;border-color:rgba(255,255,255,0.3);color:white;">Free Consultation</a>
-          </div>
-          <div style="background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;">
-            <div class="label" style="margin-bottom:1rem;">More Articles</div>
-            {Object.entries(posts).filter(([s]) => s !== slug).slice(0,3).map(([s, p]) => (
-              <a href={`/blog/${s}`} style="display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:var(--radius-sm);margin-bottom:6px;transition:background 0.2s;" onmouseover="this.style.background='var(--bg-glass-hover)'" onmouseout="this.style.background='transparent'">
-                <span style="font-size:1.3rem;flex-shrink:0;">{p.emoji}</span>
-                <div>
-                  <div style="font-size:0.78rem;font-weight:600;line-height:1.3;margin-bottom:2px;">{p.title}</div>
-                  <div style="font-size:0.68rem;color:var(--text-muted);">{p.readTime}</div>
-                </div>
-              </a>
-            ))}
-          </div>
-        </aside>
-      </div>
+        </div>
+      </section>
     </div>
-  </section>
-  </>
+  ) : (
+    <div id="not-found" style="text-align:center; padding: 10rem 2rem;">
+      <h1 class="display-lg">Post Not Found</h1>
+      <p class="body-lg" style="margin: 1rem 0 2rem;">This post may have been removed or is not yet published.</p>
+      <a href="/blog" class="btn btn-primary">Back to Blog</a>
+    </div>
   )}
-
-  <style>
-    @media (max-width: 900px) {
-      div[style*="grid-template-columns:1fr 280px"] { grid-template-columns: 1fr !important; }
-      aside[style*="sticky"] { position: static !important; }
-    }
-  </style>
 </BaseLayout>
