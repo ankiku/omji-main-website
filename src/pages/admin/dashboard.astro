@@ -1054,9 +1054,7 @@ import '../../styles/global.css';
         }
       });
     });
-  }
 
-  
     grid.querySelectorAll('.edit-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = parseInt(e.target.dataset.id);
@@ -1080,8 +1078,8 @@ import '../../styles/global.css';
         }
       });
     });
+  }
 
-  
   document.getElementById('clear-btn').addEventListener('click', () => {
     document.getElementById('upload-form').reset();
     currentImages = [];
