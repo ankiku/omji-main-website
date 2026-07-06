@@ -1100,11 +1100,11 @@ const faqs = [
     }
     .lightbox-nav {
       position: absolute; top: 50%; transform: translateY(-50%);
-      background: rgba(255,255,255,0.1); border: none; color: white;
+      background: rgba(0,0,0,0.6); border: 2px solid rgba(255,255,255,0.3); color: white;
       font-size: 2rem; padding: 1rem; cursor: pointer; border-radius: 50%;
-      transition: background 0.2s;
+      transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
-    .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+    .lightbox-nav:hover { background: rgba(0,0,0,0.9); border-color: var(--gold); color: var(--gold); transform: translateY(-50%) scale(1.1); }
     .lightbox-prev { left: 20px; }
     .lightbox-next { right: 20px; }
     @media (max-width: 768px) {
@@ -1206,7 +1206,7 @@ const faqs = [
       
       if (photos.length > 0) {
         currentGalleryPhotos = photos;
-        modalGallery.innerHTML = photos.map((src, idx) => `<img src="${src}" class="gallery-img" loading="lazy" onclick="openLightbox(${idx})" />`).join('');
+        modalGallery.innerHTML = photos.map((src, idx) => `<div style="break-inside: avoid; margin-bottom: 1.5rem;"><img src="${src}" class="gallery-img" style="margin-bottom:0;" loading="lazy" onclick="openLightbox(${idx})" /></div>`).join('');
       } else {
         currentGalleryPhotos = [];
         modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
