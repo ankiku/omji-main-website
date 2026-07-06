@@ -1059,7 +1059,7 @@ const faqs = [
     }
     .modal-overlay.open { display: flex; opacity: 1; }
     .modal-content {
-      background: var(--bg-card); width: 100%; max-width: 900px;
+      background: var(--bg-card); width: 95%; max-width: 1200px;
       max-height: 90vh; border-radius: var(--radius-lg);
       display: flex; flex-direction: column; overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid var(--border-ornament);
@@ -1077,10 +1077,41 @@ const faqs = [
     .modal-close:hover { background: rgba(220,60,60,0.1); color: #c44; }
     .modal-body { padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
     
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
-    .gallery-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+    .gallery-grid { column-count: 3; column-gap: 1.5rem; }
+    .gallery-img { width: 100%; margin-bottom: 1.5rem; display: block; break-inside: avoid; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+    .gallery-img:hover { transform: scale(1.02); }
+    @media (max-width: 768px) { .gallery-grid { column-count: 2; } }
+    @media (max-width: 480px) { .gallery-grid { column-count: 1; } }
     .modal-meta { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1rem; }
     .modal-meta-tag { background: var(--bg-elevated); padding: 6px 12px; border-radius: var(--radius-full); font-size: 0.85rem; color: var(--text-secondary); border: 1px solid var(--border); font-weight: 500; }
+    
+    /* Fullscreen Image Lightbox */
+    .lightbox-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.95); z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .lightbox-overlay.open { display: flex; opacity: 1; }
+    .lightbox-img { max-width: 90%; max-height: 90vh; object-fit: contain; border-radius: 4px; }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 30px; background: none; border: none;
+      color: white; font-size: 2.5rem; cursor: pointer; padding: 10px; line-height: 1;
+    }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: none; color: white;
+      font-size: 2rem; padding: 1rem; cursor: pointer; border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+    @media (max-width: 768px) {
+      .lightbox-nav { padding: 0.5rem; font-size: 1.5rem; }
+      .lightbox-prev { left: 10px; }
+      .lightbox-next { right: 10px; }
+    }
   </style>
 
   <div class="modal-overlay" id="homeProjectModal">
@@ -1096,6 +1127,108 @@ const faqs = [
       </div>
     </div>
   </div>
+
+  <!-- Fullscreen Image Lightbox -->
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">❮</button>
+    <img src="" class="lightbox-img" id="lightboxImg" />
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">❯</button>
+  </div>
+
+  <script is:inline define:vars={{ serverProjects }}>
+    // Lightbox Logic
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
+    let currentGalleryPhotos = [];
+    let currentPhotoIndex = 0;
+
+    window.openLightbox = function(index) {
+      currentPhotoIndex = index;
+      lightboxImg.src = currentGalleryPhotos[index];
+      lightboxOverlay.classList.add('open');
+    };
+
+    function closeLightbox() {
+      lightboxOverlay.classList.remove('open');
+    }
+
+    function showPrev() {
+      if (currentGalleryPhotos.length === 0) return;
+      currentPhotoIndex = (currentPhotoIndex - 1 + currentGalleryPhotos.length) % currentGalleryPhotos.length;
+      lightboxImg.src = currentGalleryPhotos[currentPhotoIndex];
+    }
+
+    function showNext() {
+      if (currentGalleryPhotos.length === 0) return;
+      currentPhotoIndex = (currentPhotoIndex + 1) % currentGalleryPhotos.length;
+      lightboxImg.src = currentGalleryPhotos[currentPhotoIndex];
+    }
+
+    document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
+    document.getElementById('lightboxPrev')?.addEventListener('click', showPrev);
+    document.getElementById('lightboxNext')?.addEventListener('click', showNext);
+    lightboxOverlay?.addEventListener('click', (e) => {
+      if (e.target === lightboxOverlay) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightboxOverlay?.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    });
+
+    // Home Modal Logic
+    const modal = document.getElementById('homeProjectModal');
+    const modalClose = document.getElementById('homeModalClose');
+    const modalTitle = document.getElementById('homeModalTitle');
+    const modalMeta = document.getElementById('homeModalMeta');
+    const modalDesc = document.getElementById('homeModalDesc');
+    const modalGallery = document.getElementById('homeModalGallery');
+
+    window.openHomeModal = function(id) {
+      const p = serverProjects.find(x => x.id === id);
+      if (!p) return;
+      
+      modalTitle.textContent = p.title;
+      
+      let metaHtml = `<span class="modal-meta-tag">${p.category}</span>`;
+      if (p.area) metaHtml += `<span class="modal-meta-tag">📐 Area: ${p.area}</span>`;
+      if (p.year) metaHtml += `<span class="modal-meta-tag">📅 Year: ${p.year}</span>`;
+      modalMeta.innerHTML = metaHtml;
+      
+      modalDesc.textContent = p.description || 'No description provided.';
+      
+      let photos = [];
+      if (p.images) photos = p.images;
+      else if (p.imageData) photos = [p.imageData];
+      
+      if (photos.length > 0) {
+        currentGalleryPhotos = photos;
+        modalGallery.innerHTML = photos.map((src, idx) => `<img src="${src}" class="gallery-img" loading="lazy" onclick="openLightbox(${idx})" />`).join('');
+      } else {
+        currentGalleryPhotos = [];
+        modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
+      }
+      
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    if(modalClose) {
+      modalClose.addEventListener('click', () => {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  </script>
 
   <!-- ═══════════════════════════════════
        MATERIAL PARTNERS
@@ -1358,74 +1491,7 @@ const faqs = [
       }
       animate();
 
-      async function initHomeProjects() {
-        // SSR now renders the grid on the server, so we only need to handle the modal fetching.
-        // The modal logic is kept below.
-
-        // Home Modal Logic
-        const modal = document.getElementById('homeProjectModal');
-        const modalClose = document.getElementById('homeModalClose');
-        const modalTitle = document.getElementById('homeModalTitle');
-        const modalMeta = document.getElementById('homeModalMeta');
-        const modalDesc = document.getElementById('homeModalDesc');
-        const modalGallery = document.getElementById('homeModalGallery');
-
-        let currentPhotos = [];
-        let currentPhotoIndex = 0;
-
-        window.changeHomePhoto = function(dir) {
-          if(currentPhotos.length <= 1) return;
-          currentPhotoIndex = (currentPhotoIndex + dir + currentPhotos.length) % currentPhotos.length;
-          document.getElementById('home-modal-img').src = currentPhotos[currentPhotoIndex];
-          document.getElementById('home-modal-counter').textContent = (currentPhotoIndex + 1) + ' / ' + currentPhotos.length;
-        };
-
-        window.openHomeModal = function(id) {
-          const p = savedProjects.find(x => x.id === id);
-          if (!p) return;
-          modalTitle.textContent = p.title;
-          let metaHtml = `<span class="modal-meta-tag">${p.category}</span>`;
-          if (p.area) metaHtml += `<span class="modal-meta-tag">📐 Area: ${p.area}</span>`;
-          if (p.year) metaHtml += `<span class="modal-meta-tag">📅 Year: ${p.year}</span>`;
-          modalMeta.innerHTML = metaHtml;
-          modalDesc.textContent = p.description || 'No description provided.';
-          
-          currentPhotos = p.images || (p.imageData ? [p.imageData] : []);
-          currentPhotoIndex = 0;
-          
-          if (currentPhotos.length > 0) {
-            modalGallery.innerHTML = `
-              <div style="position:relative; width:100%; text-align:center; background:#111; border-radius:8px; overflow:hidden; display:flex; justify-content:center; align-items:center; min-height:300px;">
-                <img id="home-modal-img" src="${currentPhotos[0]}" style="max-width:100%; max-height:60vh; object-fit:contain; margin:0 auto; display:block;" />
-                ${currentPhotos.length > 1 ? `
-                  <button onclick="changeHomePhoto(-1)" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center;">❮</button>
-                  <button onclick="changeHomePhoto(1)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center;">❯</button>
-                  <div id="home-modal-counter" style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.5); color:#fff; padding:4px 10px; border-radius:12px; font-size:0.8rem;">1 / ${currentPhotos.length}</div>
-                ` : ''}
-              </div>
-            `;
-          } else {
-            modalGallery.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted);background:var(--bg-elevated);border-radius:8px;border:1px dashed var(--border);grid-column:1/-1;">No photos uploaded for this project.</div>`;
-          }
-          
-          modal.classList.add('open');
-          document.body.style.overflow = 'hidden';
-        };
-
-        if(modalClose) {
-          modalClose.addEventListener('click', () => {
-            modal.classList.remove('open');
-            document.body.style.overflow = '';
-          });
-          modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-              modal.classList.remove('open');
-              document.body.style.overflow = '';
-            }
-          });
-        }
-      }
-      initHomeProjects();
+      // Home Modal logic is now inline with define:vars to get serverProjects
     })();
 
     // ── Interactive Phases Tabs ──
