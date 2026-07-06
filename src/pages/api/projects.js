@@ -91,3 +91,53 @@ export async function DELETE({ request }) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
+
+export async function PUT({ request }) {
+  try {
+    const updatedProject = await request.json();
+    let projects = getProjects();
+    const idx = projects.findIndex(p => p.id === updatedProject.id);
+    if (idx === -1) throw new Error("Project not found");
+
+    const processedImages = [];
+    if (updatedProject.images && Array.isArray(updatedProject.images)) {
+      for (let i = 0; i < updatedProject.images.length; i++) {
+        let imgStr = updatedProject.images[i];
+        if (imgStr.startsWith('data:image/')) {
+          const matches = imgStr.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+          if (matches) {
+            const ext = matches[1] === 'jpeg' ? 'jpg' : matches[1];
+            const buffer = Buffer.from(matches[2], 'base64');
+            const fileName = `proj_${Date.now()}_${Math.floor(Math.random()*1000)}_${i}.${ext}`;
+            
+            // Save to public (permanent)
+            fs.writeFileSync(path.join(PUBLIC_UPLOAD_DIR, fileName), buffer);
+            
+            // Save to dist (immediate serve)
+            try {
+              if (fs.existsSync(path.join(process.cwd(), 'dist', 'client'))) {
+                if (!fs.existsSync(DIST_UPLOAD_DIR)) fs.mkdirSync(DIST_UPLOAD_DIR, { recursive: true });
+                fs.writeFileSync(path.join(DIST_UPLOAD_DIR, fileName), buffer);
+              }
+            } catch(e) {}
+            
+            processedImages.push(`/uploads/${fileName}`);
+          }
+        } else {
+          processedImages.push(imgStr);
+        }
+      }
+    }
+    
+    updatedProject.images = processedImages;
+    projects[idx] = updatedProject;
+    saveProjects(projects);
+    
+    return new Response(JSON.stringify({ success: true, project: updatedProject }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}
