@@ -122,7 +122,9 @@ import '../../styles/global.css';
     .toast-success { background: rgba(176,141,87,0.15); border: 1px solid rgba(176,141,87,0.4); color: var(--bronze-hover); }
     .toast-error { background: rgba(220,60,60,0.12); border: 1px solid rgba(220,60,60,0.3); color: #c44; }
 
+    .admin-responsive-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
     @media (max-width: 768px) {
+      .admin-responsive-grid { grid-template-columns: 1fr !important; }
       .admin-sidebar { transform: translateX(-100%); transition: transform 0.3s; }
       .admin-sidebar.open { transform: translateX(0); }
       .admin-main { margin-left: 0; }
@@ -149,6 +151,15 @@ import '../../styles/global.css';
   window.envGeminiKey = envGeminiKey;
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
+  }
+
+  // Mobile Toggle Logic
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const adminSidebar = document.querySelector('.admin-sidebar');
+  if (mobileToggle && adminSidebar) {
+    mobileToggle.addEventListener('click', () => {
+      adminSidebar.classList.toggle('open');
+    });
   }
 </script>
 
@@ -257,7 +268,7 @@ import '../../styles/global.css';
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px;">
+        <div class="admin-responsive-grid">
           <div class="admin-panel" style="margin-bottom:0;">
             <div class="admin-panel-title">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -1596,6 +1607,15 @@ import '../../styles/global.css';
       if (tab.dataset.tab === 'manage-blogs') renderBlogsGrid();
     });
   });
+
+  // Mobile Toggle Logic
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const adminSidebar = document.querySelector('.admin-sidebar');
+  if (mobileToggle && adminSidebar) {
+    mobileToggle.addEventListener('click', () => {
+      adminSidebar.classList.toggle('open');
+    });
+  }
 </script>
 
 <script is:inline>
@@ -1835,6 +1855,15 @@ import '../../styles/global.css';
   // Initial render if tracker elements exist
   setTimeout(() => { if(document.getElementById('finance-list')) renderTracker(); }, 100);
 
+
+  // Mobile Toggle Logic
+  const mobileToggle = document.getElementById('mobile-toggle');
+  const adminSidebar = document.querySelector('.admin-sidebar');
+  if (mobileToggle && adminSidebar) {
+    mobileToggle.addEventListener('click', () => {
+      adminSidebar.classList.toggle('open');
+    });
+  }
 </script>
 
 </body>
