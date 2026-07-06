@@ -135,7 +135,12 @@ import '../../styles/global.css';
       .stat-mini { margin-bottom: 10px; }
     }
     .mobile-toggle { display: none; background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-primary); margin-right: 15px; }
-  </style>
+  
+    .mobile-close-btn { display: none; background: transparent; border: none; font-size: 2rem; color: var(--text-primary); cursor: pointer; line-height: 1; margin-top:-5px; }
+    @media (max-width: 768px) {
+      .mobile-close-btn { display: block; }
+    }
+</style>
 
 </head>
 <body>
@@ -152,30 +157,24 @@ import '../../styles/global.css';
   if (sessionStorage.getItem('omji_admin_auth') !== 'true') {
     window.location.href = '/admin';
   }
-
-  // Mobile Toggle Logic
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const adminSidebar = document.querySelector('.admin-sidebar');
-  if (mobileToggle && adminSidebar) {
-    mobileToggle.addEventListener('click', () => {
-      adminSidebar.classList.toggle('open');
-    });
-  }
 </script>
 
 <div class="admin-layout">
   <!-- SIDEBAR -->
   <aside class="admin-sidebar">
     <div class="sidebar-logo">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-          <polygon points="18,2 34,30 2,30" stroke="#B08D57" stroke-width="2" fill="none"/>
-          <polygon points="18,10 27,27 9,27" stroke="#B08D57" stroke-width="1" fill="rgba(176,141,87,0.12)"/>
-        </svg>
-        <div>
-          <div style="font-family:var(--font-display);font-size:1rem;font-weight:900;letter-spacing:0.1em;color:var(--bronze);line-height:1;">OMJI</div>
-          <div style="font-size:0.48rem;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Admin Panel</div>
+      <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;width:100%;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+            <polygon points="18,2 34,30 2,30" stroke="#B08D57" stroke-width="2" fill="none"/>
+            <polygon points="18,10 27,27 9,27" stroke="#B08D57" stroke-width="1" fill="rgba(176,141,87,0.12)"/>
+          </svg>
+          <div>
+            <div style="font-family:var(--font-display);font-size:1rem;font-weight:900;letter-spacing:0.1em;color:var(--bronze);line-height:1;">OMJI</div>
+            <div style="font-size:0.48rem;letter-spacing:0.2em;color:var(--text-muted);text-transform:uppercase;">Admin Panel</div>
+          </div>
         </div>
+        <button class="mobile-close-btn" id="mobile-close-btn">×</button>
       </div>
     </div>
 
@@ -805,6 +804,9 @@ import '../../styles/global.css';
   const tabs = document.querySelectorAll('.sidebar-link[data-tab]');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
+      // Close sidebar on mobile
+      const s = document.querySelector('.admin-sidebar');
+      if (s) s.classList.remove('open');
       tabs.forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       
@@ -1329,15 +1331,6 @@ import '../../styles/global.css';
   }
 
   
-  // Mobile Toggle Logic
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const adminSidebar = document.querySelector('.admin-sidebar');
-  if (mobileToggle && adminSidebar) {
-    mobileToggle.addEventListener('click', () => {
-      adminSidebar.classList.toggle('open');
-    });
-  }
-
   // Initial Run
   updateOverviewStats();
 
@@ -1607,15 +1600,6 @@ import '../../styles/global.css';
       if (tab.dataset.tab === 'manage-blogs') renderBlogsGrid();
     });
   });
-
-  // Mobile Toggle Logic
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const adminSidebar = document.querySelector('.admin-sidebar');
-  if (mobileToggle && adminSidebar) {
-    mobileToggle.addEventListener('click', () => {
-      adminSidebar.classList.toggle('open');
-    });
-  }
 </script>
 
 <script is:inline>
@@ -1856,15 +1840,19 @@ import '../../styles/global.css';
   setTimeout(() => { if(document.getElementById('finance-list')) renderTracker(); }, 100);
 
 
-  // Mobile Toggle Logic
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const adminSidebar = document.querySelector('.admin-sidebar');
-  if (mobileToggle && adminSidebar) {
-    mobileToggle.addEventListener('click', () => {
-      adminSidebar.classList.toggle('open');
-    });
-  }
+  // Correct Mobile Toggle Logic
+  (function() {
+    const btn = document.getElementById('mobile-toggle');
+    const side = document.querySelector('.admin-sidebar');
+    const closeBtn = document.getElementById('mobile-close-btn');
+    if (btn && side) {
+      btn.addEventListener('click', () => side.classList.add('open'));
+    }
+    if (closeBtn && side) {
+      closeBtn.addEventListener('click', () => side.classList.remove('open'));
+    }
+  })();
 </script>
-
 </body>
 </html>
+
