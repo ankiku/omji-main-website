@@ -925,6 +925,9 @@ import '../../styles/global.css';
       return;
     }
     
+    dropContent.style.display = 'none';
+    previewCont.style.display = 'block';
+
     previewGrid.innerHTML = currentImages.map((src, index) => {
       const isMain = index === 0;
       return `
