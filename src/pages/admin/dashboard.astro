@@ -2408,12 +2408,24 @@ import '../../styles/global.css';
       await loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
 
       const certElement = document.getElementById('certificate-canvas');
+      
+      // Temporarily scroll to top to prevent html2canvas cropping bug
+      const originalScroll = window.scrollY;
+      window.scrollTo(0, 0);
+
       const canvas = await html2canvas(certElement, {
-        scale: 2,
+        scale: 3,
         useCORS: true,
         backgroundColor: '#FFFDF7',
-        logging: false
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight
       });
+
+      // Restore scroll
+      window.scrollTo(0, originalScroll);
 
       const imgData = canvas.toDataURL('image/png');
       const { jsPDF } = window.jspdf;
