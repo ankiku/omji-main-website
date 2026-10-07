@@ -154,6 +154,161 @@ import '../../styles/global.css';
     @media (max-width: 768px) {
       .mobile-close-btn { display: block; }
     }
+
+    /* ── Certificate Styles ── */
+    .cert-preview-container {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    .certificate-frame {
+      width: 800px;
+      max-width: 100%;
+      margin: 0 auto;
+      background: #FFFDF7;
+      border: 3px solid #B08D57;
+      border-radius: 4px;
+      padding: 0;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(107,79,47,0.18);
+    }
+
+    .cert-ornament-border {
+      border: 2px solid #C4A86C;
+      margin: 8px;
+      padding: 40px 48px;
+      position: relative;
+    }
+
+    .cert-corner { position: absolute; width: 24px; height: 24px; }
+    .cert-corner svg { width: 100%; height: 100%; }
+    .cert-corner.tl { top: -2px; left: -2px; }
+    .cert-corner.tr { top: -2px; right: -2px; transform: rotate(90deg); }
+    .cert-corner.bl { bottom: -2px; left: -2px; transform: rotate(-90deg); }
+    .cert-corner.br { bottom: -2px; right: -2px; transform: rotate(180deg); }
+
+    .cert-header-section { text-align: center; margin-bottom: 24px; }
+    .cert-logo-row { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; }
+    .cert-company-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: #7A5530;
+    }
+    .cert-company-sub { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: #9A6F28; margin-bottom: 4px; }
+    .cert-divider { width: 200px; height: 2px; background: linear-gradient(90deg, transparent, #B08D57, transparent); margin: 16px auto; }
+    .cert-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: #5A3D1E;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .cert-subtitle { font-size: 0.7rem; letter-spacing: 0.2em; color: #8A6840; text-transform: uppercase; }
+
+    .cert-body-section { text-align: center; margin: 20px 0; }
+    .cert-preamble { font-size: 0.85rem; color: #6B5030; margin-bottom: 12px; font-style: italic; }
+    .cert-intern-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #5A3D1E;
+      border-bottom: 2px solid #C4A86C;
+      display: inline-block;
+      padding: 0 30px 6px;
+      margin-bottom: 14px;
+    }
+    .cert-description {
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: #4A3A20;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .cert-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 32px;
+      margin: 20px auto;
+      max-width: 500px;
+      text-align: left;
+    }
+    .cert-detail-item { font-size: 0.78rem; }
+    .cert-detail-item .label { color: #8A6840; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.65rem; }
+    .cert-detail-item .value { color: #3D2E18; font-weight: 500; margin-top: 2px; }
+
+    .cert-footer-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 28px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(196,168,108,0.3);
+    }
+    .cert-qr { text-align: center; }
+    .cert-qr canvas { border: 1px solid #E8DCC8; border-radius: 4px; }
+    .cert-qr-label { font-size: 0.55rem; color: #8A6840; margin-top: 4px; letter-spacing: 0.1em; }
+    .cert-signature { text-align: center; }
+    .cert-sig-line { width: 140px; height: 1px; background: #7A5530; margin: 0 auto 6px; }
+    .cert-sig-name { font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 700; color: #5A3D1E; }
+    .cert-sig-title { font-size: 0.6rem; color: #8A6840; letter-spacing: 0.08em; }
+    .cert-date-section { text-align: center; }
+    .cert-date-label { font-size: 0.6rem; color: #8A6840; text-transform: uppercase; letter-spacing: 0.08em; }
+    .cert-date-value { font-size: 0.8rem; font-weight: 600; color: #5A3D1E; margin-top: 2px; }
+    .cert-id-stamp {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 0.6rem;
+      color: #B08D57;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      opacity: 0.7;
+    }
+
+    .cert-actions {
+      display: flex; gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    .cert-list-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.2s;
+    }
+    .cert-list-card:hover { border-color: var(--gold-pale); box-shadow: 0 2px 12px rgba(154,111,40,0.08); }
+    .cert-list-icon {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, rgba(154,111,40,0.1), rgba(154,111,40,0.05));
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .cert-ornament-border { padding: 20px 16px; }
+      .cert-company-name { font-size: 1.2rem; }
+      .cert-title { font-size: 1rem; letter-spacing: 0.15em; }
+      .cert-intern-name { font-size: 1.4rem; }
+      .cert-details-grid { grid-template-columns: 1fr; }
+      .cert-footer-section { flex-direction: column; gap: 16px; align-items: center; }
+      .certificate-frame { width: 100%; }
+    }
 </style>
 
 </head>
@@ -216,6 +371,10 @@ import '../../styles/global.css';
       <button class="sidebar-link" data-tab="manage-blogs">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M4 6h16M4 12h16M4 18h12"/></svg>
         Manage Blogs
+      </button>
+      <button class="sidebar-link" data-tab="certificates">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><path d="M4 4h16v16H4z"/><path d="M9 9h6M9 13h6M9 17h4"/><circle cx="18" cy="18" r="4" fill="none"/><path d="M18 16v2l1 1"/></svg>
+        Certificates
       </button>
       <button class="sidebar-link" data-tab="tracker">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;vertical-align:middle;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
@@ -655,6 +814,155 @@ import '../../styles/global.css';
         </div>
 
       </div>
+      <!-- CERTIFICATES TAB -->
+      <div class="tab-content" id="tab-certificates">
+        <div class="admin-panel">
+          <div class="admin-panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B08D57" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+            Generate Internship Certificate
+          </div>
+
+          <form id="cert-form" novalidate>
+            <div class="admin-form-grid">
+              <div class="admin-field">
+                <label for="cert-intern-name">Intern Name *</label>
+                <input type="text" id="cert-intern-name" placeholder="e.g. Rahul Sharma" required />
+              </div>
+              <div class="admin-field">
+                <label for="cert-department">Department *</label>
+                <select id="cert-department" required>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Architecture">Architecture</option>
+                  <option value="Interior Design">Interior Design</option>
+                  <option value="Project Management">Project Management</option>
+                  <option value="Structural Engineering">Structural Engineering</option>
+                  <option value="Quantity Surveying">Quantity Surveying</option>
+                  <option value="Site Supervision">Site Supervision</option>
+                  <option value="Business Development">Business Development</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label for="cert-college">College / University</label>
+                <input type="text" id="cert-college" placeholder="e.g. MNIT Jaipur" />
+              </div>
+              <div class="admin-field">
+                <label for="cert-performance">Performance Rating</label>
+                <select id="cert-performance">
+                  <option value="Outstanding">Outstanding</option>
+                  <option value="Excellent">Excellent</option>
+                  <option value="Very Good">Very Good</option>
+                  <option value="Good" selected>Good</option>
+                  <option value="Satisfactory">Satisfactory</option>
+                </select>
+              </div>
+              <div class="admin-field">
+                <label for="cert-start-date">Start Date *</label>
+                <input type="date" id="cert-start-date" required />
+              </div>
+              <div class="admin-field">
+                <label for="cert-end-date">End Date *</label>
+                <input type="date" id="cert-end-date" required />
+              </div>
+              <div class="admin-field">
+                <label for="cert-mentor">Mentor Name</label>
+                <input type="text" id="cert-mentor" placeholder="e.g. Rajesh Kumar" />
+              </div>
+              <div class="admin-field">
+                <label for="cert-project">Project Worked On</label>
+                <input type="text" id="cert-project" placeholder="e.g. Luxury Villa, Tonk Road" />
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:1.5rem;">
+              <button type="submit" class="btn btn-primary" id="cert-generate-btn">Generate Certificate</button>
+              <button type="button" class="btn btn-ghost" id="cert-clear-btn">Clear</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Certificate Preview -->
+        <div class="cert-preview-container" id="cert-preview-section" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-family:var(--font-display); font-size:1.1rem; color:var(--text-primary); margin:0;">Certificate Preview</h3>
+            <div class="cert-actions" style="margin-top:0;">
+              <button class="btn btn-primary" id="cert-download-pdf-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download PDF
+              </button>
+              <button class="btn btn-ghost" id="cert-copy-link-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                Copy Verify Link
+              </button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <div class="certificate-frame" id="certificate-canvas">
+              <div class="cert-ornament-border">
+                <div class="cert-corner tl"><svg viewBox="0 0 24 24"><path d="M2 2h8v2H4v6H2V2z" fill="#B08D57"/></svg></div>
+                <div class="cert-corner tr"><svg viewBox="0 0 24 24"><path d="M2 2h8v2H4v6H2V2z" fill="#B08D57"/></svg></div>
+                <div class="cert-corner bl"><svg viewBox="0 0 24 24"><path d="M2 2h8v2H4v6H2V2z" fill="#B08D57"/></svg></div>
+                <div class="cert-corner br"><svg viewBox="0 0 24 24"><path d="M2 2h8v2H4v6H2V2z" fill="#B08D57"/></svg></div>
+
+                <div class="cert-id-stamp" id="cert-id-display">OMJI-2026-0001</div>
+
+                <div class="cert-header-section">
+                  <div class="cert-logo-row">
+                    <svg width="40" height="40" viewBox="0 0 36 36" fill="none">
+                      <polygon points="18,2 34,30 2,30" stroke="#7A5530" stroke-width="2" fill="none"/>
+                      <polygon points="18,10 27,27 9,27" stroke="#9A6F28" stroke-width="1" fill="rgba(154,111,40,0.08)"/>
+                    </svg>
+                    <span class="cert-company-name">OMJI</span>
+                  </div>
+                  <div class="cert-company-sub">Construction & Infrastructure Pvt. Ltd.</div>
+                  <div class="cert-divider"></div>
+                  <div class="cert-title">Certificate of Internship</div>
+                  <div class="cert-subtitle">This certificate is awarded to</div>
+                </div>
+
+                <div class="cert-body-section">
+                  <div class="cert-intern-name" id="cert-preview-name">Intern Name</div>
+                  <div class="cert-description" id="cert-preview-desc"></div>
+                </div>
+
+                <div class="cert-details-grid" id="cert-preview-details"></div>
+
+                <div class="cert-footer-section">
+                  <div class="cert-date-section">
+                    <div class="cert-date-label">Date of Issue</div>
+                    <div class="cert-date-value" id="cert-preview-issued"></div>
+                  </div>
+                  <div class="cert-signature">
+                    <div class="cert-sig-line"></div>
+                    <div class="cert-sig-name">Omji Construction</div>
+                    <div class="cert-sig-title">Authorized Signatory</div>
+                  </div>
+                  <div class="cert-qr">
+                    <canvas id="cert-qr-canvas" width="80" height="80"></canvas>
+                    <div class="cert-qr-label">Scan to Verify</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issued Certificates List -->
+        <div class="admin-panel" style="margin-top:24px;">
+          <div class="admin-panel-title" style="justify-content:space-between;">
+            <span>Issued Certificates</span>
+            <span id="cert-count-label" style="font-size:0.8rem; color:var(--text-muted); font-weight:400;">0 certificates</span>
+          </div>
+          <div id="cert-list-grid" style="display:flex; flex-direction:column; gap:12px;"></div>
+          <div class="empty-state" id="cert-empty-state">
+            <div class="empty-state-icon">📜</div>
+            <p>No certificates issued yet. Fill the form above to generate your first certificate.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- SETTINGS TAB -->
       <div class="tab-content" id="tab-settings">
         <div class="admin-panel">
@@ -1880,6 +2188,314 @@ import '../../styles/global.css';
       closeBtn.addEventListener('click', () => side.classList.remove('open'));
     }
   })();
+
+  // ═══════════════════════════════════════════════
+  // CERTIFICATE MANAGEMENT
+  // ═══════════════════════════════════════════════
+  let localCertificates = [];
+  let lastGeneratedCert = null;
+
+  // Load certificates
+  async function loadCertificates() {
+    try {
+      const res = await fetch('/api/certificates');
+      if (res.ok) localCertificates = await res.json();
+    } catch(e) {}
+    renderCertList();
+  }
+  loadCertificates();
+
+  // QR Code generator (lightweight implementation)
+  function generateQRCode(canvas, text, size) {
+    // Load qrcode library dynamically
+    if (!window._qrScriptLoaded) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js';
+      script.onload = () => {
+        window._qrScriptLoaded = true;
+        _renderQR(canvas, text, size);
+      };
+      document.head.appendChild(script);
+    } else {
+      _renderQR(canvas, text, size);
+    }
+  }
+
+  function _renderQR(canvas, text, size) {
+    if (window.QRCode) {
+      QRCode.toCanvas(canvas, text, {
+        width: size || 80,
+        margin: 1,
+        color: { dark: '#5A3D1E', light: '#FFFDF7' }
+      });
+    }
+  }
+
+  // Format date nicely
+  function formatCertDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // Certificate form submit
+  const certForm = document.getElementById('cert-form');
+  if (certForm) {
+    certForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const internName = document.getElementById('cert-intern-name').value.trim();
+      const department = document.getElementById('cert-department').value;
+      const startDate = document.getElementById('cert-start-date').value;
+      const endDate = document.getElementById('cert-end-date').value;
+
+      if (!internName || !department || !startDate || !endDate) {
+        showToast('Please fill all required fields.', 'error');
+        return;
+      }
+
+      if (new Date(endDate) <= new Date(startDate)) {
+        showToast('End date must be after start date.', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('cert-generate-btn');
+      btn.textContent = 'Generating...';
+      btn.disabled = true;
+
+      const payload = {
+        internName,
+        department,
+        collegeName: document.getElementById('cert-college').value.trim(),
+        startDate,
+        endDate,
+        performance: document.getElementById('cert-performance').value,
+        mentorName: document.getElementById('cert-mentor').value.trim(),
+        projectWorkedOn: document.getElementById('cert-project').value.trim()
+      };
+
+      try {
+        const res = await fetch('/api/certificates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          lastGeneratedCert = data.certificate;
+          localCertificates.push(data.certificate);
+          renderCertPreview(data.certificate);
+          renderCertList();
+          showToast('Certificate generated successfully! ID: ' + data.certificate.certId);
+        } else {
+          showToast('Failed: ' + data.error, 'error');
+        }
+      } catch(err) {
+        showToast('Error generating certificate.', 'error');
+      }
+
+      btn.textContent = 'Generate Certificate';
+      btn.disabled = false;
+    });
+  }
+
+  // Clear certificate form
+  document.getElementById('cert-clear-btn')?.addEventListener('click', () => {
+    document.getElementById('cert-form').reset();
+    document.getElementById('cert-preview-section').style.display = 'none';
+    lastGeneratedCert = null;
+  });
+
+  // Render certificate preview
+  function renderCertPreview(cert) {
+    const section = document.getElementById('cert-preview-section');
+    section.style.display = 'block';
+
+    // ID
+    document.getElementById('cert-id-display').textContent = cert.certId;
+
+    // Name
+    document.getElementById('cert-preview-name').textContent = cert.internName;
+
+    // Description paragraph
+    const startFormatted = formatCertDate(cert.startDate);
+    const endFormatted = formatCertDate(cert.endDate);
+    let desc = `for successfully completing an internship in the <strong>${cert.department}</strong> department at Omji Construction, from <strong>${startFormatted}</strong> to <strong>${endFormatted}</strong>.`;
+    if (cert.projectWorkedOn) {
+      desc += ` During this period, the intern contributed to the project: <strong>${cert.projectWorkedOn}</strong>.`;
+    }
+    desc += ` The overall performance was rated as <strong>${cert.performance}</strong>.`;
+    document.getElementById('cert-preview-desc').innerHTML = desc;
+
+    // Details grid
+    let detailsHTML = '';
+    if (cert.collegeName) {
+      detailsHTML += `<div class="cert-detail-item"><div class="label">College</div><div class="value">${cert.collegeName}</div></div>`;
+    }
+    detailsHTML += `<div class="cert-detail-item"><div class="label">Department</div><div class="value">${cert.department}</div></div>`;
+    if (cert.mentorName) {
+      detailsHTML += `<div class="cert-detail-item"><div class="label">Mentor</div><div class="value">${cert.mentorName}</div></div>`;
+    }
+    detailsHTML += `<div class="cert-detail-item"><div class="label">Performance</div><div class="value">${cert.performance}</div></div>`;
+    document.getElementById('cert-preview-details').innerHTML = detailsHTML;
+
+    // Issue date
+    document.getElementById('cert-preview-issued').textContent = formatCertDate(cert.issuedAt);
+
+    // QR Code
+    const verifyURL = `${window.location.origin}/verify?certId=${cert.certId}`;
+    const qrCanvas = document.getElementById('cert-qr-canvas');
+    generateQRCode(qrCanvas, verifyURL, 80);
+
+    // Scroll to preview
+    setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  }
+
+  // Copy verify link
+  document.getElementById('cert-copy-link-btn')?.addEventListener('click', () => {
+    if (!lastGeneratedCert) return;
+    const url = `${window.location.origin}/verify?certId=${lastGeneratedCert.certId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Verification link copied!');
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Verification link copied!');
+    });
+  });
+
+  // Download PDF
+  document.getElementById('cert-download-pdf-btn')?.addEventListener('click', async () => {
+    if (!lastGeneratedCert) return;
+    const btn = document.getElementById('cert-download-pdf-btn');
+    btn.textContent = 'Preparing PDF...';
+    btn.disabled = true;
+
+    // Dynamically load html2canvas and jsPDF
+    async function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[src="${url}"]`)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    try {
+      await loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+      await loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js');
+
+      const certElement = document.getElementById('certificate-canvas');
+      const canvas = await html2canvas(certElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#FFFDF7',
+        logging: false
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 20;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const y = (pageHeight - imgHeight) / 2;
+
+      pdf.addImage(imgData, 'PNG', 10, y > 0 ? y : 10, imgWidth, imgHeight);
+      pdf.save(`Certificate-${lastGeneratedCert.certId}.pdf`);
+      showToast('PDF downloaded!');
+    } catch(err) {
+      console.error('PDF Error:', err);
+      showToast('Failed to generate PDF. Check console.', 'error');
+    }
+
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Download PDF';
+    btn.disabled = false;
+  });
+
+  // Render certificate list
+  function renderCertList() {
+    const grid = document.getElementById('cert-list-grid');
+    const emptyState = document.getElementById('cert-empty-state');
+    const countLabel = document.getElementById('cert-count-label');
+
+    if (!grid) return;
+
+    countLabel.textContent = `${localCertificates.length} certificate${localCertificates.length !== 1 ? 's' : ''}`;
+
+    if (localCertificates.length === 0) {
+      grid.innerHTML = '';
+      emptyState.style.display = 'flex';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    grid.innerHTML = [...localCertificates].reverse().map(cert => {
+      const startDate = formatCertDate(cert.startDate);
+      const endDate = formatCertDate(cert.endDate);
+      return `
+        <div class="cert-list-card">
+          <div class="cert-list-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-weight:600; color:var(--text-primary); margin-bottom:2px;">${cert.internName}</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">
+              ${cert.certId} · ${cert.department} · ${startDate} — ${endDate}
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <button class="btn btn-ghost btn-sm cert-view-btn" data-id="${cert.id}" style="font-size:0.75rem;">View</button>
+            <button class="btn btn-ghost btn-sm cert-del-btn" data-id="${cert.id}" style="font-size:0.75rem; color:#c44; border-color:rgba(220,60,60,0.3);">Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // View buttons
+    grid.querySelectorAll('.cert-view-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(e.target.dataset.id);
+        const cert = localCertificates.find(c => c.id === id);
+        if (cert) {
+          lastGeneratedCert = cert;
+          renderCertPreview(cert);
+        }
+      });
+    });
+
+    // Delete buttons
+    grid.querySelectorAll('.cert-del-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (!confirm('Delete this certificate? This cannot be undone.')) return;
+        const id = parseInt(e.target.dataset.id);
+        try {
+          await fetch('/api/certificates', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+          localCertificates = localCertificates.filter(c => c.id !== id);
+          renderCertList();
+          showToast('Certificate deleted.');
+        } catch(err) {
+          showToast('Failed to delete.', 'error');
+        }
+      });
+    });
+  }
+
 </script>
 </body>
 </html>

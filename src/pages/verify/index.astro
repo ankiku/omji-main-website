@@ -1,0 +1,340 @@
+---
+export const prerender = false;
+import '../../styles/global.css';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify Certificate | Omji Construction</title>
+  <meta name="description" content="Verify the authenticity of an Omji Construction internship certificate." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #DECA9E 0%, #F6EDE0 40%, #EFE3C9 60%, #D2BC8B 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .verify-container {
+      max-width: 600px;
+      width: 100%;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .verify-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .verify-header {
+      background: linear-gradient(135deg, #7A5530, #9A6F28);
+      padding: 28px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .verify-header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='rgba(255,255,255,0.06)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+    }
+
+    .verify-header-content {
+      position: relative; z-index: 1;
+    }
+
+    .verify-logo {
+      display: flex; align-items: center; gap: 12px;
+      justify-content: center; margin-bottom: 12px;
+    }
+
+    .verify-logo svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+
+    .verify-logo-text {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      color: #F6EDE0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .verify-subtitle {
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(246,237,224,0.7);
+    }
+
+    .verify-body { padding: 32px; }
+
+    /* Loading state */
+    .verify-loading {
+      text-align: center;
+      padding: 48px 0;
+    }
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Search form */
+    .verify-search {
+      display: flex; gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .verify-search input {
+      flex: 1;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: var(--bg-elevated);
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    .verify-search input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(154,111,40,0.12);
+    }
+
+    .verify-search input::placeholder { color: var(--text-muted); }
+
+    .verify-search button {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #9A6F28, #7A5530);
+      color: #F6EDE0;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .verify-search button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(154,111,40,0.3);
+    }
+
+    /* Certificate result */
+    .cert-result { display: none; }
+    .cert-result.active { display: block; animation: slideUp 0.4s ease-out; }
+
+    .cert-status {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin-bottom: 24px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .cert-status.valid {
+      background: rgba(45,122,58,0.08);
+      border: 1px solid rgba(45,122,58,0.25);
+      color: #2D7A3A;
+    }
+
+    .cert-status.invalid {
+      background: rgba(176,48,48,0.08);
+      border: 1px solid rgba(176,48,48,0.25);
+      color: #B03030;
+    }
+
+    .cert-detail-grid {
+      display: grid; gap: 16px;
+    }
+
+    .cert-detail-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-card);
+    }
+
+    .cert-detail-row:last-child { border-bottom: none; }
+
+    .cert-detail-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .cert-detail-value {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+      margin-bottom: 16px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--gold); }
+
+    @media (max-width: 480px) {
+      .cert-detail-row { grid-template-columns: 1fr; }
+      .verify-search { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <a href="/" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to Website
+    </a>
+    <div class="verify-card">
+      <div class="verify-header">
+        <div class="verify-header-content">
+          <div class="verify-logo">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <polygon points="18,2 34,30 2,30" stroke="#F6EDE0" stroke-width="2" fill="none"/>
+              <polygon points="18,10 27,27 9,27" stroke="#F6EDE0" stroke-width="1" fill="rgba(246,237,224,0.12)"/>
+            </svg>
+            <span class="verify-logo-text">OMJI</span>
+          </div>
+          <div class="verify-subtitle">Certificate Verification Portal</div>
+        </div>
+      </div>
+
+      <div class="verify-body">
+        <div class="verify-search" id="search-form">
+          <input type="text" id="cert-input" placeholder="Enter Certificate ID (e.g. OMJI-2026-0001)" />
+          <button id="verify-btn" onclick="verifyCertificate()">Verify</button>
+        </div>
+
+        <div class="verify-loading" id="loading-state" style="display:none;">
+          <div class="spinner"></div>
+          <div style="color:var(--text-muted); font-size:0.9rem;">Verifying certificate...</div>
+        </div>
+
+        <div class="cert-result" id="valid-result">
+          <div class="cert-status valid">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ✓ Verified — This certificate is authentic
+          </div>
+          <div class="cert-detail-grid" id="cert-details"></div>
+        </div>
+
+        <div class="cert-result" id="invalid-result">
+          <div class="cert-status invalid">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            ✗ Not Found — No certificate matches this ID
+          </div>
+          <p style="color:var(--text-muted); font-size:0.9rem; text-align:center; padding:20px 0;">
+            Please double-check the certificate ID and try again. If you believe this is an error, contact us at <a href="mailto:info@omjiconstruction.com" style="color:var(--gold);">info@omjiconstruction.com</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script is:inline>
+  // Check for certId in URL query
+  const params = new URLSearchParams(window.location.search);
+  const urlCertId = params.get('certId');
+  if (urlCertId) {
+    document.getElementById('cert-input').value = urlCertId;
+    setTimeout(() => verifyCertificate(), 300);
+  }
+
+  document.getElementById('cert-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyCertificate();
+  });
+
+  async function verifyCertificate() {
+    const certId = document.getElementById('cert-input').value.trim().toUpperCase();
+    if (!certId) return;
+
+    document.getElementById('valid-result').classList.remove('active');
+    document.getElementById('invalid-result').classList.remove('active');
+    document.getElementById('loading-state').style.display = 'block';
+
+    try {
+      const res = await fetch(`/api/certificates?certId=${encodeURIComponent(certId)}`);
+      
+      await new Promise(r => setTimeout(r, 600)); // Small delay for UX
+
+      if (res.ok) {
+        const cert = await res.json();
+        renderCertDetails(cert);
+        document.getElementById('valid-result').classList.add('active');
+      } else {
+        document.getElementById('invalid-result').classList.add('active');
+      }
+    } catch (err) {
+      document.getElementById('invalid-result').classList.add('active');
+    }
+
+    document.getElementById('loading-state').style.display = 'none';
+  }
+
+  function renderCertDetails(cert) {
+    const startDate = new Date(cert.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const endDate = new Date(cert.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    const issuedDate = new Date(cert.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    const rows = [
+      { label: 'Certificate ID', value: cert.certId },
+      { label: 'Intern Name', value: cert.internName },
+      { label: 'Department', value: cert.department },
+      ...(cert.collegeName ? [{ label: 'College', value: cert.collegeName }] : []),
+      { label: 'Duration', value: `${startDate} — ${endDate}` },
+      { label: 'Performance', value: cert.performance },
+      ...(cert.mentorName ? [{ label: 'Mentor', value: cert.mentorName }] : []),
+      ...(cert.projectWorkedOn ? [{ label: 'Project', value: cert.projectWorkedOn }] : []),
+      { label: 'Issued On', value: issuedDate },
+    ];
+
+    document.getElementById('cert-details').innerHTML = rows.map(r => `
+      <div class="cert-detail-row">
+        <div class="cert-detail-label">${r.label}</div>
+        <div class="cert-detail-value">${r.value}</div>
+      </div>
+    `).join('');
+  }
+</script>
+</body>
+</html>
