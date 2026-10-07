@@ -229,11 +229,8 @@ import '../../styles/global.css';
       <div class="verify-header">
         <div class="verify-header-content">
           <div class="verify-logo">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <polygon points="18,2 34,30 2,30" stroke="#F6EDE0" stroke-width="2" fill="none"/>
-              <polygon points="18,10 27,27 9,27" stroke="#F6EDE0" stroke-width="1" fill="rgba(246,237,224,0.12)"/>
-            </svg>
-            <span class="verify-logo-text">OMJI</span>
+            <img src="/logo.jpg" alt="OMJI INFRA LLP Logo" style="height: 48px; border-radius: 4px;" />
+            <span class="verify-logo-text">OMJI INFRA LLP</span>
           </div>
           <div class="verify-subtitle">Certificate Verification Portal</div>
         </div>
@@ -319,6 +316,8 @@ import '../../styles/global.css';
     const rows = [
       { label: 'Certificate ID', value: cert.certId },
       { label: 'Intern Name', value: cert.internName },
+      ...(cert.fatherName ? [{ label: "Father's Name", value: cert.fatherName }] : []),
+      ...(cert.rollNumber ? [{ label: 'Roll Number', value: cert.rollNumber }] : []),
       { label: 'Department', value: cert.department },
       ...(cert.collegeName ? [{ label: 'College', value: cert.collegeName }] : []),
       { label: 'Duration', value: `${startDate} — ${endDate}` },

@@ -874,6 +874,18 @@ import '../../styles/global.css';
                 <label for="cert-project">Project Worked On</label>
                 <input type="text" id="cert-project" placeholder="e.g. Luxury Villa, Tonk Road" />
               </div>
+              <div class="admin-field">
+                <label for="cert-father">Father's Name</label>
+                <input type="text" id="cert-father" placeholder="e.g. Ramesh Sharma" />
+              </div>
+              <div class="admin-field">
+                <label for="cert-roll">Roll Number</label>
+                <input type="text" id="cert-roll" placeholder="e.g. 2024CIV001" />
+              </div>
+              <div class="admin-field">
+                <label for="cert-issue-date">Date of Issue (Optional)</label>
+                <input type="date" id="cert-issue-date" />
+              </div>
             </div>
             <div style="display:flex; gap:12px; margin-top:1.5rem;">
               <button type="submit" class="btn btn-primary" id="cert-generate-btn">Generate Certificate</button>
@@ -910,14 +922,10 @@ import '../../styles/global.css';
 
                 <div class="cert-header-section">
                   <div class="cert-logo-row">
-                    <svg width="40" height="40" viewBox="0 0 36 36" fill="none">
-                      <polygon points="18,2 34,30 2,30" stroke="#7A5530" stroke-width="2" fill="none"/>
-                      <polygon points="18,10 27,27 9,27" stroke="#9A6F28" stroke-width="1" fill="rgba(154,111,40,0.08)"/>
-                    </svg>
-                    <span class="cert-company-name">OMJI</span>
+                    <img src="/logo.jpg" alt="OMJI INFRA LLP Logo" style="height: 56px; border-radius: 4px;" />
+                    <span class="cert-company-name">OMJI INFRA LLP</span>
                   </div>
-                  <div class="cert-company-sub">Construction & Infrastructure Pvt. Ltd.</div>
-                  <div class="cert-divider"></div>
+                  <div class="cert-divider" style="margin-top: 10px;"></div>
                   <div class="cert-title">Certificate of Internship</div>
                   <div class="cert-subtitle">This certificate is awarded to</div>
                 </div>
@@ -936,11 +944,11 @@ import '../../styles/global.css';
                   </div>
                   <div class="cert-signature">
                     <div class="cert-sig-line"></div>
-                    <div class="cert-sig-name">Omji Construction</div>
+                    <div class="cert-sig-name">OMJI INFRA LLP</div>
                     <div class="cert-sig-title">Authorized Signatory</div>
                   </div>
                   <div class="cert-qr">
-                    <canvas id="cert-qr-canvas" width="80" height="80"></canvas>
+                    <img id="cert-qr-img" src="" alt="QR Code" style="width:80px; height:80px; border:1px solid #E8DCC8; border-radius:4px;" crossorigin="anonymous" />
                     <div class="cert-qr-label">Scan to Verify</div>
                   </div>
                 </div>
@@ -2268,7 +2276,10 @@ import '../../styles/global.css';
         endDate,
         performance: document.getElementById('cert-performance').value,
         mentorName: document.getElementById('cert-mentor').value.trim(),
-        projectWorkedOn: document.getElementById('cert-project').value.trim()
+        projectWorkedOn: document.getElementById('cert-project').value.trim(),
+        fatherName: document.getElementById('cert-father').value.trim(),
+        rollNumber: document.getElementById('cert-roll').value.trim(),
+        issueDate: document.getElementById('cert-issue-date').value || null
       };
 
       try {
@@ -2327,6 +2338,12 @@ import '../../styles/global.css';
 
     // Details grid
     let detailsHTML = '';
+    if (cert.fatherName) {
+      detailsHTML += `<div class="cert-detail-item"><div class="label">Father's Name</div><div class="value">${cert.fatherName}</div></div>`;
+    }
+    if (cert.rollNumber) {
+      detailsHTML += `<div class="cert-detail-item"><div class="label">Roll Number</div><div class="value">${cert.rollNumber}</div></div>`;
+    }
     if (cert.collegeName) {
       detailsHTML += `<div class="cert-detail-item"><div class="label">College</div><div class="value">${cert.collegeName}</div></div>`;
     }
@@ -2342,8 +2359,8 @@ import '../../styles/global.css';
 
     // QR Code
     const verifyURL = `${window.location.origin}/verify?certId=${cert.certId}`;
-    const qrCanvas = document.getElementById('cert-qr-canvas');
-    generateQRCode(qrCanvas, verifyURL, 80);
+    const qrImg = document.getElementById('cert-qr-img');
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(verifyURL)}`;
 
     // Scroll to preview
     setTimeout(() => section.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);

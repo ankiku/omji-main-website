@@ -42,7 +42,7 @@ export async function GET({ url }) {
 export async function POST({ request }) {
   try {
     const body = await request.json();
-    const { internName, department, collegeName, startDate, endDate, performance, mentorName, projectWorkedOn } = body;
+    const { internName, department, collegeName, startDate, endDate, performance, mentorName, projectWorkedOn, issueDate, rollNumber, fatherName } = body;
     
     if (!internName || !department || !startDate || !endDate) {
       return new Response(JSON.stringify({ success: false, error: 'Missing required fields' }), {
@@ -74,7 +74,9 @@ export async function POST({ request }) {
       performance: performance || 'Good',
       mentorName: mentorName || '',
       projectWorkedOn: projectWorkedOn || '',
-      issuedAt: new Date().toISOString()
+      rollNumber: rollNumber || '',
+      fatherName: fatherName || '',
+      issuedAt: issueDate || new Date().toISOString()
     };
     
     certs.push(certificate);
